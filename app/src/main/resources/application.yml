@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+
+spring:
+  config:
+    import: "application-core.yml"
+
+springdoc:
+  packages-to-scan: org.winners.app
+  api-docs:
+    enabled: true
+    path: /api/docs/json
+  swagger-ui:
+    enabled: true
+    path: /api/docs
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+    doc-expansion: none
+    disable-swagger-default-url: false
+  model-and-view-allowed: true
