@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.winners.app.application.field.JobService;
 import org.winners.app.application.field.dto.GetJobListSearchFieldDTO;
 import org.winners.app.application.field.dto.JobDTO;
-import org.winners.app.presentation.field.response.GetJobListResponseDTO;
-import org.winners.core.config.presentation.ApiResponse;
 
 import java.util.List;
 import java.util.Optional;

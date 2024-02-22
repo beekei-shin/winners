@@ -1,7 +1,9 @@
 package org.winners.app.presentation.field.impl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.winners.app.application.field.JobService;
@@ -13,7 +15,9 @@ import org.winners.core.config.presentation.ApiResponse;
 
 import java.util.List;
 
+@Tag(name = "302.v1. 직업")
 @RestController
+@RequestMapping(value = "app/v1/job")
 @RequiredArgsConstructor
 public class JobControllerV1 implements JobController {
 

@@ -33,4 +33,11 @@ public class ApiResponse<D> {
             .build();
     }
 
+    public static ApiResponse<?> exception(ApiResponseType responseType) {
+        return ApiResponse.builder()
+            .code(responseType.getCode())
+            .message(responseType.getMessage())
+            .build();
+    }
+
 }

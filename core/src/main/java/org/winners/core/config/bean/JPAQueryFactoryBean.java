@@ -1,4 +1,4 @@
-package org.winners.app.config.bean;
+package org.winners.core.config.bean;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

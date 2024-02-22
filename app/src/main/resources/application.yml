@@ -1,10 +1,14 @@
 server:
   port: 8080
 
-
 spring:
   config:
     import: "application-core.yml"
+  security:
+    access-token:
+      secret-key: test
+    refresh-token:
+      secret-key: test
 
 springdoc:
   packages-to-scan: org.winners.app
@@ -20,3 +24,4 @@ springdoc:
     doc-expansion: none
     disable-swagger-default-url: false
   model-and-view-allowed: true
+

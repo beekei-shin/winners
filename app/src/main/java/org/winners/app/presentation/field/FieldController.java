@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.winners.app.presentation.field.response.GetFieldListResponseDTO;
 import org.winners.core.config.presentation.ApiResponse;
 
-@Tag(name = "301. 분야")
-@RequestMapping(value = "app/v1/field")
 public interface FieldController {
 
     @Operation(summary = "분야 목록 조회")
