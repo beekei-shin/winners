@@ -1,13 +1,13 @@
-package org.winners.core.domain.auth;
+package org.winners.core.domain.cert;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum AuthenticationType {
+public enum CertificationType {
 
-    PHONE("휴대폰 인증");
+    PHONE_IDENTITY("휴대폰 본인인증");
 
     private final String name;
 

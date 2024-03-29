@@ -6,28 +6,32 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.winners.app.application.user.ClientUserSignService;
 import org.winners.app.application.user.impl.ClientUserSignServiceV1;
-import org.winners.core.domain.auth.service.AuthenticationKeyDomainService;
-import org.winners.core.domain.auth.service.PhoneIdentityAuthenticationDomainService;
+import org.winners.core.domain.auth.service.AuthDomainService;
+import org.winners.core.domain.cert.CertificationKeyRepository;
+import org.winners.core.domain.cert.service.CertificationKeyDomainService;
+import org.winners.core.domain.cert.service.PhoneIdentityCertificationDomainService;
 import org.winners.core.domain.user.ClientUserRepository;
 import org.winners.core.domain.user.service.ClientUserDomainService;
 
 @ComponentScan("org.winners.core.domain")
 @Configuration
 @RequiredArgsConstructor
-public class UserServiceBean {
+public class UserServiceBeanConfig {
 
     private final ClientUserRepository clientUserRepository;
     private final ClientUserDomainService clientUserDomainService;
-    private final AuthenticationKeyDomainService authenticationKeyDomainService;
-    private final PhoneIdentityAuthenticationDomainService phoneIdentityAuthenticationDomainService;
+    private final CertificationKeyDomainService certificationKeyDomainService;
+    private final PhoneIdentityCertificationDomainService phoneIdentityCertificationDomainService;
+    private final AuthDomainService authDomainService;
 
     @Bean(name = "ClientUserSignServiceV1")
     public ClientUserSignService clientUserSignService() {
         return new ClientUserSignServiceV1(
             clientUserRepository,
             clientUserDomainService,
-            authenticationKeyDomainService,
-            phoneIdentityAuthenticationDomainService);
+            certificationKeyDomainService,
+            phoneIdentityCertificationDomainService,
+            authDomainService);
     }
 
 }

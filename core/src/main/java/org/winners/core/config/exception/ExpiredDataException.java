@@ -4,12 +4,8 @@ import org.winners.core.config.presentation.ApiResponseType;
 
 public class ExpiredDataException extends ApiException {
 
-    public ExpiredDataException() {
-        super(ApiResponseType.EXPIRED_DATA);
-    }
-
-    public ExpiredDataException(String message) {
-        super(ApiResponseType.EXPIRED_DATA, message);
+    public ExpiredDataException(ExceptionMessageType exceptionMessageType) {
+        super(ApiResponseType.EXPIRED_DATA, exceptionMessageType.getMessage());
     }
 
 }

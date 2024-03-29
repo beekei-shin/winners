@@ -8,17 +8,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.winners.core.config.security.filter.JwtAuthenticationFilter;
+import org.winners.core.config.security.handler.JwtAccessDeniedHandler;
+import org.winners.core.config.security.handler.JwtUnauthorizedHandler;
 import org.winners.core.config.security.token.TokenProvider;
 import org.winners.core.config.security.token.TokenRole;
+import org.winners.core.domain.user.service.ClientUserDomainService;
 
 @Configuration
 @RequiredArgsConstructor
@@ -26,6 +30,12 @@ public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
     private final ObjectMapper objectMapper;
+    private final ClientUserDomainService clientUserDomainService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -43,26 +53,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public OncePerRequestFilter oncePerRequestFilter() {
-        return new JwtAuthenticationFilter(tokenProvider);
-    }
-
-    @Bean
-    public OncePerRequestFilter exceptionHandlerFilter() {
-        return new ExceptionHandlerFilter();
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new JwtUnAuthenticateHandler(objectMapper);
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return new JwtAccessDeniedHandler(objectMapper);
-    }
-
-    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOriginPattern("*");
@@ -77,33 +67,25 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.headers().frameOptions().disable()
-            .and()
-            .httpBasic()
-            .and()
-            .formLogin().disable()
-            .logout().disable()
-            .csrf().disable()
-            .cors().configurationSource(corsConfigurationSource())
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeHttpRequests(request -> request
+        http.csrf(AbstractHttpConfigurer::disable)
+            .headers(hc -> hc
+                .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            .authorizeHttpRequests(ar -> ar
                 .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                .requestMatchers(HttpMethod.GET, SecurityWhitelist.getWhitelistPath(HttpMethod.GET)).permitAll()
-                .requestMatchers(HttpMethod.POST, SecurityWhitelist.getWhitelistPath(HttpMethod.POST)).permitAll()
-                .requestMatchers(HttpMethod.PUT, SecurityWhitelist.getWhitelistPath(HttpMethod.PUT)).permitAll()
-                .requestMatchers(HttpMethod.DELETE, SecurityWhitelist.getWhitelistPath(HttpMethod.DELETE)).permitAll()
-                .requestMatchers("/app/**", "/toss/**").hasAnyRole(TokenRole.APP.getRole())
+                .requestMatchers(HttpMethod.GET, SecurityWhitelist.getWhitelistByMethod(HttpMethod.GET)).permitAll()
+                .requestMatchers(HttpMethod.POST, SecurityWhitelist.getWhitelistByMethod(HttpMethod.POST)).permitAll()
+                .requestMatchers(HttpMethod.PUT, SecurityWhitelist.getWhitelistByMethod(HttpMethod.PUT)).permitAll()
+                .requestMatchers(HttpMethod.DELETE, SecurityWhitelist.getWhitelistByMethod(HttpMethod.DELETE)).permitAll()
+                .requestMatchers("/app/**").hasAnyRole(TokenRole.APP.getRole())
                 .requestMatchers("/bo/**").hasAnyRole(TokenRole.BACKOFFICE.getRole())
-                .anyRequest().authenticated())
-            .addFilterBefore(exceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(oncePerRequestFilter(), UsernamePasswordAuthenticationFilter.class)
-            .exceptionHandling()
-            .authenticationEntryPoint(authenticationEntryPoint())
-            .accessDeniedHandler(accessDeniedHandler());
-
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(new JwtAuthenticationFilter(tokenProvider, clientUserDomainService), UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(eh -> eh
+                .authenticationEntryPoint(new JwtUnauthorizedHandler(objectMapper))
+                .accessDeniedHandler(new JwtAccessDeniedHandler(objectMapper)))
+            .formLogin(AbstractHttpConfigurer::disable)
+            .logout(AbstractHttpConfigurer::disable);
         return http.build();
     }
 

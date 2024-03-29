@@ -14,7 +14,7 @@ import org.winners.core.domain.field.FieldRepository;
 @ComponentScan("org.winners.core.domain")
 @Configuration
 @RequiredArgsConstructor
-public class FieldServiceBean {
+public class FieldServiceBeanConfig {
 
     private final JPAQueryFactory queryFactory;
     private final FieldRepository fieldRepository;

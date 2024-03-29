@@ -17,7 +17,7 @@ import java.util.List;
 
 @Tag(name = "302.v1. 직업")
 @RestController
-@RequestMapping(value = "app/v1/job")
+@RequestMapping(value = "v1/job")
 @RequiredArgsConstructor
 public class JobControllerV1 implements JobController {
 

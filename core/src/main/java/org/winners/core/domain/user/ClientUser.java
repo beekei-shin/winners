@@ -10,18 +10,16 @@ import org.winners.core.domain.base.Gender;
 import java.time.LocalDate;
 import java.util.List;
 
-@Comment("클라이언트 회원")
-@DynamicInsert
+@Comment("사용자 회원")
 @Getter
 @Entity
 @Table(name = "client_user", uniqueConstraints = {
     @UniqueConstraint(name = "UK_client_user_ci", columnNames = { "ci" }),
     @UniqueConstraint(name = "UK_client_user_phone_number", columnNames = { "phone_number" })
 })
-@DiscriminatorValue("CLIENT_USER")
-@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DiscriminatorValue("CLIENT")
 public class ClientUser extends User {
 
     @Comment("휴대폰 번호")

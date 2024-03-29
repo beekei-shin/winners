@@ -17,7 +17,7 @@ import org.winners.core.config.presentation.ApiResponse;
 
 @Tag(name = "201.v1. 사용자 회원 서명")
 @RestController
-@RequestMapping(value = "app/v1/user/client/sign")
+@RequestMapping(value = "v1/user/client/sign")
 @RequiredArgsConstructor
 public class ClientUserSignControllerV1 implements ClientUserSignController {
 
@@ -25,21 +25,15 @@ public class ClientUserSignControllerV1 implements ClientUserSignController {
     private final ClientUserSignService clientUserSignService;
 
     @Override
-    public ApiResponse<SignUpClientUserResponseDTO> signUpClientUser(SignUpClientUserRequestDTO request) {
-        final SignUpClientUserResultDTO result = clientUserSignService.signUpClientUser(request.getAuthenticationKey());
-        return ApiResponse.success(new SignUpClientUserResponseDTO(
-            result.isSuccessSignUp(),
-            result.isDuplicatedPhoneNumber(),
-            result.isDuplicatedCi()));
+    public ApiResponse<?> signUpClientUser(SignUpClientUserRequestDTO request) {
+        clientUserSignService.signUp(request.getAuthenticationKey());
+        return ApiResponse.success();
     }
 
     @Override
-    public ApiResponse<SignInClientUserResponseDTO> signInClientUser(SignInClientUserRequestDTO request) {
-        final SignInClientUserResultDTO result = clientUserSignService.signInClientUser(request.getAuthenticationKey());
-        return ApiResponse.success(new SignInClientUserResponseDTO(
-            result.isSuccessSignIn(),
-            result.isNotExistUser(),
-            result.isBlockUser()));
+    public ApiResponse<?> signInClientUser(SignInClientUserRequestDTO request) {
+        clientUserSignService.signIn(request.getCertificationKey());
+        return ApiResponse.success();
     }
 
 }

@@ -5,38 +5,44 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Optional;
+
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 public class ApiResponse<D> {
 
-    private String code;
+    private String responseCode;
 
-    private String message;
+    private String responseMessage;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private D data;
+    private D responseData;
 
     public static ApiResponse<?> success() {
         final ApiResponseType responseType = ApiResponseType.SUCCESS;
         return ApiResponse.builder()
-            .code(responseType.getCode())
-            .message(responseType.getMessage())
+            .responseCode(responseType.getCode())
+            .responseMessage(responseType.getMessage())
             .build();
     }
 
-    public static <D> ApiResponse<D> success(D data) {
+    public static <D> ApiResponse<D> success(D responseData) {
         final ApiResponseType responseType = ApiResponseType.SUCCESS;
         return ApiResponse.<D>builder()
-            .code(responseType.getCode())
-            .message(responseType.getMessage())
-            .data(data)
+            .responseCode(responseType.getCode())
+            .responseMessage(responseType.getMessage())
+            .responseData(responseData)
             .build();
     }
 
     public static ApiResponse<?> exception(ApiResponseType responseType) {
+        return ApiResponse.exception(responseType, null);
+    }
+
+    public static ApiResponse<?> exception(ApiResponseType responseType, String responseMessage) {
         return ApiResponse.builder()
-            .code(responseType.getCode())
-            .message(responseType.getMessage())
+            .responseCode(responseType.getCode())
+            .responseMessage(Optional.ofNullable(responseMessage).orElse(responseType.getMessage()))
             .build();
     }
 

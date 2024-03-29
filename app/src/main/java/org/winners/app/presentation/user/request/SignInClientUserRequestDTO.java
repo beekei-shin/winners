@@ -12,5 +12,5 @@ import java.util.UUID;
 @NoArgsConstructor
 public class SignInClientUserRequestDTO {
     @NotNull
-    private UUID authenticationKey;
+    private UUID certificationKey;
 }

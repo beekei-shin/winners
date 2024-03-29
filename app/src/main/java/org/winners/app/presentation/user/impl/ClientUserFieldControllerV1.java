@@ -11,7 +11,7 @@ import org.winners.core.config.presentation.ApiResponse;
 
 @Tag(name = "202.v1. 사용자 회원 분야")
 @RestController
-@RequestMapping(value = "app/v1/user/client/field")
+@RequestMapping("v1/user/client/field")
 @RequiredArgsConstructor
 public class ClientUserFieldControllerV1 implements ClientUserFieldController {
 

@@ -1,13 +1,15 @@
 package org.winners.core.domain.user.service;
 
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.winners.core.config.exception.NotAccessDataException;
+import org.winners.core.config.exception.DuplicatedDataException;
+import org.winners.core.config.exception.NotExistDataException;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.ClientUserRepository;
-import org.winners.core.domain.base.Gender;
+import org.winners.core.domain.user.service.dto.SaveClientUserParameterDTO;
 
-import java.time.LocalDate;
+import static org.winners.core.config.exception.ExceptionMessageType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -15,18 +17,36 @@ public class ClientUserDomainService {
 
     private final ClientUserRepository clientUserRepository;
 
-    public boolean duplicatePhoneNumberCheck(String phoneNumber) {
+    public void duplicatePhoneNumberCheck(String phoneNumber) {
         final long duplicatePhoneNumberCount = clientUserRepository.countByPhoneNumber(phoneNumber);
-        return duplicatePhoneNumberCount > 0;
+        if (duplicatePhoneNumberCount > 0) throw new DuplicatedDataException(DUPLICATED_PHONE_NUMBER);
     }
 
-    public boolean duplicateCiCheck(String ci) {
+    public void duplicateCiCheck(String ci) {
         final long duplicateCiCount = clientUserRepository.countByCi(ci);
-        return duplicateCiCount > 0;
+        if (duplicateCiCount > 0) throw new DuplicatedDataException(DUPLICATED_CI);
     }
 
-    public void saveClientUser(String userName, String phoneNumber, String ci, @Nullable String di, LocalDate userBirthday, Gender userGender) {
-        clientUserRepository.save(ClientUser.create(userName, phoneNumber, ci, di, userBirthday, userGender));
+    public ClientUser saveClientUser(SaveClientUserParameterDTO parameter) {
+        return clientUserRepository.save(ClientUser.create(
+            parameter.getName(),
+            parameter.getPhoneNumber(),
+            parameter.getCi(),
+            parameter.getDi(),
+            parameter.getBirthday(),
+            parameter.getGender()));
+    }
+
+    public boolean accessClientUserCheck(long userId) {
+        clientUserRepository.findById(userId)
+            .ifPresentOrElse(this::accessClientUserCheck, () -> { throw new NotExistDataException(NOT_EXIST_USER); });
+        return true;
+    }
+
+    public boolean accessClientUserCheck(ClientUser clientUser) {
+        if (clientUser.isBlockUser()) throw new NotAccessDataException(BLOCK_USER);
+        if (clientUser.isResignUser()) throw new NotAccessDataException(RESIGN_USER);
+        return true;
     }
 
 }

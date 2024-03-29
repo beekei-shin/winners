@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
@@ -20,7 +21,9 @@ public class SwaggerConfig {
         final String securitySchemeName = "JWT Authentication";
         return new OpenAPI()
             .info(apiInfo())
-            .addServersItem(new Server().url("/"))
+            .servers(List.of(
+                new Server().url("/app").description("APP"),
+                new Server().url("/bo").description("BACKOFFICE")))
             .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
             .components(new Components().addSecuritySchemes(
                 securitySchemeName,
@@ -33,9 +36,9 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-            .title("Winners APP API")
-            .description("test")
-            .license(new License().name("BEEKEI").url(""))
+            .title("Winners API Document")
+            .description("Winners API 문서")
+            .license(new License().name("beekei").url(""))
             .version("1.0.0");
     }
 

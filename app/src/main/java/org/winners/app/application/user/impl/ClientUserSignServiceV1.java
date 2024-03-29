@@ -1,58 +1,68 @@
 package org.winners.app.application.user.impl;
 
-
 import lombok.RequiredArgsConstructor;
 import org.winners.app.application.user.ClientUserSignService;
 import org.winners.app.application.user.dto.SignInClientUserResultDTO;
-import org.winners.app.application.user.dto.SignUpClientUserParameterDTO;
-import org.winners.app.application.user.dto.SignUpClientUserResultDTO;
+import org.winners.core.config.exception.ExceptionMessageType;
 import org.winners.core.config.exception.NotExistDataException;
-import org.winners.core.domain.auth.service.AuthenticationKeyDomainService;
-import org.winners.core.domain.auth.service.PhoneIdentityAuthenticationDomainService;
-import org.winners.core.domain.auth.service.dto.PhoneIdentityAuthenticationInfoDTO;
-import org.winners.core.domain.user.ClientUser;
+import org.winners.core.domain.auth.service.AuthDomainService;
+import org.winners.core.domain.auth.service.dto.AuthTokenDTO;
+import org.winners.core.domain.cert.CertificationKey;
+import org.winners.core.domain.cert.service.CertificationKeyDomainService;
+import org.winners.core.domain.cert.service.PhoneIdentityCertificationDomainService;
+import org.winners.core.domain.cert.service.dto.CertificationInfoDTO;
 import org.winners.core.domain.user.ClientUserRepository;
 import org.winners.core.domain.user.service.ClientUserDomainService;
+import org.winners.core.domain.user.service.dto.SaveClientUserParameterDTO;
 
-import java.util.Optional;
 import java.util.UUID;
+
+import static org.winners.core.config.exception.ExceptionMessageType.NOT_EXIST_USER;
 
 @RequiredArgsConstructor
 public class ClientUserSignServiceV1 implements ClientUserSignService {
 
     private final ClientUserRepository clientUserRepository;
     private final ClientUserDomainService clientUserDomainService;
-    private final AuthenticationKeyDomainService authenticationKeyDomainService;
-    private final PhoneIdentityAuthenticationDomainService phoneIdentityAuthenticationDomainService;
+    private final CertificationKeyDomainService certificationKeyDomainService;
+    private final PhoneIdentityCertificationDomainService phoneIdentityCertificationDomainService;
+    private final AuthDomainService authDomainService;
 
     @Override
-    public SignUpClientUserResultDTO signUpClientUser(UUID authenticationKey) {
-        final PhoneIdentityAuthenticationInfoDTO authenticationInfo = phoneIdentityAuthenticationDomainService.getPhoneIdentityAuthenticationInfo(authenticationKey);
-        authenticationKeyDomainService.useAuthenticationKey(authenticationKey);
+    public void signUp(UUID certificationKey) {
+        final CertificationKey savedCertificationKey = certificationKeyDomainService.getSavedCertificationKey(certificationKey);
+        certificationKeyDomainService.possibleUseCheck(savedCertificationKey);
 
-        if (clientUserDomainService.duplicatePhoneNumberCheck(authenticationInfo.getPhoneNumber()))
-            return SignUpClientUserResultDTO.duplicatedPhoneNumber();
+        final CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
+        savedCertificationKey.use();
 
-        if (clientUserDomainService.duplicateCiCheck(authenticationInfo.getCi()))
-            return SignUpClientUserResultDTO.duplicatedCi();
-
-        clientUserDomainService.saveClientUser(authenticationInfo.getName(), authenticationInfo.getPhoneNumber(), authenticationInfo.getCi(), authenticationInfo.getDi(), authenticationInfo.getBirthday(), authenticationInfo.getGender());
-        return SignUpClientUserResultDTO.successSignIn();
+        clientUserDomainService.duplicatePhoneNumberCheck(certificationInfo.getPhoneNumber());
+        clientUserDomainService.duplicateCiCheck(certificationInfo.getCi());
+        clientUserDomainService.saveClientUser(SaveClientUserParameterDTO.builder()
+                .name(certificationInfo.getName())
+                .phoneNumber(certificationInfo.getPhoneNumber())
+                .ci(certificationInfo.getCi())
+                .di(certificationInfo.getDi())
+                .birthday(certificationInfo.getBirthday())
+                .gender(certificationInfo.getGender())
+            .build());
     }
 
     @Override
-    public SignInClientUserResultDTO signInClientUser(UUID authenticationKey) {
-        final PhoneIdentityAuthenticationInfoDTO authenticationInfo = phoneIdentityAuthenticationDomainService.getPhoneIdentityAuthenticationInfo(authenticationKey);
-        authenticationKeyDomainService.useAuthenticationKey(authenticationKey);
+    public SignInClientUserResultDTO signIn(UUID certificationKey) {
+        final CertificationKey savedCertificationKey = certificationKeyDomainService.getSavedCertificationKey(certificationKey);
+        certificationKeyDomainService.possibleUseCheck(savedCertificationKey);
 
-        final Optional<ClientUser> clientUserOpt = clientUserRepository.findByPhoneNumberAndCi(authenticationInfo.getPhoneNumber(), authenticationInfo.getCi());
-        return clientUserOpt
+        final CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
+        savedCertificationKey.use();
+
+        return clientUserRepository.findByPhoneNumberAndCi(certificationInfo.getPhoneNumber(), certificationInfo.getCi())
+            .filter(clientUserDomainService::accessClientUserCheck)
             .map(clientUser -> {
-                if (clientUser.isBlockUser())
-                    return SignInClientUserResultDTO.blockUser();
-                else
-                    return SignInClientUserResultDTO.successSignIn();
-            }).orElseGet(SignInClientUserResultDTO::notExistUser);
+                AuthTokenDTO authToken = authDomainService.createClientUserAuthToken(clientUser.getId());
+                return SignInClientUserResultDTO.success(clientUser.getId(), authToken.getAccessToken(), authToken.getRefreshToken());
+            })
+            .orElseThrow(() -> new NotExistDataException(NOT_EXIST_USER));
     }
 
 }

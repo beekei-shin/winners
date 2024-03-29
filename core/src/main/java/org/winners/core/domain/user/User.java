@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicInsert;
 import org.winners.core.domain.base.BaseEntity;
 
+@DynamicInsert
 @Comment("회원")
 @Getter
 @Entity
@@ -15,10 +17,10 @@ import org.winners.core.domain.base.BaseEntity;
     @Index(name="IDX_user_user_type", columnList = "user_type"),
     @Index(name="IDX_user_user_status", columnList = "user_status"),
 })
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "user_type", length = 50, discriminatorType = DiscriminatorType.STRING)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "user_type", length = 50, discriminatorType = DiscriminatorType.STRING)
 public abstract class User extends BaseEntity {
 
     @Id
@@ -49,6 +51,10 @@ public abstract class User extends BaseEntity {
 
     public boolean isBlockUser() {
         return this.status.equals(UserStatus.BLOCK);
+    }
+
+    public boolean isResignUser() {
+        return this.status.equals(UserStatus.RESIGN);
     }
 
 }

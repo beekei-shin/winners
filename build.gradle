@@ -28,14 +28,19 @@ subprojects { // 각 모듈에 적용할 공통 설정
 	apply plugin: 'io.spring.dependency-management'
 
 	dependencies {
+		// querydsl
 		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'
 		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+		// querydsl
 		implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 		annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 		annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 		annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+		// lang3
+		implementation 'org.apache.commons:commons-lang3:3.14.0'
 	}
 
 	tasks.named('bootJar') { //빌드할 때 bootjar 파일로 하겠다는 의미

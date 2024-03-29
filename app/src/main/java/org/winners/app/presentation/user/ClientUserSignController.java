@@ -15,10 +15,10 @@ public interface ClientUserSignController {
 
     @Operation(summary = "사용자 회원 가입")
     @PostMapping(name = "사용자 회원 가입", value = "up", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ApiResponse<SignUpClientUserResponseDTO> signUpClientUser(@RequestBody @Valid SignUpClientUserRequestDTO request);
+    ApiResponse<?> signUpClientUser(@RequestBody @Valid SignUpClientUserRequestDTO request);
 
     @Operation(summary = "사용자 회원 로그인")
     @PostMapping(name = "사용자 회원 로그인", value = "in", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    ApiResponse<SignInClientUserResponseDTO> signInClientUser(@RequestBody @Valid SignInClientUserRequestDTO request);
+    ApiResponse<?> signInClientUser(@RequestBody @Valid SignInClientUserRequestDTO request);
 
 }

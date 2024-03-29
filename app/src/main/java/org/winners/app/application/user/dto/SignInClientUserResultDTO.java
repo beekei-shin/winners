@@ -8,27 +8,15 @@ import lombok.Getter;
 @Builder(access = AccessLevel.PRIVATE)
 public class SignInClientUserResultDTO {
 
-    private final boolean successSignIn;
-    private final boolean notExistUser;
-    private final boolean blockUser;
+    private final long userId;
+    private final String accessToken;
+    private final String refreshToken;
 
-    public static SignInClientUserResultDTO successSignIn() {
-        return SignInClientUserResultDTO.builder().successSignIn(true).build();
-    }
-
-    public static SignInClientUserResultDTO notExistUser() {
+    public static SignInClientUserResultDTO success(long userId, String accessToken, String refreshToken) {
         return SignInClientUserResultDTO.builder()
-            .successSignIn(false)
-            .notExistUser(true)
-            .blockUser(false)
-            .build();
-    }
-
-    public static SignInClientUserResultDTO blockUser() {
-        return SignInClientUserResultDTO.builder()
-            .successSignIn(false)
-            .notExistUser(false)
-            .blockUser(true)
+            .userId(userId)
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
             .build();
     }
 

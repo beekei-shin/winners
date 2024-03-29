@@ -15,7 +15,7 @@ import java.util.List;
 
 @Tag(name = "301.v1. 분야")
 @RestController
-@RequestMapping(value = "app/v1/field")
+@RequestMapping(value = "v1/field")
 @RequiredArgsConstructor
 public class FieldControllerV1 implements FieldController {
 
