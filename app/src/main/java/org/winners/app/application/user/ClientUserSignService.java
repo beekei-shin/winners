@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface ClientUserSignService {
 
     @Transactional
-    void signUp(UUID certificationKey);
+    SignUpClientUserResultDTO signUp(UUID certificationKey);
 
     @Transactional
     SignInClientUserResultDTO signIn(UUID certificationKey);

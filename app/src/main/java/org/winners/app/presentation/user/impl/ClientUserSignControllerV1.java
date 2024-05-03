@@ -21,19 +21,18 @@ import org.winners.core.config.presentation.ApiResponse;
 @RequiredArgsConstructor
 public class ClientUserSignControllerV1 implements ClientUserSignController {
 
-    @Qualifier("ClientUserSignServiceV1")
-    private final ClientUserSignService clientUserSignService;
+    private final ClientUserSignService clientUserSignServiceV1;
 
     @Override
-    public ApiResponse<?> signUpClientUser(SignUpClientUserRequestDTO request) {
-        clientUserSignService.signUp(request.getAuthenticationKey());
-        return ApiResponse.success();
+    public ApiResponse<SignUpClientUserResponseDTO> signUpClientUser(SignUpClientUserRequestDTO request) {
+        SignUpClientUserResultDTO result =  clientUserSignServiceV1.signUp(request.getAuthenticationKey());
+        return ApiResponse.success(SignUpClientUserResponseDTO.create(result));
     }
 
     @Override
-    public ApiResponse<?> signInClientUser(SignInClientUserRequestDTO request) {
-        clientUserSignService.signIn(request.getCertificationKey());
-        return ApiResponse.success();
+    public ApiResponse<SignInClientUserResponseDTO> signInClientUser(SignInClientUserRequestDTO request) {
+        SignInClientUserResultDTO result = clientUserSignServiceV1.signIn(request.getCertificationKey());
+        return ApiResponse.success(SignInClientUserResponseDTO.create(result));
     }
 
 }

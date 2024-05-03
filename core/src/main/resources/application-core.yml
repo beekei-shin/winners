@@ -9,7 +9,7 @@ spring:
       connection-timeout: 60000
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     open-in-view: true
     properties:
       hibernate:

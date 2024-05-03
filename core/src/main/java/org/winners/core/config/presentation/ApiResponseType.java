@@ -17,6 +17,7 @@ public enum ApiResponseType {
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED,                      "40102", "토큰 유효기간 만료"),
     FORBIDDEN_TOKEN(HttpStatus.FORBIDDEN,                       "40300", "권한 없음"),
 
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,     "50000", "알수없는 오류"),
     SECURITY_ERROR(HttpStatus.BAD_GATEWAY,                      "50200", "보안 오류"),
     DUPLICATED_DATA(HttpStatus.BAD_GATEWAY,                     "50201", "중복된 데이터"),
     EXPIRED_DATA(HttpStatus.BAD_GATEWAY,                        "50202", "만료된 데이터"),

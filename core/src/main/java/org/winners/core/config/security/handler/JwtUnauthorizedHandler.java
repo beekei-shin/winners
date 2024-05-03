@@ -26,7 +26,7 @@ public class JwtUnauthorizedHandler implements AuthenticationEntryPoint {
             final ApiResponseType apiResponseType = ApiResponseType.valueOf(
                 String.valueOf(Optional.ofNullable(request.getAttribute("ExceptionType"))
                     .map(exceptionType -> ApiResponseType.valueOf(String.valueOf(exceptionType)))
-                    .orElse(ApiResponseType.SECURITY_ERROR)));
+                    .orElse(ApiResponseType.INTERNAL_SERVER_ERROR)));
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(apiResponseType.getHttpStatus().value());

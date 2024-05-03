@@ -22,12 +22,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PhoneIdentityCertificationControllerV1 implements PhoneIdentityCertificationController {
 
-    @Qualifier("PhoneIdentityCertificationServiceV1")
-    private final PhoneIdentityCertificationService phoneIdentityCertificationService;
+    private final PhoneIdentityCertificationService phoneIdentityCertificationServiceV1;
 
     @Override
     public ApiResponse<SendPhoneIdentityOtpNumberResponseDTO> sendPhoneIdentityOtpNumber(SendPhoneIdentityOtpNumberRequestDTO request) {
-        UUID certificationKey = phoneIdentityCertificationService.sendPhoneIdentityOtpNumber(SendOtpNumberParameterDTO.builder()
+        UUID certificationKey = phoneIdentityCertificationServiceV1.sendPhoneIdentityOtpNumber(SendOtpNumberParameterDTO.builder()
             .name(request.getName())
             .birthday(request.getBirthday())
             .gender(request.getGender())
@@ -39,7 +38,7 @@ public class PhoneIdentityCertificationControllerV1 implements PhoneIdentityCert
 
     @Override
     public ApiResponse<?> certifyPhoneIdentityOtpNumber(CertifyPhoneIdentityOtpNumberRequestDTO request) {
-        phoneIdentityCertificationService.certifyPhoneIdentityOtpNumber(
+        phoneIdentityCertificationServiceV1.certifyPhoneIdentityOtpNumber(
             request.getPhoneNumber(),
             request.getCertificationKey(),
             request.getPinNumber());

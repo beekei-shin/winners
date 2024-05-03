@@ -21,15 +21,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobControllerV1 implements JobController {
 
-    @Qualifier("JobServiceV1")
-    private final JobService jobService;
+    private final JobService jobServiceV1;
 
     @Override
     public ApiResponse<GetJobListResponseDTO> getJobList(@RequestParam(required = false) Long fieldId) {
         final GetJobListSearchFieldDTO searchField = GetJobListSearchFieldDTO.builder()
             .fieldId(fieldId)
             .build();
-        final List<JobDTO> jobList = jobService.getJobList(searchField);
+        final List<JobDTO> jobList = jobServiceV1.getJobList(searchField);
         return ApiResponse.success(GetJobListResponseDTO.convert(jobList));
     }
 

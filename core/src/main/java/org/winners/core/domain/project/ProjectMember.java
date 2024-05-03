@@ -4,9 +4,6 @@ package org.winners.core.domain.project;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
-import org.winners.core.domain.user.ClientUsersField;
-
-import java.util.List;
 
 @Comment("프로젝트 구성원")
 @Getter

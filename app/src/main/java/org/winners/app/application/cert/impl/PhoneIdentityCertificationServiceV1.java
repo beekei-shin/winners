@@ -1,7 +1,7 @@
 package org.winners.app.application.cert.impl;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.winners.app.application.cert.PhoneIdentityCertificationService;
 import org.winners.core.domain.cert.CertificationKey;
 import org.winners.core.domain.cert.CertificationType;
@@ -11,7 +11,7 @@ import org.winners.core.domain.cert.service.dto.SendOtpNumberParameterDTO;
 
 import java.util.UUID;
 
-@Getter
+@Component
 @RequiredArgsConstructor
 public class PhoneIdentityCertificationServiceV1 implements PhoneIdentityCertificationService {
 

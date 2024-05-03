@@ -3,36 +3,27 @@ package org.winners.app.application.user.dto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import org.winners.core.domain.auth.service.dto.AuthTokenDTO;
+import org.winners.core.domain.user.ClientUser;
 
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 public class SignUpClientUserResultDTO {
 
-    private final boolean successSignUp;
-    private final boolean duplicatedPhoneNumber;
-    private final boolean duplicatedCi;
+    private final long userId;
+    private final String userName;
+    private final String phoneNumber;
+    private final String accessToken;
+    private final String refreshToken;
 
-    public static SignUpClientUserResultDTO successSignIn() {
-        return SignUpClientUserResultDTO.builder()
-            .successSignUp(true)
-            .duplicatedPhoneNumber(false)
-            .duplicatedCi(false)
-            .build();
-    }
 
-    public static SignUpClientUserResultDTO duplicatedPhoneNumber() {
+    public static SignUpClientUserResultDTO success(ClientUser clientUser, AuthTokenDTO authToken) {
         return SignUpClientUserResultDTO.builder()
-            .successSignUp(false)
-            .duplicatedPhoneNumber(true)
-            .duplicatedCi(false)
-            .build();
-    }
-
-    public static SignUpClientUserResultDTO duplicatedCi() {
-        return SignUpClientUserResultDTO.builder()
-            .successSignUp(false)
-            .duplicatedPhoneNumber(false)
-            .duplicatedCi(true)
+            .userId(clientUser.getId())
+            .userName(clientUser.getName())
+            .phoneNumber(clientUser.getPhoneNumber())
+            .accessToken(authToken.getAccessToken())
+            .refreshToken(authToken.getRefreshToken())
             .build();
     }
 

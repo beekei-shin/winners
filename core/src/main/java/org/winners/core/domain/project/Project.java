@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.winners.core.domain.base.BaseEntity;
-import org.winners.core.domain.user.ClientUsersField;
 
 import java.util.List;
 

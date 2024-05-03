@@ -5,9 +5,16 @@ import org.springframework.stereotype.Service;
 import org.winners.core.config.exception.NotAccessDataException;
 import org.winners.core.config.exception.DuplicatedDataException;
 import org.winners.core.config.exception.NotExistDataException;
+import org.winners.core.domain.field.Field;
+import org.winners.core.domain.field.FieldRepository;
+import org.winners.core.domain.field.Job;
+import org.winners.core.domain.field.JobRepository;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.ClientUserRepository;
 import org.winners.core.domain.user.service.dto.SaveClientUserParameterDTO;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.winners.core.config.exception.ExceptionMessageType.*;
 
@@ -16,6 +23,7 @@ import static org.winners.core.config.exception.ExceptionMessageType.*;
 public class ClientUserDomainService {
 
     private final ClientUserRepository clientUserRepository;
+    private final JobRepository jobRepository;
 
     public void duplicatePhoneNumberCheck(String phoneNumber) {
         final long duplicatePhoneNumberCount = clientUserRepository.countByPhoneNumber(phoneNumber);
@@ -37,9 +45,21 @@ public class ClientUserDomainService {
             parameter.getGender()));
     }
 
+    public void saveClientUserJob(long userId, Set<Long> jobIds) {
+        clientUserRepository.findById(userId)
+            .ifPresentOrElse(
+                clientUser -> clientUser.updateJobs(jobRepository
+                    .findByIdIn(jobIds).stream()
+                    .map(Job::getId)
+                    .collect(Collectors.toSet())),
+                () -> { throw new NotExistDataException(NOT_EXIST_USER); });
+    }
+
     public boolean accessClientUserCheck(long userId) {
         clientUserRepository.findById(userId)
-            .ifPresentOrElse(this::accessClientUserCheck, () -> { throw new NotExistDataException(NOT_EXIST_USER); });
+            .ifPresentOrElse(
+                this::accessClientUserCheck,
+                () -> { throw new NotExistDataException(NOT_EXIST_USER); });
         return true;
     }
 
@@ -48,5 +68,6 @@ public class ClientUserDomainService {
         if (clientUser.isResignUser()) throw new NotAccessDataException(RESIGN_USER);
         return true;
     }
+
 
 }

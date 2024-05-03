@@ -19,12 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FieldControllerV1 implements FieldController {
 
-    @Qualifier("FieldServiceV1")
-    private final FieldService fieldService;
+    private final FieldService fieldServiceV1;
 
     @Override
     public ApiResponse<GetFieldListResponseDTO> getFieldList() {
-        final List<FieldDTO> fieldList = fieldService.getFieldList();
+        final List<FieldDTO> fieldList = fieldServiceV1.getFieldList();
         return ApiResponse.success(GetFieldListResponseDTO.convert(fieldList));
     }
 

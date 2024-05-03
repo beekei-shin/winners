@@ -7,11 +7,12 @@ import org.hibernate.annotations.Comment;
 @Comment("사용자 회원 직업")
 @Getter
 @Entity
-@Table(name = "client_users_job")
+@Table(name = "client_user_job",
+    uniqueConstraints = { @UniqueConstraint(name = "UK_client_user_job", columnNames = { "client_user_id", "job_id" }) })
 @Builder(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ClientUsersJob {
+public class ClientUserJob {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,5 +28,12 @@ public class ClientUsersJob {
     @Comment("직업 고유번호")
     @Column(name = "job_id", nullable = false, updatable = false)
     private Long jobId;
+
+    public static ClientUserJob create(ClientUser clientUser, long jobId) {
+        return ClientUserJob.builder()
+            .clientUser(clientUser)
+            .jobId(jobId)
+            .build();
+    }
 
 }
