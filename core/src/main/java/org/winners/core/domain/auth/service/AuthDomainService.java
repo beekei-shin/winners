@@ -17,7 +17,7 @@ public class AuthDomainService {
 
     public AuthTokenDTO createClientUserAuthToken(long userId) {
         String accessToken = tokenProvider.createAccessToken(userId, CLIENT_USER_AUTH_TOKEN_ROLE);
-        String refreshToken = tokenProvider.createAccessToken(userId, CLIENT_USER_AUTH_TOKEN_ROLE);
+        String refreshToken = tokenProvider.createRefreshToken(userId, CLIENT_USER_AUTH_TOKEN_ROLE);
         return AuthTokenDTO.create(accessToken, refreshToken);
     }
 

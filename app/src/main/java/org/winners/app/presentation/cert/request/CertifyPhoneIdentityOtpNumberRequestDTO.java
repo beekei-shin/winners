@@ -14,6 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CertifyPhoneIdentityOtpNumberRequestDTO {
 
+    @NotNull
+    private UUID certificationKey;
+
     @NotBlank
     @Length(max = 12)
     private String phoneNumber;
@@ -21,8 +24,5 @@ public class CertifyPhoneIdentityOtpNumberRequestDTO {
     @NotBlank
     @Length(max = 6)
     private String pinNumber;
-
-    @NotNull
-    private UUID certificationKey;
 
 }

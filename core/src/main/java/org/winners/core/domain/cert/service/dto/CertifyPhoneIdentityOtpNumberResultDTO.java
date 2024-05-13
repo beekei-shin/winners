@@ -1,7 +1,6 @@
 package org.winners.core.domain.cert.service.dto;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 

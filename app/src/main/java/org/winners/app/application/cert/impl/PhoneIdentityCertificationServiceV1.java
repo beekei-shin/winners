@@ -25,7 +25,7 @@ public class PhoneIdentityCertificationServiceV1 implements PhoneIdentityCertifi
     }
 
     @Override
-    public void certifyPhoneIdentityOtpNumber(String phoneNumber, UUID certificationKey, String pinNumber) {
+    public void certifyPhoneIdentityOtpNumber(UUID certificationKey, String phoneNumber, String pinNumber) {
         CertificationKey savedCertificationKey = certificationKeyDomainService.getSavedCertificationKey(certificationKey);
         certificationKeyDomainService.possibleCertifyCheck(savedCertificationKey);
         phoneIdentityCertificationDomainService.certifyOtpNumber(savedCertificationKey, phoneNumber, pinNumber);

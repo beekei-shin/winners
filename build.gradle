@@ -23,21 +23,36 @@ configurations {
 
 
 subprojects { // 각 모듈에 적용할 공통 설정
+
 	apply plugin: 'java'
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
 
 	dependencies {
-		// querydsl
+		// starter
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+		// jpa
+		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+		// lombok
 		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'
-		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+		testCompileOnly 'org.projectlombok:lombok'
+		testAnnotationProcessor 'org.projectlombok:lombok'
 
 		// querydsl
 		implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 		annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 		annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 		annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+		// jwt
+		implementation 'io.jsonwebtoken:jjwt:0.9.1'
+		implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
+		implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
+		implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 
 		// lang3
 		implementation 'org.apache.commons:commons-lang3:3.14.0'
@@ -54,4 +69,5 @@ subprojects { // 각 모듈에 적용할 공통 설정
 	tasks.named('test') {
 		useJUnitPlatform()
 	}
+
 }

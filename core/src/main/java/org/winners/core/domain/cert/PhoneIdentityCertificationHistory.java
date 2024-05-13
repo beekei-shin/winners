@@ -5,12 +5,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.DynamicUpdate;
 import org.winners.core.domain.base.Gender;
 
 import java.time.LocalDate;
-import java.util.SimpleTimeZone;
-import java.util.UUID;
 
 @Comment("휴대폰 본인인증 내역")
 @Getter

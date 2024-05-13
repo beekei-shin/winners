@@ -1,6 +1,5 @@
 package org.winners.core.config.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -12,9 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.winners.core.config.presentation.ApiResponse;
 import org.winners.core.config.presentation.ApiResponseType;
-
-import java.util.LinkedHashMap;
-import java.util.Optional;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

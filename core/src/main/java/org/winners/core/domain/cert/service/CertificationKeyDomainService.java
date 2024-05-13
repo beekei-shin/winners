@@ -1,6 +1,7 @@
 package org.winners.core.domain.cert.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.winners.core.config.exception.AlreadyProcessedDataException;
 import org.winners.core.config.exception.NotExistDataException;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import static org.winners.core.config.exception.ExceptionMessageType.*;
 
 @Service
+@Component
 @RequiredArgsConstructor
 public class CertificationKeyDomainService {
 
@@ -28,42 +30,36 @@ public class CertificationKeyDomainService {
             .orElseThrow(() -> new NotExistDataException(NOT_EXIST_AUTHENTICATION_KEY));
     }
 
-    public boolean alreadyCertifiedCheck(CertificationKey certificationKey) {
+    public void certifiedCheck(CertificationKey certificationKey) {
         if (certificationKey.isCertified())
             throw new AlreadyProcessedDataException(ALREADY_CERTIFIED_AUTHENTICATION_KEY);
-        return true;
     }
 
-    public boolean notCertifiedCheck(CertificationKey certificationKey) {
+    public void notCertifiedCheck(CertificationKey certificationKey) {
         if (!certificationKey.isCertified())
             throw new UnprocessedDataException(NOT_CERTIFIED_AUTHENTICATION_KEY);
-        return true;
     }
 
-    public boolean alreadyUsedCheck(CertificationKey certificationKey) {
+    public void usedCheck(CertificationKey certificationKey) {
         if (certificationKey.isUsed())
             throw new AlreadyProcessedDataException(ALREADY_USED_AUTHENTICATION_KEY);
-        return true;
     }
 
-    public boolean expiredCheck(CertificationKey certificationKey) {
+    public void expiredCheck(CertificationKey certificationKey) {
         if (certificationKey.isExpired())
             throw new AlreadyProcessedDataException(EXPIRED_AUTHENTICATION_KEY);
-        return true;
     }
 
-    public boolean possibleCertifyCheck(CertificationKey certificationKey) {
-        this.alreadyCertifiedCheck(certificationKey);
+    public void possibleCertifyCheck(CertificationKey certificationKey) {
         this.expiredCheck(certificationKey);
-        this.alreadyUsedCheck(certificationKey);
-        return true;
+        this.certifiedCheck(certificationKey);
+        this.usedCheck(certificationKey);
     }
 
-    public boolean possibleUseCheck(CertificationKey certificationKey) {
+    public void possibleUseCheck(CertificationKey certificationKey) {
+        this.expiredCheck(certificationKey);
         this.notCertifiedCheck(certificationKey);
-        this.expiredCheck(certificationKey);
-        this.alreadyUsedCheck(certificationKey);
-        return true;
+        this.usedCheck(certificationKey);
     }
 
 }

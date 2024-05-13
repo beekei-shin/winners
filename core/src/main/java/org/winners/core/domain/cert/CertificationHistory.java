@@ -7,11 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.cglib.core.Local;
 import org.winners.core.domain.base.BaseEntity;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 
 @DynamicInsert

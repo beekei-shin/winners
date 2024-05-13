@@ -1,11 +1,3 @@
-tasks.named('bootJar'){ // bootJar 세팅을 켜기
-    enabled = true
-}
-
-tasks.named('jar'){ // jar 설정은 끄기
-    enabled = false
-}
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -16,10 +8,7 @@ dependencies {
 
     implementation project(':core')
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
 }

@@ -2,7 +2,6 @@ package org.winners.app.presentation.cert.impl;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.winners.app.application.cert.PhoneIdentityCertificationService;
@@ -39,8 +38,8 @@ public class PhoneIdentityCertificationControllerV1 implements PhoneIdentityCert
     @Override
     public ApiResponse<?> certifyPhoneIdentityOtpNumber(CertifyPhoneIdentityOtpNumberRequestDTO request) {
         phoneIdentityCertificationServiceV1.certifyPhoneIdentityOtpNumber(
-            request.getPhoneNumber(),
             request.getCertificationKey(),
+            request.getPhoneNumber(),
             request.getPinNumber());
         return ApiResponse.success();
     }

@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.winners.app.presentation.user.request.SignInClientUserRequestDTO;
 import org.winners.app.presentation.user.request.SignUpClientUserRequestDTO;
-import org.winners.app.presentation.user.response.SignInClientUserResponseDTO;
-import org.winners.app.presentation.user.response.SignUpClientUserResponseDTO;
 import org.winners.core.config.presentation.ApiResponse;
 
 public interface ClientUserSignController {

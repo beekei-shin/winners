@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "certification_key")
-@Builder(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class CertificationKey extends BaseEntity {
@@ -55,10 +55,11 @@ public class CertificationKey extends BaseEntity {
     private LocalDateTime expiredDatetime;
 
     public static CertificationKey create(CertificationType certificationType, int expiredMinute) {
+        LocalDateTime requestDatetime = LocalDateTime.now();
         return CertificationKey.builder()
             .certificationType(certificationType)
-            .requestDatetime(LocalDateTime.now())
-            .expiredDatetime(LocalDateTime.now().plusMinutes(expiredMinute))
+            .requestDatetime(requestDatetime)
+            .expiredDatetime(requestDatetime.plusMinutes(expiredMinute))
             .build();
     }
 

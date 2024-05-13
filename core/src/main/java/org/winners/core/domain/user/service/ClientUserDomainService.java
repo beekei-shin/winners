@@ -2,11 +2,9 @@ package org.winners.core.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.winners.core.config.exception.NotAccessDataException;
 import org.winners.core.config.exception.DuplicatedDataException;
+import org.winners.core.config.exception.NotAccessDataException;
 import org.winners.core.config.exception.NotExistDataException;
-import org.winners.core.domain.field.Field;
-import org.winners.core.domain.field.FieldRepository;
 import org.winners.core.domain.field.Job;
 import org.winners.core.domain.field.JobRepository;
 import org.winners.core.domain.user.ClientUser;

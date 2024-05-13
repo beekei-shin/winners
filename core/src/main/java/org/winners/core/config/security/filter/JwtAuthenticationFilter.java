@@ -9,20 +9,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.winners.core.config.security.SecurityWhitelist;
-import org.winners.core.config.security.token.TokenProvider;
 import org.winners.core.config.exception.ExpiredTokenException;
 import org.winners.core.config.exception.UnauthorizedTokenException;
 import org.winners.core.config.presentation.ApiResponseType;
+import org.winners.core.config.security.SecurityWhitelist;
+import org.winners.core.config.security.token.TokenProvider;
 import org.winners.core.domain.user.service.ClientUserDomainService;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Set;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
