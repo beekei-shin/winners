@@ -2,6 +2,7 @@ package org.winners.core.domain.cert;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "phone_identity_certification_history")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @DiscriminatorValue("PHONE_IDENTITY")
 public class PhoneIdentityCertificationHistory extends CertificationHistory {
 
@@ -61,7 +63,9 @@ public class PhoneIdentityCertificationHistory extends CertificationHistory {
         this.otpNumber = otpNumber;
     }
 
-    public static PhoneIdentityCertificationHistory create(CertificationKey certificationKey, String name, LocalDate birthday, Gender gender, MobileCarrier mobileCarrier, String phoneNumber, String otpNumber) {
+    public static PhoneIdentityCertificationHistory create(CertificationKey certificationKey,
+                                                           String name, LocalDate birthday, Gender gender,
+                                                           MobileCarrier mobileCarrier, String phoneNumber, String otpNumber) {
         return new PhoneIdentityCertificationHistory(certificationKey, name, birthday, gender, mobileCarrier, phoneNumber, otpNumber);
     }
 

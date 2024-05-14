@@ -17,6 +17,7 @@ import org.winners.core.config.exception.UnauthorizedTokenException;
 import org.winners.core.config.presentation.ApiResponseType;
 import org.winners.core.config.security.SecurityWhitelist;
 import org.winners.core.config.security.token.TokenProvider;
+import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.service.ClientUserDomainService;
 
 import java.io.IOException;
@@ -60,7 +61,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     long userId = jwtProvider.getAccessTokenId(token);
                     Collection<? extends GrantedAuthority> authority = jwtProvider.getAccessTokenAuthorities(token);
 
-                    clientUserDomainService.accessClientUserCheck(userId);
+                    ClientUser clientUser = clientUserDomainService.getClientUser(userId);
+                    clientUser.accessUserCheck();
 
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, null, authority);
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

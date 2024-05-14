@@ -60,8 +60,18 @@ public class ClientUser extends User {
         this.gender = gender;
     }
 
-    public static ClientUser create(String name, String phoneNumber, String ci, @Nullable String di, @Nullable LocalDate birthday, @Nullable Gender gender) {
+    public static ClientUser create(String name, String phoneNumber,
+                                    String ci, @Nullable String di,
+                                    @Nullable LocalDate birthday, @Nullable Gender gender) {
         return new ClientUser(name, phoneNumber, ci, di, birthday, gender);
+    }
+
+    public void block() {
+        this.status = UserStatus.BLOCK;
+    }
+
+    public void resign() {
+        this.status = UserStatus.RESIGN;
     }
 
     public void updateJobs(Set<Long> jobIds) {
@@ -74,5 +84,6 @@ public class ClientUser extends User {
             .map(jobId -> ClientUserJob.create(this, jobId))
             .forEach(clientUserJob -> this.jobList.add(clientUserJob));
     }
+
 
 }

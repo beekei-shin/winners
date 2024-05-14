@@ -4,10 +4,14 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.GenericGenerator;
+import org.winners.core.config.exception.AlreadyProcessedDataException;
+import org.winners.core.config.exception.UnprocessedDataException;
 import org.winners.core.domain.base.BaseEntity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static org.winners.core.config.exception.ExceptionMessageType.*;
 
 @Comment("인증키")
 @Getter
@@ -67,14 +71,46 @@ public class CertificationKey extends BaseEntity {
         return this.expiredDatetime.isBefore(LocalDateTime.now());
     }
 
+    public void expiredCheck() {
+        if (this.isExpired())
+            throw new AlreadyProcessedDataException(EXPIRED_CERTIFICATION_KEY);
+    }
+
     public void certify() {
         this.isCertified = true;
         this.certifiedDatetime = LocalDateTime.now();
     }
 
+    public void certifiedCheck() {
+        if (this.isCertified)
+            throw new AlreadyProcessedDataException(ALREADY_CERTIFIED_CERTIFICATION_KEY);
+    }
+
+    public void notCertifiedCheck() {
+        if (!this.isCertified)
+            throw new UnprocessedDataException(NOT_CERTIFIED_CERTIFICATION_KEY);
+    }
+
     public void use() {
         this.isUsed = true;
         this.usedDatetime = LocalDateTime.now();
+    }
+
+    public void usedCheck() {
+        if (this.isUsed)
+            throw new AlreadyProcessedDataException(ALREADY_USED_CERTIFICATION_KEY);
+    }
+
+    public void possibleCertifyCheck() {
+        this.expiredCheck();
+        this.certifiedCheck();
+        this.usedCheck();
+    }
+
+    public void possibleUseCheck() {
+        this.expiredCheck();
+        this.notCertifiedCheck();
+        this.usedCheck();
     }
 
 }

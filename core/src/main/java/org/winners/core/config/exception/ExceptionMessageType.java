@@ -7,11 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ExceptionMessageType {
 
-    NOT_EXIST_AUTHENTICATION_KEY("등록된 인증키 정보가 없습니다."),
-    NOT_CERTIFIED_AUTHENTICATION_KEY("인증되지 않은 인증키입니다."),
-    ALREADY_CERTIFIED_AUTHENTICATION_KEY("이미 인증된 인증키입니다."),
-    ALREADY_USED_AUTHENTICATION_KEY("이미 사용한 인증키입니다."),
-    EXPIRED_AUTHENTICATION_KEY("만료된 인증키입니다."),
+    NOT_EXIST_CERTIFICATION_KEY("등록된 인증키 정보가 없습니다."),
+    NOT_CERTIFIED_CERTIFICATION_KEY("인증되지 않은 인증키입니다."),
+    ALREADY_CERTIFIED_CERTIFICATION_KEY("이미 인증된 인증키입니다."),
+    ALREADY_USED_CERTIFICATION_KEY("이미 사용한 인증키입니다."),
+    EXPIRED_CERTIFICATION_KEY("만료된 인증키입니다."),
 
     NOT_EXIST_PHONE_IDENTITY_CERTIFICATION_HISTORY("휴대폰 본인인증 내역이 없습니다."),
     INCORRECT_OTP_NUMBER("OTP 번호가 일치하지 않습니다."),

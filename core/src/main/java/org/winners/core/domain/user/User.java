@@ -7,7 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicInsert;
+import org.winners.core.config.exception.NotAccessDataException;
 import org.winners.core.domain.base.BaseEntity;
+
+import static org.winners.core.config.exception.ExceptionMessageType.BLOCK_USER;
+import static org.winners.core.config.exception.ExceptionMessageType.RESIGN_USER;
 
 @DynamicInsert
 @Comment("회원")
@@ -37,11 +41,15 @@ public abstract class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Comment("회원 상태")
     @Column(name = "user_status", length = 50, nullable = false)
-    private UserStatus status;
+    protected UserStatus status;
 
     @Comment("회원 성명")
     @Column(name = "user_name", length = 100, nullable = false)
-    private String name;
+    protected String name;
+
+    protected void setMockId(long id) {
+        this.id = id;
+    }
 
     protected User(UserType type, String name) {
         this.type = type;
@@ -55,6 +63,11 @@ public abstract class User extends BaseEntity {
 
     public boolean isResignUser() {
         return this.status.equals(UserStatus.RESIGN);
+    }
+
+    public void accessUserCheck() {
+        if (this.isBlockUser()) throw new NotAccessDataException(BLOCK_USER);
+        if (this.isResignUser()) throw new NotAccessDataException(RESIGN_USER);
     }
 
 }

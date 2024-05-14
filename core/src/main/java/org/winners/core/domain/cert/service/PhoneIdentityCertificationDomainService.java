@@ -38,11 +38,11 @@ public class PhoneIdentityCertificationDomainService {
         return certHistory.getCertificationKey().getId();
     }
 
-    public void certifyOtpNumber(CertificationKey certificationKey, String phoneNumber, String pinNumber) {
+    public void certifyOtpNumber(CertificationKey certificationKey, String phoneNumber, String optNumber) {
         phoneIdentityCertificationHistoryRepository.findByCertificationKeyAndPhoneNumber(certificationKey, phoneNumber)
             .ifPresentOrElse(
                 authHistory -> {
-                    if (!passwordEncoder.matches(pinNumber, authHistory.getOtpNumber()))
+                    if (!passwordEncoder.matches(optNumber, authHistory.getOtpNumber()))
                         throw new IncorrectDataException(INCORRECT_OTP_NUMBER);
                     authHistory.certify("ci", "di");
                 },

@@ -5,34 +5,41 @@ import java.util.UUID;
 
 public class CertificationKeyMock {
 
-    public static CertificationKey createCertificationKey(CertificationType certificationType, int expiredMinute) {
+    public static CertificationKey createKey() {
         LocalDateTime requestDatetime = LocalDateTime.now();
         return CertificationKey.builder()
             .id(UUID.randomUUID())
-            .certificationType(certificationType)
+            .certificationType(CertificationType.PHONE_IDENTITY)
             .requestDatetime(requestDatetime)
-            .expiredDatetime(requestDatetime.plusMinutes(expiredMinute))
+            .expiredDatetime(requestDatetime.plusMinutes(5))
             .build();
     }
 
-    public static CertificationKey createExpiredCertificationKey(CertificationType certificationType) {
+    public static CertificationKey createExpiredKey() {
         LocalDateTime requestDatetime = LocalDateTime.now();
         return CertificationKey.builder()
             .id(UUID.randomUUID())
-            .certificationType(certificationType)
+            .certificationType(CertificationType.PHONE_IDENTITY)
             .requestDatetime(requestDatetime)
             .expiredDatetime(requestDatetime.minusDays(1))
             .build();
     }
 
-    public static CertificationKey createCertifiedCertificationKey(CertificationType certificationType) {
-        CertificationKey certificationKey = createCertificationKey(certificationType, 5);
+    public static CertificationKey createCertifiedKey() {
+        CertificationKey certificationKey = createKey();
         certificationKey.certify();
         return certificationKey;
     }
 
-    public static CertificationKey createUsedCertificationKey(CertificationType certificationType) {
-        CertificationKey certificationKey = createCertificationKey(certificationType, 5);
+    public static CertificationKey createUsedKey() {
+        CertificationKey certificationKey = createKey();
+        certificationKey.use();
+        return certificationKey;
+    }
+
+    public static CertificationKey createCertifiedAndUsedKey() {
+        CertificationKey certificationKey = createKey();
+        certificationKey.certify();
         certificationKey.use();
         return certificationKey;
     }

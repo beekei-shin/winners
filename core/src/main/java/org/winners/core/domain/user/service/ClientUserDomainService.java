@@ -3,7 +3,6 @@ package org.winners.core.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.winners.core.config.exception.DuplicatedDataException;
-import org.winners.core.config.exception.NotAccessDataException;
 import org.winners.core.config.exception.NotExistDataException;
 import org.winners.core.domain.field.Job;
 import org.winners.core.domain.field.JobRepository;
@@ -43,6 +42,11 @@ public class ClientUserDomainService {
             parameter.getGender()));
     }
 
+    public ClientUser getClientUser(long userId) {
+        return clientUserRepository.findById(userId)
+            .orElseThrow(() -> new NotExistDataException(NOT_EXIST_USER));
+    }
+
     public void saveClientUserJob(long userId, Set<Long> jobIds) {
         clientUserRepository.findById(userId)
             .ifPresentOrElse(
@@ -52,20 +56,5 @@ public class ClientUserDomainService {
                     .collect(Collectors.toSet())),
                 () -> { throw new NotExistDataException(NOT_EXIST_USER); });
     }
-
-    public boolean accessClientUserCheck(long userId) {
-        clientUserRepository.findById(userId)
-            .ifPresentOrElse(
-                this::accessClientUserCheck,
-                () -> { throw new NotExistDataException(NOT_EXIST_USER); });
-        return true;
-    }
-
-    public boolean accessClientUserCheck(ClientUser clientUser) {
-        if (clientUser.isBlockUser()) throw new NotAccessDataException(BLOCK_USER);
-        if (clientUser.isResignUser()) throw new NotAccessDataException(RESIGN_USER);
-        return true;
-    }
-
 
 }
