@@ -1,5 +1,6 @@
 package org.winners.core.config.exception;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.winners.core.config.presentation.ApiResponse;
 import org.winners.core.config.presentation.ApiResponseType;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -40,9 +44,20 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ApiResponse<?>> badRequestExceptionHandler(Exception e) {
         final ApiResponseType apiResponseType = ApiResponseType.BAD_REQUEST;
-        return ResponseEntity
-            .status(apiResponseType.getHttpStatus())
-            .body(ApiResponse.exception(apiResponseType));
+        if (e.getClass().equals(MethodArgumentNotValidException.class)) {
+            MethodArgumentNotValidException notValidException = (MethodArgumentNotValidException) e;
+            String fieldName = Objects.requireNonNull(notValidException.getFieldError()).getField();
+            String message = Optional.ofNullable(notValidException.getFieldError())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .orElse(apiResponseType.getMessage());
+            return ResponseEntity
+                .status(apiResponseType.getHttpStatus())
+                .body(ApiResponse.exception(apiResponseType, fieldName + " : " + message));
+        } else {
+            return ResponseEntity
+                .status(apiResponseType.getHttpStatus())
+                .body(ApiResponse.exception(apiResponseType));
+        }
     }
 
     /**

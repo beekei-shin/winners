@@ -14,7 +14,7 @@ public enum ExceptionMessageType {
     EXPIRED_CERTIFICATION_KEY("만료된 인증키입니다."),
 
     NOT_EXIST_PHONE_IDENTITY_CERTIFICATION_HISTORY("휴대폰 본인인증 내역이 없습니다."),
-    INCORRECT_OTP_NUMBER("OTP 번호가 일치하지 않습니다."),
+    INVALID_OTP_NUMBER("OTP 번호가 일치하지 않습니다."),
 
     NOT_EXIST_USER("존재하지 않는 회원입니다."),
     BLOCK_USER("차단된 회원입니다."),

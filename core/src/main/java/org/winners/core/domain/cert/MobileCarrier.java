@@ -1,11 +1,13 @@
 package org.winners.core.domain.cert;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.winners.core.domain.enums.EnumClass;
 
 @Getter
 @AllArgsConstructor
-public enum MobileCarrier {
+public enum MobileCarrier implements EnumClass {
 
     SK("SK 텔레콤"),
     KT("KT"),

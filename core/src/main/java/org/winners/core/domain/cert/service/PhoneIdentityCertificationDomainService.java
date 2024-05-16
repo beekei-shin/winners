@@ -3,7 +3,7 @@ package org.winners.core.domain.cert.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.winners.core.config.exception.IncorrectDataException;
+import org.winners.core.config.exception.InvalidDataException;
 import org.winners.core.config.exception.NotExistDataException;
 import org.winners.core.domain.cert.CertificationKey;
 import org.winners.core.domain.cert.PhoneIdentityCertificationHistory;
@@ -13,7 +13,7 @@ import org.winners.core.domain.cert.service.dto.SendOtpNumberParameterDTO;
 
 import java.util.UUID;
 
-import static org.winners.core.config.exception.ExceptionMessageType.INCORRECT_OTP_NUMBER;
+import static org.winners.core.config.exception.ExceptionMessageType.INVALID_OTP_NUMBER;
 import static org.winners.core.config.exception.ExceptionMessageType.NOT_EXIST_PHONE_IDENTITY_CERTIFICATION_HISTORY;
 
 @Service
@@ -43,7 +43,7 @@ public class PhoneIdentityCertificationDomainService {
             .ifPresentOrElse(
                 authHistory -> {
                     if (!passwordEncoder.matches(optNumber, authHistory.getOtpNumber()))
-                        throw new IncorrectDataException(INCORRECT_OTP_NUMBER);
+                        throw new InvalidDataException(INVALID_OTP_NUMBER);
                     authHistory.certify("ci", "di");
                 },
                 () -> { throw new NotExistDataException(NOT_EXIST_PHONE_IDENTITY_CERTIFICATION_HISTORY); });

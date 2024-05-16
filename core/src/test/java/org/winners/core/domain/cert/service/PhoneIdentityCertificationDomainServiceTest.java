@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.winners.core.config.exception.ExceptionMessageType;
-import org.winners.core.config.exception.IncorrectDataException;
+import org.winners.core.config.exception.InvalidDataException;
 import org.winners.core.config.exception.NotExistDataException;
 import org.winners.core.domain.DomainServiceTest;
 import org.winners.core.domain.cert.*;
@@ -109,11 +109,11 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
         // when
         String phoneNumber = "01011112222";
         String optNumber = "000000";
-        Throwable exception = assertThrows(IncorrectDataException.class,
+        Throwable exception = assertThrows(InvalidDataException.class,
             () -> phoneIdentityCertificationDomainService.certifyOtpNumber(certificationKey, phoneNumber, optNumber));
 
         // then
-        assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.INCORRECT_OTP_NUMBER.getMessage());
+        assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.INVALID_OTP_NUMBER.getMessage());
         verify(phoneIdentityCertificationHistoryRepository).findByCertificationKeyAndPhoneNumber(certificationKey, phoneNumber);
         verify(passwordEncoder).matches(optNumber, savedPhoneIdentityCertificationHistory.getOtpNumber());
     }
