@@ -23,6 +23,6 @@ public class CertifyPhoneIdentityOtpNumberRequestDTO {
 
     @NotBlank
     @Length(max = 6)
-    private String pinNumber;
+    private String optNumber;
 
 }

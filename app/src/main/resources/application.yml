@@ -26,4 +26,3 @@ springdoc:
     doc-expansion: none
     disable-swagger-default-url: false
   model-and-view-allowed: true
-

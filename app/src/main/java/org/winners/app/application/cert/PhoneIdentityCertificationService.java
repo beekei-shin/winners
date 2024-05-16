@@ -13,6 +13,6 @@ public interface PhoneIdentityCertificationService {
     UUID sendPhoneIdentityOtpNumber(SendOtpNumberParameterDTO sendPhoneIdentityOtpNumberParameter);
 
     @Transactional
-    void certifyPhoneIdentityOtpNumber(UUID certificationKey, String phoneNumber, String pinNumber);
+    void certifyPhoneIdentityOtpNumber(UUID certificationKey, String phoneNumber, String optNumber);
 
 }

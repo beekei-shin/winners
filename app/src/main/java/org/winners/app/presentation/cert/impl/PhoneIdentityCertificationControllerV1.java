@@ -40,7 +40,7 @@ public class PhoneIdentityCertificationControllerV1 implements PhoneIdentityCert
         phoneIdentityCertificationServiceV1.certifyPhoneIdentityOtpNumber(
             request.getCertificationKey(),
             request.getPhoneNumber(),
-            request.getPinNumber());
+            request.getOptNumber());
         return ApiResponse.success();
     }
 

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.winners.app.application.ServiceTest;
+import org.winners.app.application.ApplicationServiceTest;
 import org.winners.core.config.exception.AlreadyProcessedDataException;
 import org.winners.core.config.exception.ExceptionMessageType;
 import org.winners.core.config.exception.NotExistDataException;
@@ -25,10 +25,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
-import static org.winners.core.config.exception.ExceptionMessageType.ALREADY_CERTIFIED_AUTHENTICATION_KEY;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.verify;
 
-class PhoneIdentityCertificationServiceV1Test extends ServiceTest {
+class PhoneIdentityCertificationServiceV1Test extends ApplicationServiceTest {
 
     @Autowired
     @InjectMocks
@@ -44,7 +44,7 @@ class PhoneIdentityCertificationServiceV1Test extends ServiceTest {
     @DisplayName("휴대폰 본인인증 인증 OTP 번호 전송")
     public void sendPhoneIdentityOtpNumber() {
         // given
-        CertificationKey issuedCertificationKey = CertificationKeyMock.createCertificationKey(CertificationType.PHONE_IDENTITY, 5);
+        CertificationKey issuedCertificationKey = CertificationKeyMock.createKey();
         given(certificationKeyDomainService.createCertificationKey(any(CertificationType.class), anyInt()))
             .willReturn(issuedCertificationKey);
         given(phoneIdentityCertificationDomainService.sendOtpNumber(any(CertificationKey.class), any(SendOtpNumberParameterDTO.class)))
@@ -67,10 +67,9 @@ class PhoneIdentityCertificationServiceV1Test extends ServiceTest {
     @DisplayName("휴대폰 본인인증 인증 OTP 번호 인증")
     public void certifyPhoneIdentityOtpNumber() {
         // given
-        CertificationKey issuedCertificationKey = CertificationKeyMock.createCertificationKey(CertificationType.PHONE_IDENTITY, 5);
+        CertificationKey issuedCertificationKey = CertificationKeyMock.createKey();
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(issuedCertificationKey);
-        doNothing().when(certificationKeyDomainService).possibleCertifyCheck(any(CertificationKey.class));
-        doNothing().when(phoneIdentityCertificationDomainService).certifyOtpNumber(any(CertificationKey.class), anyString(), anyString());
+        willDoNothing().given(phoneIdentityCertificationDomainService).certifyOtpNumber(any(CertificationKey.class), anyString(), anyString());
 
         // when
         UUID certificationKey = UUID.randomUUID();
@@ -80,7 +79,6 @@ class PhoneIdentityCertificationServiceV1Test extends ServiceTest {
 
         // then
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKey);
-        verify(certificationKeyDomainService).possibleCertifyCheck(issuedCertificationKey);
         verify(phoneIdentityCertificationDomainService).certifyOtpNumber(issuedCertificationKey, phoneNumber, pinNumber);
     }
 
@@ -89,7 +87,7 @@ class PhoneIdentityCertificationServiceV1Test extends ServiceTest {
     public void certifyPhoneIdentityOtpNumber_notExistAuthenticationKey() {
         // given
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class)))
-            .willThrow(new NotExistDataException(ExceptionMessageType.NOT_EXIST_AUTHENTICATION_KEY));
+            .willThrow(new NotExistDataException(ExceptionMessageType.NOT_EXIST_CERTIFICATION_KEY));
 
         // when
         UUID certificationKey = UUID.randomUUID();
@@ -99,7 +97,7 @@ class PhoneIdentityCertificationServiceV1Test extends ServiceTest {
             () -> phoneIdentityCertificationServiceV1.certifyPhoneIdentityOtpNumber(certificationKey, phoneNumber, pinNumber));
 
         // then
-        assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.NOT_EXIST_AUTHENTICATION_KEY.getMessage());
+        assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.NOT_EXIST_CERTIFICATION_KEY.getMessage());
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKey);
     }
 
@@ -107,10 +105,8 @@ class PhoneIdentityCertificationServiceV1Test extends ServiceTest {
     @DisplayName("휴대폰 본인인증 인증 OTP 번호 인증 - 인증이 불가능한 인증키")
     public void certifyPhoneIdentityOtpNumber_notPossibleCertifyAuthenticationKey() {
         // given
-        CertificationKey issuedCertificationKey = CertificationKeyMock.createCertificationKey(CertificationType.PHONE_IDENTITY, 5);
-        given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(issuedCertificationKey);
-        doThrow(new AlreadyProcessedDataException(ALREADY_CERTIFIED_AUTHENTICATION_KEY))
-            .when(certificationKeyDomainService).possibleCertifyCheck(any(CertificationKey.class));
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
 
         // when
         UUID certificationKey = UUID.randomUUID();
@@ -120,9 +116,8 @@ class PhoneIdentityCertificationServiceV1Test extends ServiceTest {
             () -> phoneIdentityCertificationServiceV1.certifyPhoneIdentityOtpNumber(certificationKey, phoneNumber, pinNumber));
 
         // then
-        assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.ALREADY_CERTIFIED_AUTHENTICATION_KEY.getMessage());
+        assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.ALREADY_CERTIFIED_CERTIFICATION_KEY.getMessage());
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKey);
-        verify(certificationKeyDomainService).possibleCertifyCheck(issuedCertificationKey);
     }
 
 }

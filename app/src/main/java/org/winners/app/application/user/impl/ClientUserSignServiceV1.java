@@ -34,13 +34,14 @@ public class ClientUserSignServiceV1 implements ClientUserSignService {
     @Override
     public SignUpClientUserResultDTO signUp(UUID certificationKey) {
         CertificationKey savedCertificationKey = certificationKeyDomainService.getSavedCertificationKey(certificationKey);
-        certificationKeyDomainService.possibleUseCheck(savedCertificationKey);
+        savedCertificationKey.possibleUseCheck();
+        savedCertificationKey.use();
 
         CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
-        savedCertificationKey.use();
 
         clientUserDomainService.duplicatePhoneNumberCheck(certificationInfo.getPhoneNumber());
         clientUserDomainService.duplicateCiCheck(certificationInfo.getCi());
+
         ClientUser clientUser = clientUserDomainService.saveClientUser(SaveClientUserParameterDTO.builder()
                 .name(certificationInfo.getName())
                 .phoneNumber(certificationInfo.getPhoneNumber())
@@ -49,6 +50,7 @@ public class ClientUserSignServiceV1 implements ClientUserSignService {
                 .birthday(certificationInfo.getBirthday())
                 .gender(certificationInfo.getGender())
             .build());
+
         AuthTokenDTO authToken = authDomainService.createClientUserAuthToken(clientUser.getId());
 
         return SignUpClientUserResultDTO.success(clientUser, authToken);
@@ -57,14 +59,14 @@ public class ClientUserSignServiceV1 implements ClientUserSignService {
     @Override
     public SignInClientUserResultDTO signIn(UUID certificationKey) {
         CertificationKey savedCertificationKey = certificationKeyDomainService.getSavedCertificationKey(certificationKey);
-        certificationKeyDomainService.possibleUseCheck(savedCertificationKey);
-
-        CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
+        savedCertificationKey.possibleUseCheck();
         savedCertificationKey.use();
 
+        CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
+
         return clientUserRepository.findByPhoneNumberAndCi(certificationInfo.getPhoneNumber(), certificationInfo.getCi())
-            .filter(clientUserDomainService::accessClientUserCheck)
             .map(clientUser -> {
+                clientUser.accessUserCheck();
                 AuthTokenDTO authToken = authDomainService.createClientUserAuthToken(clientUser.getId());
                 return SignInClientUserResultDTO.success(clientUser, authToken);
             })
