@@ -7,13 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.winners.core.domain.base.Gender;
+import org.winners.core.domain.common.Gender;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Comment("사용자 회원")
 @Getter
@@ -48,9 +44,6 @@ public class ClientUser extends User {
     @Column(name = "user_gender", length = 50)
     private Gender gender;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "clientUser", cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
-    private List<ClientUserJob> jobList;
-
     private ClientUser(String name, String phoneNumber, String ci, @Nullable String di, @Nullable LocalDate birthday, @Nullable Gender gender) {
         super(UserType.CLIENT, name);
         this.phoneNumber = phoneNumber;
@@ -73,17 +66,5 @@ public class ClientUser extends User {
     public void resign() {
         this.status = UserStatus.RESIGN;
     }
-
-    public void updateJobs(Set<Long> jobIds) {
-        if (this.jobList == null) this.jobList = new ArrayList<>();
-        this.jobList.removeAll(this.jobList.stream()
-            .filter(clientUserJob -> !jobIds.contains(clientUserJob.getJobId()))
-            .toList());
-        jobIds.stream()
-            .filter(jobId -> !this.jobList.stream().map(ClientUserJob::getJobId).collect(Collectors.toSet()).contains(jobId))
-            .map(jobId -> ClientUserJob.create(this, jobId))
-            .forEach(clientUserJob -> this.jobList.add(clientUserJob));
-    }
-
 
 }

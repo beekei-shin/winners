@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface PhoneIdentityCertificationService {
 
     @Transactional
-    UUID sendPhoneIdentityOtpNumber(SendOtpNumberParameterDTO sendPhoneIdentityOtpNumberParameter);
+    UUID sendPhoneIdentityOtpNumber(SendOtpNumberParameterDTO sendOtpNumberParameter);
 
     @Transactional
     void certifyPhoneIdentityOtpNumber(UUID certificationKey, String phoneNumber, String optNumber);

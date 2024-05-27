@@ -23,7 +23,6 @@ class AuthDomainServiceTest extends DomainServiceTest {
     public void beforeAll() {
         this.tokenProvider = Mockito.mock(TokenProvider.class);
         this.authDomainService = new AuthDomainService(this.tokenProvider);
-
     }
 
     @Test

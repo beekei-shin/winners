@@ -8,7 +8,6 @@ import org.winners.core.config.exception.DuplicatedDataException;
 import org.winners.core.config.exception.ExceptionMessageType;
 import org.winners.core.config.exception.NotExistDataException;
 import org.winners.core.domain.DomainServiceTest;
-import org.winners.core.domain.field.JobRepository;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.ClientUserMock;
 import org.winners.core.domain.user.ClientUserRepository;
@@ -26,13 +25,11 @@ class ClientUserDomainServiceTest extends DomainServiceTest {
 
     private ClientUserDomainService clientUserDomainService;
     private ClientUserRepository clientUserRepository;
-    private JobRepository jobRepository;
 
     @BeforeAll
     public void beforeAll() {
         this.clientUserRepository = Mockito.mock(ClientUserRepository.class);
-        this.jobRepository = Mockito.mock(JobRepository.class);
-        this.clientUserDomainService = new ClientUserDomainService(this.clientUserRepository, this.jobRepository);
+        this.clientUserDomainService = new ClientUserDomainService(this.clientUserRepository);
     }
 
     @Test

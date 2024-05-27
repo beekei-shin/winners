@@ -19,9 +19,9 @@ public class PhoneIdentityCertificationServiceV1 implements PhoneIdentityCertifi
     private final PhoneIdentityCertificationDomainService phoneIdentityCertificationDomainService;
 
     @Override
-    public UUID sendPhoneIdentityOtpNumber(SendOtpNumberParameterDTO sendPhoneIdentityOtpNumberParameter) {
+    public UUID sendPhoneIdentityOtpNumber(SendOtpNumberParameterDTO sendOtpNumberParameter) {
         CertificationKey certificationKey = certificationKeyDomainService.createCertificationKey(CertificationType.PHONE_IDENTITY, 5);
-        return phoneIdentityCertificationDomainService.sendOtpNumber(certificationKey, sendPhoneIdentityOtpNumberParameter);
+        return phoneIdentityCertificationDomainService.sendOtpNumber(certificationKey, sendOtpNumberParameter);
     }
 
     @Override

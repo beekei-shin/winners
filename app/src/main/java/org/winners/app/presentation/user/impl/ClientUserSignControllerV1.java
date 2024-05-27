@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.winners.app.application.user.ClientUserSignService;
 import org.winners.app.application.user.dto.SignInClientUserResultDTO;
 import org.winners.app.application.user.dto.SignUpClientUserResultDTO;
+import org.winners.app.presentation.AppController;
 import org.winners.app.presentation.user.ClientUserSignController;
 import org.winners.app.presentation.user.request.SignInClientUserRequestDTO;
 import org.winners.app.presentation.user.request.SignUpClientUserRequestDTO;
@@ -14,9 +15,9 @@ import org.winners.app.presentation.user.response.SignInClientUserResponseDTO;
 import org.winners.app.presentation.user.response.SignUpClientUserResponseDTO;
 import org.winners.core.config.presentation.ApiResponse;
 
-@Tag(name = "201.v1. 사용자 회원 서명")
 @RestController
-@RequestMapping(value = "v1/user/client/sign")
+@Tag(name = "v1." + AppController.CLIENT_USER_SIGN_TAG_NAME)
+@RequestMapping(value = "v1/" + AppController.CLIENT_USER_SIGN_PATH)
 @RequiredArgsConstructor
 public class ClientUserSignControllerV1 implements ClientUserSignController {
 

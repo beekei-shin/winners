@@ -20,7 +20,7 @@ public class ValidationMessageConfig {
         localeResolver.setDefaultLocale(Locale.KOREAN);
         return localeResolver;
     }
-//
+
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
         Locale.setDefault(Locale.KOREAN);

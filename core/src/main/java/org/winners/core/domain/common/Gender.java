@@ -1,8 +1,7 @@
-package org.winners.core.domain.base;
+package org.winners.core.domain.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.winners.core.domain.enums.EnumClass;
 
 @Getter
 @AllArgsConstructor

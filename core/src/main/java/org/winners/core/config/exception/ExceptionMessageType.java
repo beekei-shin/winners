@@ -2,10 +2,11 @@ package org.winners.core.config.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.winners.core.domain.common.EnumClass;
 
 @Getter
 @AllArgsConstructor
-public enum ExceptionMessageType {
+public enum ExceptionMessageType implements EnumClass {
 
     NOT_EXIST_CERTIFICATION_KEY("등록된 인증키 정보가 없습니다."),
     NOT_CERTIFIED_CERTIFICATION_KEY("인증되지 않은 인증키입니다."),

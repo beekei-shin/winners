@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.winners.app.application.cert.PhoneIdentityCertificationService;
+import org.winners.app.presentation.AppController;
 import org.winners.app.presentation.cert.PhoneIdentityCertificationController;
 import org.winners.app.presentation.cert.request.CertifyPhoneIdentityOtpNumberRequestDTO;
 import org.winners.app.presentation.cert.request.SendPhoneIdentityOtpNumberRequestDTO;
@@ -14,10 +15,9 @@ import org.winners.core.domain.cert.service.dto.SendOtpNumberParameterDTO;
 
 import java.util.UUID;
 
-
-@Tag(name = "101.v1. 휴대폰 본인인증")
 @RestController
-@RequestMapping(value = "v1/cert/phone-identity")
+@Tag(name = "v1." + AppController.PHONE_IDENTITY_CERT_TAG_NAME)
+@RequestMapping(value = "v1/" + AppController.PHONE_IDENTITY_CERT_PATH)
 @RequiredArgsConstructor
 public class PhoneIdentityCertificationControllerV1 implements PhoneIdentityCertificationController {
 
@@ -45,3 +45,4 @@ public class PhoneIdentityCertificationControllerV1 implements PhoneIdentityCert
     }
 
 }
+

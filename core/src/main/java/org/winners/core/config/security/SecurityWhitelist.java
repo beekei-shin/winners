@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.AntPathMatcher;
+import org.winners.core.domain.common.EnumClass;
 
 import java.util.Arrays;
 import java.util.Set;
 
 @Getter
 @AllArgsConstructor
-public enum SecurityWhitelist {
+public enum SecurityWhitelist implements EnumClass {
 
     USER_SIGN("/v*/user/client/sign/**", Set.of(HttpMethod.POST), true),
     CERT_PHONE_IDENTITY("/v*/cert/phone-identity/**", Set.of(HttpMethod.POST, HttpMethod.PUT), true)

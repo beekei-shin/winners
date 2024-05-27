@@ -4,14 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.winners.core.config.exception.DuplicatedDataException;
 import org.winners.core.config.exception.NotExistDataException;
-import org.winners.core.domain.field.Job;
-import org.winners.core.domain.field.JobRepository;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.ClientUserRepository;
 import org.winners.core.domain.user.service.dto.SaveClientUserParameterDTO;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.winners.core.config.exception.ExceptionMessageType.*;
 
@@ -20,7 +15,6 @@ import static org.winners.core.config.exception.ExceptionMessageType.*;
 public class ClientUserDomainService {
 
     private final ClientUserRepository clientUserRepository;
-    private final JobRepository jobRepository;
 
     public void duplicatePhoneNumberCheck(String phoneNumber) {
         final long duplicatePhoneNumberCount = clientUserRepository.countByPhoneNumber(phoneNumber);
@@ -45,16 +39,6 @@ public class ClientUserDomainService {
     public ClientUser getClientUser(long userId) {
         return clientUserRepository.findById(userId)
             .orElseThrow(() -> new NotExistDataException(NOT_EXIST_USER));
-    }
-
-    public void saveClientUserJob(long userId, Set<Long> jobIds) {
-        clientUserRepository.findById(userId)
-            .ifPresentOrElse(
-                clientUser -> clientUser.updateJobs(jobRepository
-                    .findByIdIn(jobIds).stream()
-                    .map(Job::getId)
-                    .collect(Collectors.toSet())),
-                () -> { throw new NotExistDataException(NOT_EXIST_USER); });
     }
 
 }

@@ -2,7 +2,7 @@ package org.winners.core.domain.cert;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.winners.core.domain.base.Gender;
+import org.winners.core.domain.common.Gender;
 
 import java.time.LocalDate;
 

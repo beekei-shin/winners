@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.winners.core.domain.base.Gender;
+import org.winners.core.domain.common.Gender;
 
 import java.time.LocalDate;
 

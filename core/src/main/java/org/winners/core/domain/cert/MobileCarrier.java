@@ -1,9 +1,8 @@
 package org.winners.core.domain.cert;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.winners.core.domain.enums.EnumClass;
+import org.winners.core.domain.common.EnumClass;
 
 @Getter
 @AllArgsConstructor

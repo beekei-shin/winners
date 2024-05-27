@@ -1,6 +1,6 @@
 package org.winners.core.domain.cert;
 
-import org.winners.core.domain.base.Gender;
+import org.winners.core.domain.common.Gender;
 
 import java.time.LocalDate;
 

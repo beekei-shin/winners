@@ -2,10 +2,11 @@ package org.winners.core.config.security.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.winners.core.domain.common.EnumClass;
 
 @Getter
 @AllArgsConstructor
-public enum TokenRole {
+public enum TokenRole implements EnumClass {
 
     APP("앱 권한", "APP"),
     BACKOFFICE("백오피스 권한", "BACKOFFICE"),

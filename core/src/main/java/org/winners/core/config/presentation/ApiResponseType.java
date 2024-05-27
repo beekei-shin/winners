@@ -3,10 +3,11 @@ package org.winners.core.config.presentation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import org.winners.core.domain.common.EnumClass;
 
 @Getter
 @AllArgsConstructor
-public enum ApiResponseType {
+public enum ApiResponseType implements EnumClass {
 
     SUCCESS(HttpStatus.OK,                                      "20000", "API 호출 성공"),
 

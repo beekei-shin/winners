@@ -2,8 +2,8 @@ package org.winners.core.domain.cert.service.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.winners.core.domain.base.Gender;
 import org.winners.core.domain.cert.MobileCarrier;
+import org.winners.core.domain.common.Gender;
 
 import java.time.LocalDate;
 
