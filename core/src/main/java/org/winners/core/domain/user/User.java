@@ -6,14 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.DynamicInsert;
 import org.winners.core.config.exception.NotAccessDataException;
 import org.winners.core.domain.base.BaseEntity;
 
 import static org.winners.core.config.exception.ExceptionMessageType.BLOCK_USER;
 import static org.winners.core.config.exception.ExceptionMessageType.RESIGN_USER;
 
-@DynamicInsert
 @Comment("회원")
 @Getter
 @Entity

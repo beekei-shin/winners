@@ -34,10 +34,9 @@ public class ClientUserSignServiceV1 implements ClientUserSignService {
     @Override
     public SignUpClientUserResultDTO signUp(UUID certificationKey) {
         CertificationKey savedCertificationKey = certificationKeyDomainService.getSavedCertificationKey(certificationKey);
+        CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
         savedCertificationKey.possibleUseCheck();
         savedCertificationKey.use();
-
-        CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
 
         clientUserDomainService.duplicatePhoneNumberCheck(certificationInfo.getPhoneNumber());
         clientUserDomainService.duplicateCiCheck(certificationInfo.getCi());
@@ -59,10 +58,9 @@ public class ClientUserSignServiceV1 implements ClientUserSignService {
     @Override
     public SignInClientUserResultDTO signIn(UUID certificationKey) {
         CertificationKey savedCertificationKey = certificationKeyDomainService.getSavedCertificationKey(certificationKey);
+        CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
         savedCertificationKey.possibleUseCheck();
         savedCertificationKey.use();
-
-        CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
 
         return clientUserRepository.findByPhoneNumberAndCi(certificationInfo.getPhoneNumber(), certificationInfo.getCi())
             .map(clientUser -> {

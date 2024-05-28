@@ -72,7 +72,6 @@ public class PhoneIdentityCertificationHistory extends CertificationHistory {
     public void certify(String ci, String di) {
         this.ci = ci;
         this.di = di;
-        this.certificationKey.certify();
     }
 
 }

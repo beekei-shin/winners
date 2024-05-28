@@ -1,13 +1,11 @@
 package org.winners.app.presentation.user.impl;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.winners.app.application.user.ClientUserSignService;
 import org.winners.app.application.user.dto.SignInClientUserResultDTO;
 import org.winners.app.application.user.dto.SignUpClientUserResultDTO;
-import org.winners.app.presentation.AppController;
 import org.winners.app.presentation.ControllerTest;
 import org.winners.app.presentation.user.request.SignInClientUserRequestDTO;
 import org.winners.app.presentation.user.request.SignUpClientUserRequestDTO;
@@ -24,14 +22,12 @@ import static org.mockito.BDDMockito.given;
 
 class ClientUserSignControllerV1Test extends ControllerTest {
 
+    public ClientUserSignControllerV1Test() {
+        super(ClientUserSignControllerV1.class);
+    }
+
     @MockBean
     private ClientUserSignService clientUserSignService;
-
-    @BeforeAll
-    public void beforeAll() {
-        this.setVersion("v1");
-        this.setControllerPath(AppController.CLIENT_USER_SIGN_PATH);
-    }
 
     @Test
     @DisplayName("사용자 회원 가입")

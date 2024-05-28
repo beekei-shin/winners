@@ -76,24 +76,14 @@ public class CertificationKey extends BaseEntity {
             throw new AlreadyProcessedDataException(EXPIRED_CERTIFICATION_KEY);
     }
 
-    public void certify() {
-        this.isCertified = true;
-        this.certifiedDatetime = LocalDateTime.now();
-    }
-
-    public void certifiedCheck() {
-        if (this.isCertified)
-            throw new AlreadyProcessedDataException(ALREADY_CERTIFIED_CERTIFICATION_KEY);
-    }
-
     public void notCertifiedCheck() {
         if (!this.isCertified)
             throw new UnprocessedDataException(NOT_CERTIFIED_CERTIFICATION_KEY);
     }
 
-    public void use() {
-        this.isUsed = true;
-        this.usedDatetime = LocalDateTime.now();
+    public void certifiedCheck() {
+        if (this.isCertified)
+            throw new AlreadyProcessedDataException(ALREADY_CERTIFIED_CERTIFICATION_KEY);
     }
 
     public void usedCheck() {
@@ -111,6 +101,16 @@ public class CertificationKey extends BaseEntity {
         this.expiredCheck();
         this.notCertifiedCheck();
         this.usedCheck();
+    }
+
+    public void certify() {
+        this.isCertified = true;
+        this.certifiedDatetime = LocalDateTime.now();
+    }
+
+    public void use() {
+        this.isUsed = true;
+        this.usedDatetime = LocalDateTime.now();
     }
 
 }

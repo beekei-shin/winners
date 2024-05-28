@@ -17,7 +17,7 @@ import org.winners.core.config.presentation.ApiResponse;
 
 @RestController
 @Tag(name = "v1." + AppController.CLIENT_USER_SIGN_TAG_NAME)
-@RequestMapping(value = "v1/" + AppController.CLIENT_USER_SIGN_PATH)
+@RequestMapping(path = "v1/" + AppController.CLIENT_USER_SIGN_PATH)
 @RequiredArgsConstructor
 public class ClientUserSignControllerV1 implements ClientUserSignController {
 

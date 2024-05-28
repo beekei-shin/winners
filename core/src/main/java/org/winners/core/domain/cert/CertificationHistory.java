@@ -6,11 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.DynamicInsert;
 import org.winners.core.domain.base.BaseEntity;
 
-
-@DynamicInsert
 @Comment("인증 내역")
 @Getter
 @Entity

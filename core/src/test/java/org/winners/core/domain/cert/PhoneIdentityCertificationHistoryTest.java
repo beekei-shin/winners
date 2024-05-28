@@ -49,8 +49,6 @@ class PhoneIdentityCertificationHistoryTest {
 
         assertThat(history.getCi()).isEqualTo(ci);
         assertThat(history.getDi()).isEqualTo(di);
-        assertThat(history.getCertificationKey().isCertified()).isTrue();
-        assertThat(history.getCertificationKey().getCertifiedDatetime()).isNotNull();
     }
 
 }

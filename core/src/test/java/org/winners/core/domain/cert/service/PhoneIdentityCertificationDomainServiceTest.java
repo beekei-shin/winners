@@ -72,8 +72,6 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
 
         phoneIdentityCertificationDomainService.certifyOtpNumber(certificationKey, "01011112222", "000000");
 
-        assertThat(savedPhoneIdentityCertificationHistory.getCertificationKey().isCertified()).isTrue();
-        assertThat(savedPhoneIdentityCertificationHistory.getCertificationKey().getCertifiedDatetime()).isNotNull();
         assertThat(savedPhoneIdentityCertificationHistory.getCi()).isNotNull();
         assertThat(savedPhoneIdentityCertificationHistory.getDi()).isNotNull();
     }

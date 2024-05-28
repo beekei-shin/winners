@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @Tag(name = "v1." + AppController.PHONE_IDENTITY_CERT_TAG_NAME)
-@RequestMapping(value = "v1/" + AppController.PHONE_IDENTITY_CERT_PATH)
+@RequestMapping(path = "v1/" + AppController.PHONE_IDENTITY_CERT_PATH)
 @RequiredArgsConstructor
 public class PhoneIdentityCertificationControllerV1 implements PhoneIdentityCertificationController {
 

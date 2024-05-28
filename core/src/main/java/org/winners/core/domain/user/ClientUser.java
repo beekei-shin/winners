@@ -15,11 +15,10 @@ import java.time.LocalDate;
 @Getter
 @Entity
 @Table(name = "client_user", uniqueConstraints = {
-    @UniqueConstraint(name = "UK_client_user_ci", columnNames = { "ci" }),
-    @UniqueConstraint(name = "UK_client_user_phone_number", columnNames = { "phone_number" })
+    @UniqueConstraint(name = "UK_client_user_phone_number_ci", columnNames = { "phone_number", "ci" })
 })
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @DiscriminatorValue("CLIENT")
 public class ClientUser extends User {
 

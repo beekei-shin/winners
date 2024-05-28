@@ -1,11 +1,9 @@
 package org.winners.app.presentation.cert.impl;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.winners.app.application.cert.PhoneIdentityCertificationService;
-import org.winners.app.presentation.AppController;
 import org.winners.app.presentation.ControllerTest;
 import org.winners.app.presentation.cert.request.CertifyPhoneIdentityOtpNumberRequestDTO;
 import org.winners.app.presentation.cert.request.SendPhoneIdentityOtpNumberRequestDTO;
@@ -26,14 +24,12 @@ import static org.mockito.Mockito.verify;
 
 class PhoneIdentityCertificationControllerV1Test extends ControllerTest {
 
+    public PhoneIdentityCertificationControllerV1Test() {
+        super(PhoneIdentityCertificationControllerV1.class);
+    }
+
     @MockBean
     private PhoneIdentityCertificationService phoneIdentityCertificationService;
-
-    @BeforeAll
-    public void beforeAll() {
-        this.setVersion("v1");
-        this.setControllerPath(AppController.PHONE_IDENTITY_CERT_PATH);
-    }
 
     @Test
     @DisplayName("휴대폰 본인인증 OTP 번호 발송")
