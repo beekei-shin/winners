@@ -15,6 +15,6 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-        driver-class-name: com.mysql.cj.jdbc.Driver
+        dialect: org.hibernate.dialect.MySQLDialect
   mustache:
     check-template-location: false

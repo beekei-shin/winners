@@ -3,8 +3,7 @@ package org.winners.app.application.user.impl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.winners.app.application.ApplicationServiceTest;
 import org.winners.app.application.user.dto.SignInClientUserResultDTO;
@@ -36,23 +35,23 @@ import static org.mockito.Mockito.verify;
 
 class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
-    @Autowired
+    @SpyBean
     @InjectMocks
     private ClientUserSignServiceV1 clientUserSignServiceV1;
 
-    @MockBean
+    @Mock
     private ClientUserRepository clientUserRepository;
 
-    @MockBean
+    @Mock
     private ClientUserDomainService clientUserDomainService;
 
-    @MockBean
+    @Mock
     private CertificationKeyDomainService certificationKeyDomainService;
 
-    @MockBean
+    @Mock
     private PhoneIdentityCertificationDomainService phoneIdentityCertificationDomainService;
 
-    @MockBean
+    @Mock
     private AuthDomainService authDomainService;
 
     @Test

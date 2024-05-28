@@ -3,8 +3,7 @@ package org.winners.app.application.cert.impl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.winners.app.application.ApplicationServiceTest;
 import org.winners.core.config.exception.AlreadyProcessedDataException;
@@ -31,14 +30,14 @@ import static org.mockito.Mockito.verify;
 
 class PhoneIdentityCertificationServiceV1Test extends ApplicationServiceTest {
 
-    @Autowired
+    @SpyBean
     @InjectMocks
     private PhoneIdentityCertificationServiceV1 phoneIdentityCertificationServiceV1;
 
-    @MockBean
+    @Mock
     private CertificationKeyDomainService certificationKeyDomainService;
 
-    @MockBean
+    @Mock
     private PhoneIdentityCertificationDomainService phoneIdentityCertificationDomainService;
 
     @Test
