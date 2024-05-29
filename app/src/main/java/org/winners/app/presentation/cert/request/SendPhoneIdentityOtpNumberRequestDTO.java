@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class SendPhoneIdentityOtpNumberRequestDTO {
 
-    @NotNull
+    @NotBlank
     @ValidEnum(enumClass = MobileCarrier.class)
     private String mobileCarrier;
 
@@ -28,7 +28,7 @@ public class SendPhoneIdentityOtpNumberRequestDTO {
     @NotNull
     private LocalDate birthday;
 
-    @NotNull
+    @NotBlank
     @ValidEnum(enumClass = Gender.class)
     private String gender;
 

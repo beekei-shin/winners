@@ -10,11 +10,8 @@ import java.util.UUID;
 
 @Service
 public interface ClientUserSignService {
-
     @Transactional
     SignUpClientUserResultDTO signUp(UUID certificationKey, DeviceOs deviceOs, String deviceToken);
-
     @Transactional
     SignInClientUserResultDTO signIn(UUID certificationKey, DeviceOs deviceOs, String deviceToken);
-
 }

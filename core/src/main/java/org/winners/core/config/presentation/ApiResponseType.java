@@ -24,8 +24,9 @@ public enum ApiResponseType implements EnumClass {
     NOT_ACCESS_DATA(HttpStatus.BAD_GATEWAY,                     "50203", "허용되지 않은 데이터"),
     UNPROCESSED_DATA(HttpStatus.BAD_GATEWAY,                    "50204", "처리되지 않은 데이터"),
     ALREADY_PROCESSED_DATA(HttpStatus.BAD_GATEWAY,              "50205", "이미 처리된 데이터"),
-    DUPLICATED_DATA(HttpStatus.BAD_GATEWAY,                     "50206", "중복된 데이터"),
-    EXPIRED_DATA(HttpStatus.BAD_GATEWAY,                        "50207", "만료된 데이터"),
+    CANNOT_PROCESSED_DATA(HttpStatus.BAD_GATEWAY,               "50206", "처리할 수 없는 데이터"),
+    DUPLICATED_DATA(HttpStatus.BAD_GATEWAY,                     "50207", "중복된 데이터"),
+    EXPIRED_DATA(HttpStatus.BAD_GATEWAY,                        "50208", "만료된 데이터"),
     ;
 
     private final HttpStatus httpStatus;

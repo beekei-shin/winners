@@ -11,6 +11,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.winners.core.config.presentation.ApiResponse;
 import org.winners.core.config.presentation.ApiResponseType;
 
+import javax.naming.InsufficientResourcesException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class JwtUnauthorizedHandler implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
+        e.printStackTrace();
         try (OutputStream os = response.getOutputStream()) {
             final ApiResponseType apiResponseType = ApiResponseType.valueOf(
                 String.valueOf(Optional.ofNullable(request.getAttribute("ExceptionType"))

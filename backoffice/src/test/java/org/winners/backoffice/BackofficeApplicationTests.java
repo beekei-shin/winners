@@ -1,4 +1,4 @@
-package org.winners.core.backoffice;
+package org.winners.backoffice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

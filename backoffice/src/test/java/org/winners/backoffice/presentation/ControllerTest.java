@@ -1,4 +1,4 @@
-package org.winners.app.presentation;
+package org.winners.backoffice.presentation;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,14 +15,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.winners.app.MockMvcConfig;
+import org.winners.backoffice.MockMvcConfig;
 import org.winners.core.config.presentation.ApiResponse;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
@@ -57,9 +56,13 @@ public class ControllerTest {
         this.objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
+    protected void postTest(Object request, Object response) {
+        postTest(null, request, response);
+    }
+
     @SneakyThrows
     protected void postTest(String apiPath, Object request, Object response) {
-        mockMvc.perform(post("/" + controllerPath + "/" + apiPath)
+        mockMvc.perform(post("/" + controllerPath + Optional.ofNullable(apiPath).map(s -> "/" + s).orElse(""))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(request)))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -67,9 +70,27 @@ public class ControllerTest {
             .andDo(print());
     }
 
+    protected void putTest(Object request, Object response) {
+        putTest(null, request, response);
+    }
+
     @SneakyThrows
     protected void putTest(String apiPath, Object request, Object response) {
-        mockMvc.perform(put("/" + controllerPath + "/" + apiPath)
+        mockMvc.perform(put("/" + controllerPath + Optional.ofNullable(apiPath).map(s -> "/" + s).orElse(""))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(request)))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.content().string(objectMapper.writeValueAsString(ApiResponse.success(response))))
+            .andDo(print());
+    }
+
+    protected void deleteTest(Object request, Object response) {
+        deleteTest(null, request, response);
+    }
+
+    @SneakyThrows
+    protected void deleteTest(String apiPath, Object request, Object response) {
+        mockMvc.perform(delete("/" + controllerPath + Optional.ofNullable(apiPath).map(s -> "/" + s).orElse(""))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(request)))
             .andExpect(MockMvcResultMatchers.status().isOk())

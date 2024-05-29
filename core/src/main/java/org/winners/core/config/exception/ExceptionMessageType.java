@@ -22,6 +22,10 @@ public enum ExceptionMessageType implements EnumClass {
     RESIGN_USER("탈퇴된 회원입니다."),
     DUPLICATED_PHONE_NUMBER("중복된 휴대폰 번호 입니다."),
     DUPLICATED_CI("중복된 CI 입니다."),
+
+    NOT_EXIST_BOARD("존재하지 않는 게시판입니다."),
+    DUPLICATED_BOARD("중복된 게시판 입니다."),
+    CANNOT_DELETE_BOARD("삭제할 수 없는 게시판입니다."),
     ;
 
     private final String message;

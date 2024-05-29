@@ -34,10 +34,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+        String contextPath = request.getContextPath();
         String requestURI = request.getRequestURI();
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
-        if (SecurityWhitelist.isWhitelist(requestURI, method)) {
-            if (SecurityWhitelist.isShouldNotFilter(requestURI, method)) {
+        if (SecurityWhitelist.isWhitelist(contextPath, requestURI, method)) {
+            if (SecurityWhitelist.isShouldNotFilter(contextPath, requestURI, method)) {
                 return true;
             } else {
                 final String authorizationToken = request.getHeader(TOKEN_HEADER_NAME);
@@ -68,6 +69,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
+            } else if (!this.shouldNotFilter(request)) {
+                throw new UnauthorizedTokenException();
             }
         } catch (ExpiredTokenException e) {
             request.setAttribute("ExceptionType", ApiResponseType.EXPIRED_TOKEN.toString());

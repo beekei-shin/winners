@@ -70,4 +70,16 @@ public class GlobalExceptionHandler {
             .body(ApiResponse.exception(e.getApiResponseType(), e.getMessage()));
     }
 
+    /**
+     * Exception
+     */
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<ApiResponse<?>> exceptionHandler(Exception e){
+        e.printStackTrace();
+        ApiResponseType apiResponseType = ApiResponseType.INTERNAL_SERVER_ERROR;
+        return ResponseEntity
+            .status(apiResponseType.getHttpStatus())
+            .body(ApiResponse.exception(apiResponseType, apiResponseType.getMessage()));
+    }
+
 }

@@ -1,4 +1,4 @@
-package org.winners.core.backoffice;
+package org.winners.backoffice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
