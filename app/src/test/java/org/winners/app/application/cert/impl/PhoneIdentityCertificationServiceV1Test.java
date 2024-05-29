@@ -55,7 +55,7 @@ class PhoneIdentityCertificationServiceV1Test extends ApplicationServiceTest {
             .name("홍길동")
             .birthday(LocalDate.of(1993, 10, 20))
             .gender(Gender.MALE)
-            .mobileCarrier(MobileCarrier.LG)
+            .mobileCarrier(MobileCarrier.LGM)
             .phoneNumber("01011112222")
             .build());
 

@@ -44,7 +44,7 @@ public class PhoneIdentityCertificationDomainService {
                 authHistory -> {
                     if (!passwordEncoder.matches(optNumber, authHistory.getOtpNumber()))
                         throw new InvalidDataException(INVALID_OTP_NUMBER);
-                    authHistory.certify("ci", "di");
+                    authHistory.certify("ci", "di", false);
                 },
                 () -> { throw new NotExistDataException(NOT_EXIST_PHONE_IDENTITY_CERTIFICATION_HISTORY); });
     }

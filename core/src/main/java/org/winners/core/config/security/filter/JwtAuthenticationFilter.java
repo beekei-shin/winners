@@ -16,7 +16,7 @@ import org.winners.core.config.exception.ExpiredTokenException;
 import org.winners.core.config.exception.UnauthorizedTokenException;
 import org.winners.core.config.presentation.ApiResponseType;
 import org.winners.core.config.security.SecurityWhitelist;
-import org.winners.core.config.security.token.TokenProvider;
+import org.winners.core.config.token.TokenProvider;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.service.ClientUserDomainService;
 
@@ -26,7 +26,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final TokenProvider jwtProvider;
+    private final TokenProvider tokenProvider;
     private final static String TOKEN_HEADER_NAME = "Authorization";
     private final static String TOKEN_PREFIX = "Bearer ";
 
@@ -57,9 +57,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (!TOKEN_PREFIX.equalsIgnoreCase(prefix)) throw new RuntimeException("Header Prefix Token Type");
 
                 final String token = accessToken.trim().substring(TOKEN_PREFIX.length());
-                if (jwtProvider.validateAccessToken(token)) {
-                    long userId = jwtProvider.getAccessTokenId(token);
-                    Collection<? extends GrantedAuthority> authority = jwtProvider.getAccessTokenAuthorities(token);
+                if (tokenProvider.validateAccessToken(token)) {
+                    long userId = tokenProvider.getAccessTokenId(token);
+                    Collection<? extends GrantedAuthority> authority = tokenProvider.getAccessTokenAuthorities(token);
 
                     ClientUser clientUser = clientUserDomainService.getClientUser(userId);
                     clientUser.accessUserCheck();

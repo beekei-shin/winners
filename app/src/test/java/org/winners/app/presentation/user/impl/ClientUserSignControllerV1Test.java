@@ -12,12 +12,14 @@ import org.winners.app.presentation.user.request.SignUpClientUserRequestDTO;
 import org.winners.app.presentation.user.response.SignInClientUserResponseDTO;
 import org.winners.app.presentation.user.response.SignUpClientUserResponseDTO;
 import org.winners.core.domain.auth.service.dto.AuthTokenDTO;
+import org.winners.core.domain.common.DeviceOs;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.ClientUserMock;
 
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 class ClientUserSignControllerV1Test extends ControllerTest {
@@ -35,9 +37,9 @@ class ClientUserSignControllerV1Test extends ControllerTest {
         ClientUser clientUser = ClientUserMock.createUser();
         AuthTokenDTO authToken = AuthTokenDTO.create("accessToken", "refreshToken");
         SignUpClientUserResultDTO signUpClientUserResult = SignUpClientUserResultDTO.success(clientUser, authToken);
-        given(clientUserSignService.signUp(any(UUID.class))).willReturn(signUpClientUserResult);
+        given(clientUserSignService.signUp(any(UUID.class), any(DeviceOs.class), anyString())).willReturn(signUpClientUserResult);
 
-        SignUpClientUserRequestDTO request = new SignUpClientUserRequestDTO(UUID.randomUUID());
+        SignUpClientUserRequestDTO request = new SignUpClientUserRequestDTO(UUID.randomUUID(), "AOS", "deviceToken");
         SignUpClientUserResponseDTO response = SignUpClientUserResponseDTO.create(signUpClientUserResult);
         this.postTest("up", request, response);
     }
@@ -48,9 +50,9 @@ class ClientUserSignControllerV1Test extends ControllerTest {
         ClientUser clientUser = ClientUserMock.createUser();
         AuthTokenDTO authToken = AuthTokenDTO.create("accessToken", "refreshToken");
         SignInClientUserResultDTO signInClientUserResult = SignInClientUserResultDTO.success(clientUser, authToken);
-        given(clientUserSignService.signIn(any(UUID.class))).willReturn(signInClientUserResult);
+        given(clientUserSignService.signIn(any(UUID.class), any(DeviceOs.class), anyString())).willReturn(signInClientUserResult);
 
-        SignInClientUserRequestDTO request = new SignInClientUserRequestDTO(UUID.randomUUID());
+        SignInClientUserRequestDTO request = new SignInClientUserRequestDTO(UUID.randomUUID(), "AOS", "deviceToken");
         SignInClientUserResponseDTO response = SignInClientUserResponseDTO.create(signInClientUserResult);
         this.postTest("in", request, response);
     }

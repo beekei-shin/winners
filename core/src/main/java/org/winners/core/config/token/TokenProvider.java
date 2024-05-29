@@ -1,4 +1,4 @@
-package org.winners.core.config.security.token;
+package org.winners.core.config.token;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

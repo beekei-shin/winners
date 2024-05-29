@@ -18,6 +18,7 @@ import org.winners.core.domain.cert.PhoneIdentityCertificationHistoryMock;
 import org.winners.core.domain.cert.service.CertificationKeyDomainService;
 import org.winners.core.domain.cert.service.PhoneIdentityCertificationDomainService;
 import org.winners.core.domain.cert.service.dto.CertificationInfoDTO;
+import org.winners.core.domain.common.DeviceOs;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.ClientUserMock;
 import org.winners.core.domain.user.ClientUserRepository;
@@ -72,11 +73,13 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
         given(clientUserDomainService.saveClientUser(any(SaveClientUserParameterDTO.class))).willReturn(clientUser);
 
         AuthTokenDTO authToken = AuthTokenDTO.create("accessToken", "refreshToken");
-        given(authDomainService.createClientUserAuthToken(anyLong())).willReturn(authToken);
+        given(authDomainService.createClientUserAuthToken(anyLong(), any(DeviceOs.class), anyString())).willReturn(authToken);
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        SignUpClientUserResultDTO result = clientUserSignServiceV1.signUp(certificationKeyId);
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        SignUpClientUserResultDTO result = clientUserSignServiceV1.signUp(certificationKeyId, deviceOs, deviceToken);
 
         // then
         assertThat(result.getUserId()).isEqualTo(clientUser.getId());
@@ -90,7 +93,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
         verify(phoneIdentityCertificationDomainService).getCertificationInfo(certifiedCertificationKey);
         verify(clientUserDomainService).duplicatePhoneNumberCheck(certificationInfo.getPhoneNumber());
         verify(clientUserDomainService).duplicateCiCheck(certificationInfo.getCi());
-        verify(authDomainService).createClientUserAuthToken(clientUser.getId());
+        verify(authDomainService).createClientUserAuthToken(clientUser.getId(), deviceOs, deviceToken);
     }
 
     @Test
@@ -101,7 +104,9 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        assertThrows(NotExistDataException.class, () -> clientUserSignServiceV1.signUp(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        assertThrows(NotExistDataException.class, () -> clientUserSignServiceV1.signUp(certificationKeyId, deviceOs, deviceToken));
 
         // then
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKeyId);
@@ -116,7 +121,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        Throwable exception = assertThrows(AlreadyProcessedDataException.class, () -> clientUserSignServiceV1.signUp(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        Throwable exception = assertThrows(AlreadyProcessedDataException.class,
+            () -> clientUserSignServiceV1.signUp(certificationKeyId, deviceOs, deviceToken));
 
         // then
         assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.EXPIRED_CERTIFICATION_KEY.getMessage());
@@ -132,7 +140,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        Throwable exception = assertThrows(UnprocessedDataException.class, () -> clientUserSignServiceV1.signUp(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        Throwable exception = assertThrows(UnprocessedDataException.class,
+            () -> clientUserSignServiceV1.signUp(certificationKeyId, deviceOs, deviceToken));
 
         // then
         assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.NOT_CERTIFIED_CERTIFICATION_KEY.getMessage());
@@ -148,7 +159,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        Throwable exception = assertThrows(AlreadyProcessedDataException.class, () -> clientUserSignServiceV1.signUp(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        Throwable exception = assertThrows(AlreadyProcessedDataException.class,
+            () -> clientUserSignServiceV1.signUp(certificationKeyId, deviceOs, deviceToken));
 
         // then
         assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.ALREADY_USED_CERTIFICATION_KEY.getMessage());
@@ -165,7 +179,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        assertThrows(NotExistDataException.class, () -> clientUserSignServiceV1.signUp(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        assertThrows(NotExistDataException.class,
+            () -> clientUserSignServiceV1.signUp(certificationKeyId, deviceOs, deviceToken));
 
         // then
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKeyId);
@@ -187,7 +204,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        assertThrows(DuplicatedDataException.class, () -> clientUserSignServiceV1.signUp(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        assertThrows(DuplicatedDataException.class,
+            () -> clientUserSignServiceV1.signUp(certificationKeyId, deviceOs, deviceToken));
 
         // then
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKeyId);
@@ -211,7 +231,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        assertThrows(DuplicatedDataException.class, () -> clientUserSignServiceV1.signUp(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        assertThrows(DuplicatedDataException.class,
+            () -> clientUserSignServiceV1.signUp(certificationKeyId, deviceOs, deviceToken));
 
         // then
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKeyId);
@@ -235,11 +258,13 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
         given(clientUserRepository.findByPhoneNumberAndCi(anyString(), anyString())).willReturn(Optional.of(clientUser));
 
         AuthTokenDTO authToken = AuthTokenDTO.create("accessToken", "refreshToken");
-        given(authDomainService.createClientUserAuthToken(anyLong())).willReturn(authToken);
+        given(authDomainService.createClientUserAuthToken(anyLong(), any(DeviceOs.class), anyString())).willReturn(authToken);
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        SignInClientUserResultDTO result = clientUserSignServiceV1.signIn(certificationKeyId);
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        SignInClientUserResultDTO result = clientUserSignServiceV1.signIn(certificationKeyId, deviceOs, deviceToken);
 
         // then
         assertThat(result.getUserId()).isEqualTo(clientUser.getId());
@@ -252,7 +277,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKeyId);
         verify(phoneIdentityCertificationDomainService).getCertificationInfo(certifiedCertificationKey);
         verify(clientUserRepository).findByPhoneNumberAndCi(certifiedHistory.getPhoneNumber(), certifiedHistory.getCi());
-        verify(authDomainService).createClientUserAuthToken(clientUser.getId());
+        verify(authDomainService).createClientUserAuthToken(clientUser.getId(), deviceOs, deviceToken);
     }
 
     @Test
@@ -262,7 +287,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        assertThrows(NotExistDataException.class, () -> clientUserSignServiceV1.signIn(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        assertThrows(NotExistDataException.class,
+            () -> clientUserSignServiceV1.signIn(certificationKeyId, deviceOs, deviceToken));
 
         // then
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKeyId);
@@ -277,7 +305,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        Throwable exception = assertThrows(AlreadyProcessedDataException.class, () -> clientUserSignServiceV1.signIn(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        Throwable exception = assertThrows(AlreadyProcessedDataException.class,
+            () -> clientUserSignServiceV1.signIn(certificationKeyId, deviceOs, deviceToken));
 
         // then
         assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.EXPIRED_CERTIFICATION_KEY.getMessage());
@@ -293,7 +324,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        Throwable exception = assertThrows(UnprocessedDataException.class, () -> clientUserSignServiceV1.signIn(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        Throwable exception = assertThrows(UnprocessedDataException.class,
+            () -> clientUserSignServiceV1.signIn(certificationKeyId, deviceOs, deviceToken));
 
         // then
         assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.NOT_CERTIFIED_CERTIFICATION_KEY.getMessage());
@@ -309,7 +343,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        Throwable exception = assertThrows(AlreadyProcessedDataException.class, () -> clientUserSignServiceV1.signIn(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        Throwable exception = assertThrows(AlreadyProcessedDataException.class,
+            () -> clientUserSignServiceV1.signIn(certificationKeyId, deviceOs, deviceToken));
 
         // then
         assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.ALREADY_USED_CERTIFICATION_KEY.getMessage());
@@ -326,7 +363,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        assertThrows(NotExistDataException.class, () -> clientUserSignServiceV1.signIn(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        assertThrows(NotExistDataException.class,
+            () -> clientUserSignServiceV1.signIn(certificationKeyId, deviceOs, deviceToken));
 
         // then
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKeyId);
@@ -348,8 +388,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        Throwable exception = assertThrows(NotExistDataException.class, () -> clientUserSignServiceV1.signIn(certificationKeyId));
-
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        Throwable exception = assertThrows(NotExistDataException.class,
+            () -> clientUserSignServiceV1.signIn(certificationKeyId, deviceOs, deviceToken));
 
         // then
         assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.NOT_EXIST_USER.getMessage());
@@ -375,7 +417,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        assertThrows(NotAccessDataException.class, () -> clientUserSignServiceV1.signIn(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        assertThrows(NotAccessDataException.class,
+            () -> clientUserSignServiceV1.signIn(certificationKeyId, deviceOs, deviceToken));
 
         // then
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKeyId);
@@ -399,7 +444,10 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = UUID.randomUUID();
-        assertThrows(NotAccessDataException.class, () -> clientUserSignServiceV1.signIn(certificationKeyId));
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        assertThrows(NotAccessDataException.class,
+            () -> clientUserSignServiceV1.signIn(certificationKeyId, deviceOs, deviceToken));
 
         // then
         verify(certificationKeyDomainService).getSavedCertificationKey(certificationKeyId);

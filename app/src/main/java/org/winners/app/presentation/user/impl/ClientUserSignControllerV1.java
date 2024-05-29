@@ -25,13 +25,19 @@ public class ClientUserSignControllerV1 implements ClientUserSignController {
 
     @Override
     public ApiResponse<SignUpClientUserResponseDTO> signUpClientUser(SignUpClientUserRequestDTO request) {
-        SignUpClientUserResultDTO result =  clientUserSignServiceV1.signUp(request.getAuthenticationKey());
+        SignUpClientUserResultDTO result =  clientUserSignServiceV1.signUp(
+            request.getAuthenticationKey(),
+            request.getDeviceOs(),
+            request.getDeviceToken());
         return ApiResponse.success(SignUpClientUserResponseDTO.create(result));
     }
 
     @Override
     public ApiResponse<SignInClientUserResponseDTO> signInClientUser(SignInClientUserRequestDTO request) {
-        SignInClientUserResultDTO result = clientUserSignServiceV1.signIn(request.getCertificationKey());
+        SignInClientUserResultDTO result = clientUserSignServiceV1.signIn(
+            request.getCertificationKey(),
+            request.getDeviceOs(),
+            request.getDeviceToken());
         return ApiResponse.success(SignInClientUserResponseDTO.create(result));
     }
 

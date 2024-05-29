@@ -53,7 +53,13 @@ public class PhoneIdentityCertificationHistory extends CertificationHistory {
     @Column(name = "di", length = 500)
     private String di;
 
-    private PhoneIdentityCertificationHistory(CertificationKey certificationKey, String name, LocalDate birthday, Gender gender, MobileCarrier mobileCarrier, String phoneNumber, String otpNumber) {
+    @Comment("외국인 여부")
+    @Column(name = "is_foreigner", columnDefinition = "TINYINT(1)")
+    private Boolean isForeigner;
+
+    private PhoneIdentityCertificationHistory(CertificationKey certificationKey,
+                                              String name, LocalDate birthday, Gender gender,
+                                              MobileCarrier mobileCarrier, String phoneNumber, String otpNumber) {
         super(CertificationType.PHONE_IDENTITY, certificationKey);
         this.name = name;
         this.birthday = birthday;
@@ -66,12 +72,15 @@ public class PhoneIdentityCertificationHistory extends CertificationHistory {
     public static PhoneIdentityCertificationHistory create(CertificationKey certificationKey,
                                                            String name, LocalDate birthday, Gender gender,
                                                            MobileCarrier mobileCarrier, String phoneNumber, String otpNumber) {
-        return new PhoneIdentityCertificationHistory(certificationKey, name, birthday, gender, mobileCarrier, phoneNumber, otpNumber);
+        return new PhoneIdentityCertificationHistory(certificationKey,
+            name, birthday, gender,
+            mobileCarrier, phoneNumber, otpNumber);
     }
 
-    public void certify(String ci, String di) {
+    public void certify(String ci, String di, boolean isForeigner) {
         this.ci = ci;
         this.di = di;
+        this.isForeigner = isForeigner;
     }
 
 }

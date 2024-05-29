@@ -10,13 +10,13 @@ public class PhoneIdentityCertificationHistoryMock {
         return PhoneIdentityCertificationHistory.create(
             certificationKey,
             "홍길동", LocalDate.of(1993, 10, 20), Gender.MALE,
-            MobileCarrier.LG, "01011112222",
+            MobileCarrier.LGM, "01011112222",
             "test-encryptOtpNumber");
     }
 
     public static PhoneIdentityCertificationHistory createCertifiedHistory(CertificationKey certificationKey) {
         PhoneIdentityCertificationHistory certificationHistory = createHistory(certificationKey);
-        certificationHistory.certify("ci", "di");
+        certificationHistory.certify("ci", "di", false);
         return certificationHistory;
     }
 

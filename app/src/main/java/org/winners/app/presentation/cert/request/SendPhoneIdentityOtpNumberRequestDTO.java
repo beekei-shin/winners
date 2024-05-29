@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import org.winners.core.config.validation.ValidEnum;
+import org.winners.core.config.presentation.validation.ValidEnum;
 import org.winners.core.domain.cert.MobileCarrier;
 import org.winners.core.domain.common.Gender;
 

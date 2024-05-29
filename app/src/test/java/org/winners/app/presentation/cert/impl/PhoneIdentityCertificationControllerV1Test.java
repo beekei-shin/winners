@@ -39,7 +39,7 @@ class PhoneIdentityCertificationControllerV1Test extends ControllerTest {
             .willReturn(certificationKeyId);
 
         SendPhoneIdentityOtpNumberRequestDTO request = new SendPhoneIdentityOtpNumberRequestDTO(
-            MobileCarrier.LG.toString(),
+            MobileCarrier.LGM.toString(),
             "신봉교",
             LocalDate.of(1993, 10, 20),
             Gender.MALE.toString(),

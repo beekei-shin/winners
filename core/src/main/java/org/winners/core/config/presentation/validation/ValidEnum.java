@@ -1,4 +1,4 @@
-package org.winners.core.config.validation;
+package org.winners.core.config.presentation.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

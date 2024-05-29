@@ -12,6 +12,7 @@ import org.winners.core.domain.cert.CertificationKey;
 import org.winners.core.domain.cert.service.CertificationKeyDomainService;
 import org.winners.core.domain.cert.service.PhoneIdentityCertificationDomainService;
 import org.winners.core.domain.cert.service.dto.CertificationInfoDTO;
+import org.winners.core.domain.common.DeviceOs;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.ClientUserRepository;
 import org.winners.core.domain.user.service.ClientUserDomainService;
@@ -32,7 +33,7 @@ public class ClientUserSignServiceV1 implements ClientUserSignService {
     private final AuthDomainService authDomainService;
 
     @Override
-    public SignUpClientUserResultDTO signUp(UUID certificationKey) {
+    public SignUpClientUserResultDTO signUp(UUID certificationKey, DeviceOs deviceOs, String deviceToken) {
         CertificationKey savedCertificationKey = certificationKeyDomainService.getSavedCertificationKey(certificationKey);
         CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
         savedCertificationKey.possibleUseCheck();
@@ -50,13 +51,13 @@ public class ClientUserSignServiceV1 implements ClientUserSignService {
                 .gender(certificationInfo.getGender())
             .build());
 
-        AuthTokenDTO authToken = authDomainService.createClientUserAuthToken(clientUser.getId());
+        AuthTokenDTO authToken = authDomainService.createClientUserAuthToken(clientUser.getId(), deviceOs, deviceToken);
 
         return SignUpClientUserResultDTO.success(clientUser, authToken);
     }
 
     @Override
-    public SignInClientUserResultDTO signIn(UUID certificationKey) {
+    public SignInClientUserResultDTO signIn(UUID certificationKey, DeviceOs deviceOs, String deviceToken) {
         CertificationKey savedCertificationKey = certificationKeyDomainService.getSavedCertificationKey(certificationKey);
         CertificationInfoDTO certificationInfo = phoneIdentityCertificationDomainService.getCertificationInfo(savedCertificationKey);
         savedCertificationKey.possibleUseCheck();
@@ -65,7 +66,7 @@ public class ClientUserSignServiceV1 implements ClientUserSignService {
         return clientUserRepository.findByPhoneNumberAndCi(certificationInfo.getPhoneNumber(), certificationInfo.getCi())
             .map(clientUser -> {
                 clientUser.accessUserCheck();
-                AuthTokenDTO authToken = authDomainService.createClientUserAuthToken(clientUser.getId());
+                AuthTokenDTO authToken = authDomainService.createClientUserAuthToken(clientUser.getId(), deviceOs, deviceToken);
                 return SignInClientUserResultDTO.success(clientUser, authToken);
             })
             .orElseThrow(() -> new NotExistDataException(NOT_EXIST_USER));

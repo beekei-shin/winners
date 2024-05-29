@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.winners.core.config.exception.NotAccessDataException;
-import org.winners.core.domain.base.BaseEntity;
+import org.winners.core.domain.common.BaseEntity;
 
 import static org.winners.core.config.exception.ExceptionMessageType.BLOCK_USER;
 import static org.winners.core.config.exception.ExceptionMessageType.RESIGN_USER;

@@ -17,7 +17,7 @@ class PhoneIdentityCertificationHistoryTest {
         String name = "홍길동";
         LocalDate birthday = LocalDate.of(1993, 10, 20);
         Gender gender = Gender.MALE;
-        MobileCarrier mobileCarrier = MobileCarrier.LG;
+        MobileCarrier mobileCarrier = MobileCarrier.LGM;
         String phoneNumber = "01011112222";
         String otpNumber = "encodeOtpNumber";
 
@@ -45,10 +45,12 @@ class PhoneIdentityCertificationHistoryTest {
 
         String ci = "test_ci";
         String di = "test_di";
-        history.certify(ci, di);
+        boolean isForeigner = false;
+        history.certify(ci, di, isForeigner);
 
         assertThat(history.getCi()).isEqualTo(ci);
         assertThat(history.getDi()).isEqualTo(di);
+        assertThat(history.getIsForeigner()).isEqualTo(isForeigner);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.winners.core.config.validation;
+package org.winners.core.config.presentation.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.server.Encoding;

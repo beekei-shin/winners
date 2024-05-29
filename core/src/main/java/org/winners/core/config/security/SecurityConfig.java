@@ -20,8 +20,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.winners.core.config.security.filter.JwtAuthenticationFilter;
 import org.winners.core.config.security.handler.JwtAccessDeniedHandler;
 import org.winners.core.config.security.handler.JwtUnauthorizedHandler;
-import org.winners.core.config.security.token.TokenProvider;
-import org.winners.core.config.security.token.TokenRole;
+import org.winners.core.config.token.TokenProvider;
+import org.winners.core.config.token.TokenRole;
 import org.winners.core.domain.user.service.ClientUserDomainService;
 
 @Configuration

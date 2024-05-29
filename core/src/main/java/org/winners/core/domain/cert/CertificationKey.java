@@ -6,7 +6,7 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.GenericGenerator;
 import org.winners.core.config.exception.AlreadyProcessedDataException;
 import org.winners.core.config.exception.UnprocessedDataException;
-import org.winners.core.domain.base.BaseEntity;
+import org.winners.core.domain.common.BaseEntity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

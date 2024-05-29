@@ -8,12 +8,12 @@ import org.winners.core.domain.common.EnumClass;
 @AllArgsConstructor
 public enum MobileCarrier implements EnumClass {
 
-    SK("SK 텔레콤"),
-    KT("KT"),
-    LG("LG U+"),
-    SK_SMART_SAVE("SK 텔레콤 알뜰폰"),
-    KT_SMART_SAVE("KT 알뜰폰"),
-    LG_SMART_SAVE("LG U+ 알뜰폰");
+    SKT("SK 텔레콤"),
+    KTF("KT"),
+    LGM("LG U+"),
+    SKT_SMART_SAVE("SK 텔레콤 알뜰폰"),
+    KTF_SMART_SAVE("KT 알뜰폰"),
+    LGM_SMART_SAVE("LG U+ 알뜰폰");
 
     private final String name;
 
