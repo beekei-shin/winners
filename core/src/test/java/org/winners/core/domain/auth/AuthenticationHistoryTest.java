@@ -2,19 +2,17 @@ package org.winners.core.domain.auth;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.winners.core.domain.cert.CertificationType;
 import org.winners.core.domain.common.DeviceOs;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class AuthenticationHistoryTest {
 
     @Test
     @DisplayName("인증내역 생성")
-    void create() {
+    void createHistory() {
         long userId = 10;
         DeviceOs deviceOs = DeviceOs.AOS;
         String deviceToken = "deviceToken";
@@ -23,7 +21,7 @@ class AuthenticationHistoryTest {
         String refreshToken = "refreshToken";
         LocalDateTime refreshTokenExpireDatetime = LocalDateTime.now().plusDays(20);
 
-        AuthenticationHistory authenticationHistory = AuthenticationHistory.create(userId, deviceOs, deviceToken,
+        AuthenticationHistory authenticationHistory = AuthenticationHistory.createHistory(userId, deviceOs, deviceToken,
             accessToken, accessTokenExpireDatetime,
             refreshToken, refreshTokenExpireDatetime);
 

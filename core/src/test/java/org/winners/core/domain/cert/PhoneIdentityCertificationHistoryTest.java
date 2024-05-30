@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.winners.core.domain.common.Gender;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,8 +13,8 @@ class PhoneIdentityCertificationHistoryTest {
 
     @Test
     @DisplayName("휴대폰 본인인증 내역 생성")
-    void create() {
-        CertificationKey certificationKey = CertificationKeyMock.createKey();
+    void createHistory() {
+        CertificationKey certificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         String name = "홍길동";
         LocalDate birthday = LocalDate.of(1993, 10, 20);
         Gender gender = Gender.MALE;
@@ -21,7 +22,7 @@ class PhoneIdentityCertificationHistoryTest {
         String phoneNumber = "01011112222";
         String otpNumber = "encodeOtpNumber";
 
-        PhoneIdentityCertificationHistory history = PhoneIdentityCertificationHistory.create(
+        PhoneIdentityCertificationHistory history = PhoneIdentityCertificationHistory.createHistory(
             certificationKey,
             name, birthday, gender,
             mobileCarrier, phoneNumber,
@@ -40,7 +41,7 @@ class PhoneIdentityCertificationHistoryTest {
     @Test
     @DisplayName("휴대폰 본인인증 내역 인증")
     void certify() {
-        CertificationKey certificationKey = CertificationKeyMock.createKey();
+        CertificationKey certificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         PhoneIdentityCertificationHistory history = PhoneIdentityCertificationHistoryMock.createHistory(certificationKey);
 
         String ci = "test_ci";

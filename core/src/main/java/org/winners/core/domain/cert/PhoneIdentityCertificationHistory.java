@@ -69,9 +69,9 @@ public class PhoneIdentityCertificationHistory extends CertificationHistory {
         this.otpNumber = otpNumber;
     }
 
-    public static PhoneIdentityCertificationHistory create(CertificationKey certificationKey,
-                                                           String name, LocalDate birthday, Gender gender,
-                                                           MobileCarrier mobileCarrier, String phoneNumber, String otpNumber) {
+    public static PhoneIdentityCertificationHistory createHistory(CertificationKey certificationKey,
+                                                                  String name, LocalDate birthday, Gender gender,
+                                                                  MobileCarrier mobileCarrier, String phoneNumber, String otpNumber) {
         return new PhoneIdentityCertificationHistory(certificationKey,
             name, birthday, gender,
             mobileCarrier, phoneNumber, otpNumber);

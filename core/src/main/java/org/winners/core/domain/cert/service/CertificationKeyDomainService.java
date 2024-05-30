@@ -20,11 +20,11 @@ public class CertificationKeyDomainService {
     private final CertificationKeyRepository certificationKeyRepository;
 
     public CertificationKey createCertificationKey(CertificationType certificationType, int expiredMinute) {
-        return certificationKeyRepository.save(CertificationKey.create(certificationType, expiredMinute));
+        return certificationKeyRepository.save(CertificationKey.createKey(certificationType, expiredMinute));
     }
 
-    public CertificationKey getSavedCertificationKey(UUID id) {
-        return certificationKeyRepository.findById(id)
+    public CertificationKey getSavedCertificationKey(UUID certificationKeyId) {
+        return certificationKeyRepository.findById(certificationKeyId)
             .orElseThrow(() -> new NotExistDataException(NOT_EXIST_CERTIFICATION_KEY));
     }
 

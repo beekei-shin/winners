@@ -26,7 +26,7 @@ public class PhoneIdentityCertificationDomainService {
     public UUID sendOtpNumber(CertificationKey certificationKey, SendOtpNumberParameterDTO parameter) {
         String defaultOtpNumber = "000000";
         String encryptOtpNumber = passwordEncoder.encode(defaultOtpNumber);
-        PhoneIdentityCertificationHistory certHistory = phoneIdentityCertificationHistoryRepository.save(PhoneIdentityCertificationHistory.create(
+        PhoneIdentityCertificationHistory certHistory = phoneIdentityCertificationHistoryRepository.save(PhoneIdentityCertificationHistory.createHistory(
             certificationKey,
             parameter.getName(),
             parameter.getBirthday(),

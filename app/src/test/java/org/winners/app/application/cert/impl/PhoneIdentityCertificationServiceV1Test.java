@@ -44,7 +44,7 @@ class PhoneIdentityCertificationServiceV1Test extends ApplicationServiceTest {
     @DisplayName("휴대폰 본인인증 인증 OTP 번호 전송")
     public void sendPhoneIdentityOtpNumber() {
         // given
-        CertificationKey issuedCertificationKey = CertificationKeyMock.createKey();
+        CertificationKey issuedCertificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         given(certificationKeyDomainService.createCertificationKey(any(CertificationType.class), anyInt()))
             .willReturn(issuedCertificationKey);
         given(phoneIdentityCertificationDomainService.sendOtpNumber(any(CertificationKey.class), any(SendOtpNumberParameterDTO.class)))
@@ -67,7 +67,7 @@ class PhoneIdentityCertificationServiceV1Test extends ApplicationServiceTest {
     @DisplayName("휴대폰 본인인증 인증 OTP 번호 인증")
     public void certifyPhoneIdentityOtpNumber() {
         // given
-        CertificationKey issuedCertificationKey = CertificationKeyMock.createKey();
+        CertificationKey issuedCertificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(issuedCertificationKey);
         willDoNothing().given(phoneIdentityCertificationDomainService).certifyOtpNumber(any(CertificationKey.class), anyString(), anyString());
 
@@ -105,7 +105,7 @@ class PhoneIdentityCertificationServiceV1Test extends ApplicationServiceTest {
     @DisplayName("휴대폰 본인인증 인증 OTP 번호 인증 - 인증이 불가능한 인증키")
     public void certifyPhoneIdentityOtpNumber_notPossibleCertifyAuthenticationKey() {
         // given
-        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
 
         // when

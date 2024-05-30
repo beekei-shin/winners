@@ -52,9 +52,9 @@ public class ClientUser extends User {
         this.gender = gender;
     }
 
-    public static ClientUser create(String name, String phoneNumber,
-                                    String ci, @Nullable String di,
-                                    @Nullable LocalDate birthday, @Nullable Gender gender) {
+    public static ClientUser createUser(String name, String phoneNumber,
+                                        String ci, @Nullable String di,
+                                        @Nullable LocalDate birthday, @Nullable Gender gender) {
         return new ClientUser(name, phoneNumber, ci, di, birthday, gender);
     }
 

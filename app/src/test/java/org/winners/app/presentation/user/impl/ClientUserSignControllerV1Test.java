@@ -34,7 +34,7 @@ class ClientUserSignControllerV1Test extends ControllerTest {
     @Test
     @DisplayName("사용자 회원 가입")
     void signUpClientUser() {
-        ClientUser clientUser = ClientUserMock.createUser();
+        ClientUser clientUser = ClientUserMock.createUser(1L);
         AuthTokenDTO authToken = AuthTokenDTO.create("accessToken", "refreshToken");
         SignUpClientUserResultDTO signUpClientUserResult = SignUpClientUserResultDTO.success(clientUser, authToken);
         given(clientUserSignService.signUp(any(UUID.class), any(DeviceOs.class), anyString())).willReturn(signUpClientUserResult);
@@ -47,7 +47,7 @@ class ClientUserSignControllerV1Test extends ControllerTest {
     @Test
     @DisplayName("사용자 회원 로그인")
     void signInClientUser() {
-        ClientUser clientUser = ClientUserMock.createUser();
+        ClientUser clientUser = ClientUserMock.createUser(1L);
         AuthTokenDTO authToken = AuthTokenDTO.create("accessToken", "refreshToken");
         SignInClientUserResultDTO signInClientUserResult = SignInClientUserResultDTO.success(clientUser, authToken);
         given(clientUserSignService.signIn(any(UUID.class), any(DeviceOs.class), anyString())).willReturn(signInClientUserResult);

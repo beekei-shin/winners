@@ -12,14 +12,14 @@ class ClientUserTest {
 
     @Test
     @DisplayName("사용자 회원 생성")
-    void create() {
+    void createUser() {
         String name = "홍길동";
         String phoneNumber = "01011112222";
         String ci = "test_ci";
         String di = "test_di";
         LocalDate birthday = LocalDate.of(1993, 10, 20);
         Gender gender = Gender.MALE;
-        ClientUser clientUser = ClientUser.create(
+        ClientUser clientUser = ClientUser.createUser(
             name, phoneNumber,
             ci, di,
             birthday,gender);
@@ -37,7 +37,7 @@ class ClientUserTest {
     @Test
     @DisplayName("사용자 회원 차단")
     void block() {
-        ClientUser clientUser = ClientUserMock.createUser();
+        ClientUser clientUser = ClientUserMock.createUser(1L);
         clientUser.block();
 
         assertThat(clientUser.isBlockUser()).isEqualTo(true);
@@ -47,7 +47,7 @@ class ClientUserTest {
     @Test
     @DisplayName("사용자 회원 탈퇴")
     void resign() {
-        ClientUser clientUser = ClientUserMock.createUser();
+        ClientUser clientUser = ClientUserMock.createUser(1L);
         clientUser.resign();
 
         assertThat(clientUser.isResignUser()).isEqualTo(true);

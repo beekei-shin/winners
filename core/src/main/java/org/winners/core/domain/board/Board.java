@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.winners.core.domain.common.BaseEntity;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @Comment("게시판")
@@ -21,7 +20,7 @@ public class Board extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("고유번호")
     @Column(name = "id")
-    private Long id;
+    protected Long id;
 
     @Enumerated(EnumType.STRING)
     @Comment("게시판 유형")
@@ -35,26 +34,33 @@ public class Board extends BaseEntity {
     @OrderBy("orderNumber ASC")
     @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST })
     @JoinColumn(name = "board_id")
-    private List<BoardCategory> categoryList;
+    protected List<BoardCategory> categoryList;
 
-    protected void setMockId(long id) {
-        this.id = id;
-    }
-
-    public static Board create(BoardType boardType, String boardName) {
+    public static Board createBoard(BoardType boardType, String boardName) {
         return Board.builder()
             .type(boardType)
             .name(boardName)
             .build();
     }
 
-    public void addCategories(LinkedHashSet<String> categoryNames) {
-        categoryNames.forEach(this::addCategory);
+    public void updateBoard(String name) {
+        this.name = name;
     }
 
-    public void addCategory(String categoryName) {
-        if (this.categoryList == null) this.categoryList = new ArrayList<>();
-        this.categoryList.add(BoardCategory.create(this.id, categoryName, this.categoryList.size()+ 1));
+    public void saveCategories(LinkedHashSet<String> categoryNames) {
+        categoryNames.forEach(this::saveCategory);
+    }
+
+    public void saveCategory(String categoryName) {
+        if (this.getCategoryList() == null) this.categoryList = new ArrayList<>();
+        this.categoryList.add(BoardCategory.createCategory(this.id, categoryName, this.categoryList.size()+ 1));
+    }
+
+    public void updateCategory(Long categoryId, String categoryName) {
+        Optional.ofNullable(this.getCategoryList())
+            .flatMap(categoryList -> categoryList.stream()
+            .filter(category -> category.getId().equals(categoryId)).findFirst())
+            .ifPresent(category -> category.updateName(categoryName));
     }
 
 }

@@ -1,6 +1,7 @@
 package org.winners.core.domain.auth.service;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,10 +14,12 @@ import org.winners.core.domain.auth.service.dto.AuthTokenDTO;
 import org.winners.core.domain.common.DeviceOs;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 class AuthDomainServiceTest extends DomainServiceTest {
 
@@ -24,8 +27,8 @@ class AuthDomainServiceTest extends DomainServiceTest {
     private TokenProvider tokenProvider;
     private AuthenticationHistoryRepository authenticationHistoryRepository;
 
-    @BeforeAll
-    public void beforeAll() {
+    @BeforeEach
+    public void BeforeEach() {
         this.tokenProvider = Mockito.mock(TokenProvider.class);
         this.authenticationHistoryRepository = Mockito.mock(AuthenticationHistoryRepository.class);
         this.authDomainService = new AuthDomainService(this.tokenProvider, this.authenticationHistoryRepository);
@@ -46,11 +49,18 @@ class AuthDomainServiceTest extends DomainServiceTest {
         given(authenticationHistoryRepository.save(any(AuthenticationHistory.class))).willReturn(authenticationHistory);
 
         // when
-        AuthTokenDTO authToken = authDomainService.createClientUserAuthToken(1L, DeviceOs.AOS, "deviceToken");
+        long userId = 1L;
+        DeviceOs deviceOs = DeviceOs.AOS;
+        String deviceToken = "deviceToken";
+        AuthTokenDTO authToken = authDomainService.createClientUserAuthToken(userId, deviceOs, deviceToken);
 
         // then
         assertThat(authToken.getAccessToken()).isEqualTo(accessToken);
         assertThat(authToken.getRefreshToken()).isEqualTo(refreshToken);
+        verify(tokenProvider).createAccessToken(userId, AuthDomainService.CLIENT_USER_AUTH_TOKEN_ROLE);
+        verify(tokenProvider).getAccessTokenExpiredDate(accessToken);
+        verify(tokenProvider).createRefreshToken(userId, AuthDomainService.CLIENT_USER_AUTH_TOKEN_ROLE);
+        verify(tokenProvider).getRefreshTokenExpiredDate(refreshToken);
     }
 
 }

@@ -1,6 +1,7 @@
 package org.winners.core.domain.cert.service;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,8 +28,8 @@ class CertificationKeyDomainServiceTest extends DomainServiceTest {
 
     private CertificationKeyRepository certificationKeyRepository;
 
-    @BeforeAll
-    public void beforeAll() {
+    @BeforeEach
+    public void beforeEach() {
         this.certificationKeyRepository = Mockito.mock(CertificationKeyRepository.class);
         this.certificationKeyDomainService = new CertificationKeyDomainService(this.certificationKeyRepository);
     }
@@ -37,7 +38,7 @@ class CertificationKeyDomainServiceTest extends DomainServiceTest {
     @DisplayName("인증키 생성")
     void createCertificationKey() {
         // given
-        CertificationKey savedCertificationKey = CertificationKeyMock.createKey();
+        CertificationKey savedCertificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         given(certificationKeyRepository.save(any(CertificationKey.class))).willReturn(savedCertificationKey);
 
         // when
@@ -51,14 +52,16 @@ class CertificationKeyDomainServiceTest extends DomainServiceTest {
     @DisplayName("인증키 조회")
     void getSavedCertificationKey() {
         // given
-        CertificationKey savedCertificationKey = CertificationKeyMock.createKey();
+        CertificationKey savedCertificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         given(certificationKeyRepository.findById(any(UUID.class))).willReturn(Optional.of(savedCertificationKey));
 
         // when
-        CertificationKey returnCertificationKey = certificationKeyDomainService.getSavedCertificationKey(UUID.randomUUID());
+        UUID certificationKeyId = UUID.randomUUID();
+        CertificationKey returnCertificationKey = certificationKeyDomainService.getSavedCertificationKey(certificationKeyId);
 
         // then
         assertThat(savedCertificationKey).isEqualTo(returnCertificationKey);
+        verify(certificationKeyRepository).findById(certificationKeyId);
     }
 
     @Test
@@ -68,13 +71,13 @@ class CertificationKeyDomainServiceTest extends DomainServiceTest {
         given(certificationKeyRepository.findById(any(UUID.class))).willReturn(Optional.empty());
 
         // when
-        UUID id = UUID.randomUUID();
+        UUID certificationKeyId = UUID.randomUUID();
         Throwable exception = assertThrows(NotExistDataException.class,
-            () -> certificationKeyDomainService.getSavedCertificationKey(id));
+            () -> certificationKeyDomainService.getSavedCertificationKey(certificationKeyId));
 
         // then
         assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.NOT_EXIST_CERTIFICATION_KEY.getMessage());
-        verify(certificationKeyRepository).findById(id);
+        verify(certificationKeyRepository).findById(certificationKeyId);
     }
 
 }

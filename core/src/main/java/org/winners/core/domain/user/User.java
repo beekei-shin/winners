@@ -29,7 +29,7 @@ public abstract class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("고유번호")
     @Column(name = "id")
-    private Long id;
+    protected Long id;
 
     @Enumerated(EnumType.STRING)
     @Comment("회원 유형")
@@ -44,10 +44,6 @@ public abstract class User extends BaseEntity {
     @Comment("회원 성명")
     @Column(name = "user_name", length = 100, nullable = false)
     protected String name;
-
-    protected void setMockId(long id) {
-        this.id = id;
-    }
 
     protected User(UserType type, String name) {
         this.type = type;

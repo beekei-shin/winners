@@ -16,7 +16,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthDomainService {
 
-    private final static Set<TokenRole> CLIENT_USER_AUTH_TOKEN_ROLE = Set.of(TokenRole.APP, TokenRole.CLIENT_USER);
+    protected final static Set<TokenRole> CLIENT_USER_AUTH_TOKEN_ROLE = Set.of(TokenRole.APP, TokenRole.CLIENT_USER);
+
     private final TokenProvider tokenProvider;
     private final AuthenticationHistoryRepository authenticationHistoryRepository;
 
@@ -25,7 +26,7 @@ public class AuthDomainService {
         LocalDateTime accessTokenExpireDate = tokenProvider.getAccessTokenExpiredDate(accessToken);
         String refreshToken = tokenProvider.createRefreshToken(userId, CLIENT_USER_AUTH_TOKEN_ROLE);
         LocalDateTime refreshTokenExpireDate = tokenProvider.getRefreshTokenExpiredDate(refreshToken);
-        authenticationHistoryRepository.save(AuthenticationHistory.create(
+        authenticationHistoryRepository.save(AuthenticationHistory.createHistory(
             userId, deviceOs, deviceToken,
             accessToken, accessTokenExpireDate,
             refreshToken, refreshTokenExpireDate));

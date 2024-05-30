@@ -1,6 +1,7 @@
 package org.winners.core.domain.cert.service;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -29,8 +30,8 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
     private PasswordEncoder passwordEncoder;
     private PhoneIdentityCertificationHistoryRepository phoneIdentityCertificationHistoryRepository;
 
-    @BeforeAll
-    public void beforeAll() {
+    @BeforeEach
+    public void beforeEach() {
         this.passwordEncoder = Mockito.mock(PasswordEncoder.class);
         this.phoneIdentityCertificationHistoryRepository = Mockito.mock(PhoneIdentityCertificationHistoryRepository.class);
         this.phoneIdentityCertificationDomainService = new PhoneIdentityCertificationDomainService(this.passwordEncoder, this.phoneIdentityCertificationHistoryRepository);
@@ -40,10 +41,10 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
     @DisplayName("휴대폰 본인인증 OTP 번호 전송")
     void sendOtpNumber() {
         // given
-        String encryptOtpNumber = "test-encryptOtpNumber";
+        String encryptOtpNumber = "encryptOtpNumber";
         given(passwordEncoder.encode(anyString())).willReturn(encryptOtpNumber);
 
-        CertificationKey certificationKey = CertificationKeyMock.createKey();
+        CertificationKey certificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         PhoneIdentityCertificationHistory savedPhoneIdentityCertificationHistory = PhoneIdentityCertificationHistoryMock.createHistory(certificationKey);
         given(phoneIdentityCertificationHistoryRepository.save(any(PhoneIdentityCertificationHistory.class))).willReturn(savedPhoneIdentityCertificationHistory);
 
@@ -64,16 +65,20 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
     @Test
     @DisplayName("휴대폰 본인인증 OTP 번호 인증")
     void certifyOtpNumber() {
-        CertificationKey certificationKey = CertificationKeyMock.createKey();
+        CertificationKey certificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         PhoneIdentityCertificationHistory savedPhoneIdentityCertificationHistory = PhoneIdentityCertificationHistoryMock.createHistory(certificationKey);
         given(phoneIdentityCertificationHistoryRepository.findByCertificationKeyAndPhoneNumber(any(CertificationKey.class), anyString()))
             .willReturn(Optional.of(savedPhoneIdentityCertificationHistory));
         given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
 
-        phoneIdentityCertificationDomainService.certifyOtpNumber(certificationKey, "01011112222", "000000");
+        String phoneNumber = "01011112222";
+        String otpNumber = "000000";
+        phoneIdentityCertificationDomainService.certifyOtpNumber(certificationKey, phoneNumber, otpNumber);
 
         assertThat(savedPhoneIdentityCertificationHistory.getCi()).isNotNull();
         assertThat(savedPhoneIdentityCertificationHistory.getDi()).isNotNull();
+        verify(phoneIdentityCertificationHistoryRepository).findByCertificationKeyAndPhoneNumber(certificationKey, phoneNumber);
+        verify(passwordEncoder).matches(otpNumber, savedPhoneIdentityCertificationHistory.getOtpNumber());
     }
 
     @Test
@@ -84,7 +89,7 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
             .willReturn(Optional.empty());
 
         // when
-        CertificationKey certificationKey = CertificationKeyMock.createKey();
+        CertificationKey certificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         String phoneNumber = "01011112222";
         Throwable exception = assertThrows(NotExistDataException.class,
             () -> phoneIdentityCertificationDomainService.certifyOtpNumber(certificationKey, phoneNumber, "000000"));
@@ -98,7 +103,7 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
     @DisplayName("휴대폰 본인인증 OTP 번호 인증 - OPT 번호 불일치")
     void certifyOtpNumber_incorrectOTPNumber() {
         // given
-        CertificationKey certificationKey = CertificationKeyMock.createKey();
+        CertificationKey certificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         PhoneIdentityCertificationHistory savedPhoneIdentityCertificationHistory = PhoneIdentityCertificationHistoryMock.createHistory(certificationKey);
         given(phoneIdentityCertificationHistoryRepository.findByCertificationKeyAndPhoneNumber(any(CertificationKey.class), anyString()))
             .willReturn(Optional.of(savedPhoneIdentityCertificationHistory));
@@ -120,7 +125,7 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
     @DisplayName("휴대폰 본인인증 정보 조회")
     void getCertificationInfo() {
         // given
-        CertificationKey certificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         PhoneIdentityCertificationHistory savedPhoneIdentityCertificationHistory = PhoneIdentityCertificationHistoryMock.createHistory(certificationKey);
         given(phoneIdentityCertificationHistoryRepository.findByCertificationKey(any(CertificationKey.class)))
             .willReturn(Optional.of(savedPhoneIdentityCertificationHistory));
@@ -135,6 +140,7 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
         assertThat(certificationInfo.getDi()).isEqualTo(savedPhoneIdentityCertificationHistory.getDi());
         assertThat(certificationInfo.getBirthday()).isEqualTo(savedPhoneIdentityCertificationHistory.getBirthday());
         assertThat(certificationInfo.getGender()).isEqualTo(savedPhoneIdentityCertificationHistory.getGender());
+        verify(phoneIdentityCertificationHistoryRepository).findByCertificationKey(certificationKey);
     }
 
     @Test
@@ -145,7 +151,7 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
             .willReturn(Optional.empty());
 
         // when
-        CertificationKey certificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         Throwable exception = assertThrows(NotExistDataException.class,
             () -> phoneIdentityCertificationDomainService.getCertificationInfo(certificationKey));
 

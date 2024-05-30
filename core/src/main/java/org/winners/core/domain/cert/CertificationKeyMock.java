@@ -5,40 +5,40 @@ import java.util.UUID;
 
 public class CertificationKeyMock {
 
-    public static CertificationKey createKey() {
+    public static CertificationKey createKey(UUID id) {
         LocalDateTime requestDatetime = LocalDateTime.now();
         return CertificationKey.builder()
-            .id(UUID.randomUUID())
+            .id(id)
             .certificationType(CertificationType.PHONE_IDENTITY)
             .requestDatetime(requestDatetime)
             .expiredDatetime(requestDatetime.plusMinutes(5))
             .build();
     }
 
-    public static CertificationKey createExpiredKey() {
+    public static CertificationKey createExpiredKey(UUID id) {
         LocalDateTime requestDatetime = LocalDateTime.now();
         return CertificationKey.builder()
-            .id(UUID.randomUUID())
+            .id(id)
             .certificationType(CertificationType.PHONE_IDENTITY)
             .requestDatetime(requestDatetime)
             .expiredDatetime(requestDatetime.minusDays(1))
             .build();
     }
 
-    public static CertificationKey createCertifiedKey() {
-        CertificationKey certificationKey = createKey();
+    public static CertificationKey createCertifiedKey(UUID id) {
+        CertificationKey certificationKey = createKey(id);
         certificationKey.certify();
         return certificationKey;
     }
 
-    public static CertificationKey createUsedKey() {
-        CertificationKey certificationKey = createKey();
+    public static CertificationKey createUsedKey(UUID id) {
+        CertificationKey certificationKey = createKey(id);
         certificationKey.use();
         return certificationKey;
     }
 
-    public static CertificationKey createCertifiedAndUsedKey() {
-        CertificationKey certificationKey = createKey();
+    public static CertificationKey createCertifiedAndUsedKey(UUID id) {
+        CertificationKey certificationKey = createKey(id);
         certificationKey.certify();
         certificationKey.use();
         return certificationKey;

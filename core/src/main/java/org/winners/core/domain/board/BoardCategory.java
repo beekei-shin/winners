@@ -18,7 +18,7 @@ public class BoardCategory extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("고유번호")
     @Column(name = "id")
-    private Long id;
+    protected Long id;
 
     @Comment("게시판 고유번호")
     @Column(name = "board_id", nullable = false, updatable = false)
@@ -32,12 +32,16 @@ public class BoardCategory extends BaseEntity {
     @Column(name = "order_number", nullable = false)
     private Integer orderNumber;
 
-    public static BoardCategory create(long boardId, String name, int orderNumber) {
+    public static BoardCategory createCategory(long boardId, String name, int orderNumber) {
         return BoardCategory.builder()
             .boardId(boardId)
             .name(name)
             .orderNumber(orderNumber)
             .build();
+    }
+
+    public void updateName(String name) {
+        this.name = name;
     }
 
 }

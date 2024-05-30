@@ -27,7 +27,7 @@ public class ClientUserDomainService {
     }
 
     public ClientUser saveClientUser(SaveClientUserParameterDTO parameter) {
-        return clientUserRepository.save(ClientUser.create(
+        return clientUserRepository.save(ClientUser.createUser(
             parameter.getName(),
             parameter.getPhoneNumber(),
             parameter.getCi(),

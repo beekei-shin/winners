@@ -58,7 +58,7 @@ public class CertificationKey extends BaseEntity {
     @Column(name = "expired_datetime", nullable = false, updatable = false)
     private LocalDateTime expiredDatetime;
 
-    public static CertificationKey create(CertificationType certificationType, int expiredMinute) {
+    public static CertificationKey createKey(CertificationType certificationType, int expiredMinute) {
         LocalDateTime requestDatetime = LocalDateTime.now();
         return CertificationKey.builder()
             .certificationType(certificationType)

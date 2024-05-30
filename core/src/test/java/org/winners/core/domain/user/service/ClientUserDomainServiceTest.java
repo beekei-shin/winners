@@ -67,7 +67,7 @@ class ClientUserDomainServiceTest extends DomainServiceTest {
     @Test
     @DisplayName("사용자 회원 등록")
     void saveClientUser() {
-        ClientUser savedClientUser = ClientUserMock.createUser();
+        ClientUser savedClientUser = ClientUserMock.createUser(1L);
         given(clientUserRepository.save(any(ClientUser.class))).willReturn(savedClientUser);
 
         SaveClientUserParameterDTO saveClientUserParameter = SaveClientUserParameterDTO.builder()
@@ -86,7 +86,7 @@ class ClientUserDomainServiceTest extends DomainServiceTest {
     @Test
     @DisplayName("사용자 회원 조회")
     void getClientUser() {
-        ClientUser savedClientUser = ClientUserMock.createUser();
+        ClientUser savedClientUser = ClientUserMock.createUser(1L);
         given(clientUserRepository.findById(anyLong())).willReturn(Optional.of(savedClientUser));
 
         ClientUser returnClientUser = clientUserDomainService.getClientUser(1L);

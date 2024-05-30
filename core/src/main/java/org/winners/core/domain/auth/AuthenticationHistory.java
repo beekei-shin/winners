@@ -52,10 +52,10 @@ public class AuthenticationHistory extends BaseEntity {
     @Column(name = "refresh_token_expire_datetime", nullable = false, updatable = false)
     private LocalDateTime refreshTokenExpireDatetime;
 
-    public static AuthenticationHistory create(long userId,
-                                               DeviceOs deviceOs, String deviceToken,
-                                               String accessToken, LocalDateTime accessTokenExpireDatetime,
-                                               String refreshToken, LocalDateTime refreshTokenExpireDatetime) {
+    public static AuthenticationHistory createHistory(long userId,
+                                                      DeviceOs deviceOs, String deviceToken,
+                                                      String accessToken, LocalDateTime accessTokenExpireDatetime,
+                                                      String refreshToken, LocalDateTime refreshTokenExpireDatetime) {
         return AuthenticationHistory.builder()
             .userId(userId)
             .deviceOs(deviceOs)

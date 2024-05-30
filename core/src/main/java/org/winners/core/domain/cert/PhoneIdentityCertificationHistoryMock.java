@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public class PhoneIdentityCertificationHistoryMock {
 
     public static PhoneIdentityCertificationHistory createHistory(CertificationKey certificationKey) {
-        return PhoneIdentityCertificationHistory.create(
+        return PhoneIdentityCertificationHistory.createHistory(
             certificationKey,
             "홍길동", LocalDate.of(1993, 10, 20), Gender.MALE,
             MobileCarrier.LGM, "01011112222",

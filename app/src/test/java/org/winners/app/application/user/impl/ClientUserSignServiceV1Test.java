@@ -59,7 +59,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 가입")
     void signUp() {
         // given
-        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
 
         PhoneIdentityCertificationHistory certifiedHistory = PhoneIdentityCertificationHistoryMock.createCertifiedHistory(certifiedCertificationKey);
@@ -69,7 +69,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
         willDoNothing().given(clientUserDomainService).duplicatePhoneNumberCheck(anyString());
         willDoNothing().given(clientUserDomainService).duplicateCiCheck(anyString());
 
-        ClientUser clientUser = ClientUserMock.createUser();
+        ClientUser clientUser = ClientUserMock.createUser(1L);
         given(clientUserDomainService.saveClientUser(any(SaveClientUserParameterDTO.class))).willReturn(clientUser);
 
         AuthTokenDTO authToken = AuthTokenDTO.create("accessToken", "refreshToken");
@@ -116,7 +116,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 가입 - 만료된 인증키")
     void signUp_expiredCertificationKey() {
         // given
-        CertificationKey expiredCertificationKey = CertificationKeyMock.createExpiredKey();
+        CertificationKey expiredCertificationKey = CertificationKeyMock.createExpiredKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(expiredCertificationKey);
 
         // when
@@ -135,7 +135,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 가입 - 인증되지 않은 인증키")
     void signUp_notCertifiedKey() {
         // given
-        CertificationKey certificationKey = CertificationKeyMock.createKey();
+        CertificationKey certificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certificationKey);
 
         // when
@@ -154,7 +154,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 가입 - 사용한 인증키")
     void signUp_usedCertificationKey() {
         // given
-        CertificationKey usedCertificationKey = CertificationKeyMock.createCertifiedAndUsedKey();
+        CertificationKey usedCertificationKey = CertificationKeyMock.createCertifiedAndUsedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(usedCertificationKey);
 
         // when
@@ -173,7 +173,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 가입 - 존재하지 않는 인증 정보")
     void signUp_notExistCertificationInfo() {
         // given
-        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
         willThrow(NotExistDataException.class).given(phoneIdentityCertificationDomainService).getCertificationInfo(any(CertificationKey.class));
 
@@ -193,7 +193,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 가입 - 중복된 휴대폰번호")
     void signUp_duplicatedPhoneNumber() {
         // given
-        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
 
         PhoneIdentityCertificationHistory certifiedHistory = PhoneIdentityCertificationHistoryMock.createCertifiedHistory(certifiedCertificationKey);
@@ -219,7 +219,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 가입 - 중복된 CI")
     void signUp_duplicatedCi() {
         // given
-        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
 
         PhoneIdentityCertificationHistory certifiedHistory = PhoneIdentityCertificationHistoryMock.createCertifiedHistory(certifiedCertificationKey);
@@ -247,14 +247,14 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 로그인")
     void signIn() {
         // given
-        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
 
         PhoneIdentityCertificationHistory certifiedHistory = PhoneIdentityCertificationHistoryMock.createCertifiedHistory(certifiedCertificationKey);
         CertificationInfoDTO certificationInfo = CertificationInfoDTO.convert(certifiedHistory);
         given(phoneIdentityCertificationDomainService.getCertificationInfo(any(CertificationKey.class))).willReturn(certificationInfo);
 
-        ClientUser clientUser = ClientUserMock.createUser();
+        ClientUser clientUser = ClientUserMock.createUser(1L);
         given(clientUserRepository.findByPhoneNumberAndCi(anyString(), anyString())).willReturn(Optional.of(clientUser));
 
         AuthTokenDTO authToken = AuthTokenDTO.create("accessToken", "refreshToken");
@@ -300,7 +300,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 로그인 - 만료된 인증키")
     void signIn_expiredCertificationKey() {
         // given
-        CertificationKey expiredCertificationKey = CertificationKeyMock.createExpiredKey();
+        CertificationKey expiredCertificationKey = CertificationKeyMock.createExpiredKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(expiredCertificationKey);
 
         // when
@@ -319,7 +319,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 로그인 - 인증되지 않은 인증키")
     void signIn_notCertifiedKey() {
         // given
-        CertificationKey certificationKey = CertificationKeyMock.createKey();
+        CertificationKey certificationKey = CertificationKeyMock.createKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certificationKey);
 
         // when
@@ -338,7 +338,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 로그인 - 사용한 인증키")
     void signIn_usedCertificationKey() {
         // given
-        CertificationKey usedCertificationKey = CertificationKeyMock.createCertifiedAndUsedKey();
+        CertificationKey usedCertificationKey = CertificationKeyMock.createCertifiedAndUsedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(usedCertificationKey);
 
         // when
@@ -357,7 +357,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 로그인 - 존재하지 않는 인증 정보")
     void signIn_notExistCertificationInfo() {
         // given
-        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
         willThrow(NotExistDataException.class).given(phoneIdentityCertificationDomainService).getCertificationInfo(any(CertificationKey.class));
 
@@ -377,7 +377,7 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 로그인 - 존재하지 않는 회원")
     void signIn_notExistClientUser() {
         // given
-        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
 
         PhoneIdentityCertificationHistory certifiedHistory = PhoneIdentityCertificationHistoryMock.createCertifiedHistory(certifiedCertificationKey);
@@ -405,14 +405,14 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 로그인 - 차단 회원")
     void signIn_blockUser() {
         // given
-        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
 
         PhoneIdentityCertificationHistory certifiedHistory = PhoneIdentityCertificationHistoryMock.createCertifiedHistory(certifiedCertificationKey);
         CertificationInfoDTO certificationInfo = CertificationInfoDTO.convert(certifiedHistory);
         given(phoneIdentityCertificationDomainService.getCertificationInfo(any(CertificationKey.class))).willReturn(certificationInfo);
 
-        ClientUser clientUser = ClientUserMock.createBlockUser();
+        ClientUser clientUser = ClientUserMock.createBlockUser(1L);
         given(clientUserRepository.findByPhoneNumberAndCi(anyString(), anyString())).willReturn(Optional.of(clientUser));
 
         // when
@@ -432,14 +432,14 @@ class ClientUserSignServiceV1Test extends ApplicationServiceTest {
     @DisplayName("사용자 회원 로그인 - 탈퇴 회원")
     void signIn_resignUser() {
         // given
-        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey();
+        CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);
 
         PhoneIdentityCertificationHistory certifiedHistory = PhoneIdentityCertificationHistoryMock.createCertifiedHistory(certifiedCertificationKey);
         CertificationInfoDTO certificationInfo = CertificationInfoDTO.convert(certifiedHistory);
         given(phoneIdentityCertificationDomainService.getCertificationInfo(any(CertificationKey.class))).willReturn(certificationInfo);
 
-        ClientUser clientUser = ClientUserMock.createResignUser();
+        ClientUser clientUser = ClientUserMock.createResignUser(1L);
         given(clientUserRepository.findByPhoneNumberAndCi(anyString(), anyString())).willReturn(Optional.of(clientUser));
 
         // when
