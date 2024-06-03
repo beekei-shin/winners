@@ -22,14 +22,16 @@ class BoardCategoryTest {
     }
 
     @Test
-    @DisplayName("카테고리명 수정")
-    void updateName() {
+    @DisplayName("카테고리 수정")
+    void updateCategory() {
         BoardCategory category = BoardCategoryMock.createCategory(1L, "카테고리1", 1);
 
         String updateCategoryName = "카테고리1 수정";
-        category.updateName(updateCategoryName);
+        int updateOrderNumber = 2;
+        category.updateCategory(updateCategoryName, updateOrderNumber);
 
         assertThat(category.getName()).isEqualTo(updateCategoryName);
+        assertThat(category.getOrderNumber()).isEqualTo(updateOrderNumber);
     }
 
 }

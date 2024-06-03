@@ -15,7 +15,7 @@ public enum SecurityWhitelist implements EnumClass {
 
     USER_SIGN("/v*/user/client/sign/**", Set.of(HttpMethod.POST), true),
     CERT_PHONE_IDENTITY("/v*/cert/phone-identity/**", Set.of(HttpMethod.POST, HttpMethod.PUT), true),
-    BOARD_MANAGE("/v*/board/**", Set.of(HttpMethod.POST, HttpMethod.DELETE), true),
+    BOARD_MANAGE("/v*/board/**", Set.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE), true),
     ;
 
     private final String path;

@@ -3,13 +3,18 @@ package org.winners.backoffice.application.board.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.winners.backoffice.application.board.BoardManageService;
-import org.winners.backoffice.application.board.dto.UpdateBoardCategoryParameterDTO;
-import org.winners.core.domain.board.*;
+import org.winners.core.domain.board.Board;
+import org.winners.core.domain.board.BoardCategory;
+import org.winners.core.domain.board.BoardRepository;
+import org.winners.core.domain.board.BoardType;
 import org.winners.core.domain.board.service.BoardDomainService;
+import org.winners.core.domain.board.service.dto.SaveAndUpdateBoardCategoryParameterDTO;
 
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -26,21 +31,30 @@ public class BoardManageServiceV1 implements BoardManageService {
     }
 
     @Override
-    public void updateBoard(long boardId, String boardName, List<UpdateBoardCategoryParameterDTO> updateCategoryList) {
+    public void updateBoard(long boardId, String boardName, List<SaveAndUpdateBoardCategoryParameterDTO> updateCategoryList) {
         Board board = boardDomainService.getBoard(boardId);
+
+        Set<Long> updateCategoryIds = updateCategoryList.stream()
+            .map(SaveAndUpdateBoardCategoryParameterDTO::getCategoryId)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
+        Set<Long> deleteCategoryIds = board.getCategoryList().stream()
+            .map(BoardCategory::getId)
+            .filter(categoryId -> !updateCategoryIds.contains(categoryId))
+            .collect(Collectors.toSet());
+
         boardDomainService.duplicateBoardCheck(board.getType(), boardName, boardId);
+        boardDomainService.possibleDeleteCategoryCheck(board, deleteCategoryIds);
+
         board.updateBoard(boardName);
-        updateCategoryList.forEach(updateCategory ->
-            Optional.ofNullable(updateCategory.getCategoryId())
-                .ifPresentOrElse(
-                    categoryId -> board.updateCategory(updateCategory.getCategoryId(), updateCategory.getCategoryName()),
-                    () -> board.saveCategory(updateCategory.getCategoryName())));
+        board.deleteCategories(deleteCategoryIds);
+        board.saveAndUpdateCategories(updateCategoryList);
     }
 
     @Override
     public void deleteBoard(long boardId) {
         Board board = boardDomainService.getBoard(boardId);
-        boardDomainService.possibleDeleteCheck(board);
+        boardDomainService.possibleDeleteBoardCheck(board);
         boardDomainService.deleteBoard(board);
     }
 

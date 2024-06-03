@@ -1,4 +1,4 @@
-package org.winners.backoffice.presentation.board;
+package org.winners.backoffice.presentation;
 
 public interface BackofficeController {
 

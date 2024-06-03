@@ -12,6 +12,7 @@ import org.winners.core.domain.DomainServiceTest;
 import org.winners.core.domain.board.*;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -104,7 +105,7 @@ class BoardDomainServiceTest extends DomainServiceTest {
         given(boardPostRepository.countByBoardId(anyLong())).willReturn(0L);
 
         Board board = BoardMock.createBoard(1L);
-        boardDomainService.possibleDeleteCheck(board);
+        boardDomainService.possibleDeleteBoardCheck(board);
 
         verify(boardPostRepository).countByBoardId(board.getId());
     }
@@ -116,7 +117,8 @@ class BoardDomainServiceTest extends DomainServiceTest {
 
         Board board = BoardMock.createBoard(1L);
         Throwable exception = assertThrows(CannotProcessedDataException.class,
-            () -> boardDomainService.possibleDeleteCheck(board));
+            () -> boardDomainService.possibleDeleteBoardCheck(board));
+
         assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.CANNOT_DELETE_BOARD.getMessage());
         verify(boardPostRepository).countByBoardId(board.getId());
     }
@@ -132,6 +134,32 @@ class BoardDomainServiceTest extends DomainServiceTest {
 
         verify(boardCategoryRepository).deleteByBoardId(board.getId());
         verify(boardRepository).delete(board);
+    }
+
+    @Test
+    @DisplayName("카테고리 삭제 가능 여부 확인")
+    public void possibleDeleteCategoryCheck() {
+        given(boardPostRepository.countByBoardIdAndCategoryIdIn(anyLong(), anySet())).willReturn(0L);
+
+        Board board = BoardMock.createBoard(1L);
+        Set<Long> deleteCategoryIds = Set.of(1L, 2L);
+        boardDomainService.possibleDeleteCategoryCheck(board, deleteCategoryIds);
+
+        verify(boardPostRepository).countByBoardIdAndCategoryIdIn(board.getId(), deleteCategoryIds);
+    }
+
+    @Test
+    @DisplayName("카테고리 삭제 가능 여부 확인 - 삭제 불가능")
+    public void possibleDeleteCategoryCheck_cannotPossibleDelete() {
+        given(boardPostRepository.countByBoardIdAndCategoryIdIn(anyLong(), anySet())).willReturn(1L);
+
+        Board board = BoardMock.createBoard(1L);
+        Set<Long> deleteCategoryIds = Set.of(1L, 2L);
+        Throwable exception = assertThrows(CannotProcessedDataException.class,
+            () -> boardDomainService.possibleDeleteCategoryCheck(board, deleteCategoryIds));
+
+        assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.CANNOT_DELETE_BOARD_CATEGORY.getMessage());
+        verify(boardPostRepository).countByBoardIdAndCategoryIdIn(board.getId(), deleteCategoryIds);
     }
 
 }

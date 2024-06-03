@@ -28,7 +28,7 @@ public class BoardCategory extends BaseEntity {
     @Column(name = "category_name", length = 50, nullable = false)
     private String name;
 
-    @Comment("정렬 번호")
+    @Comment("정렬순서")
     @Column(name = "order_number", nullable = false)
     private Integer orderNumber;
 
@@ -40,8 +40,9 @@ public class BoardCategory extends BaseEntity {
             .build();
     }
 
-    public void updateName(String name) {
+    public void updateCategory(String name, int orderNumber) {
         this.name = name;
+        this.orderNumber = orderNumber;
     }
 
 }

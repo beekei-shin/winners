@@ -11,7 +11,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.winners.core.config.presentation.ApiResponse;
 import org.winners.core.config.presentation.ApiResponseType;
 
-import javax.naming.InsufficientResourcesException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Optional;

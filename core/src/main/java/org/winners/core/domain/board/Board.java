@@ -3,9 +3,12 @@ package org.winners.core.domain.board;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.winners.core.domain.board.service.dto.SaveAndUpdateBoardCategoryParameterDTO;
 import org.winners.core.domain.common.BaseEntity;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Comment("게시판")
 @Getter
@@ -32,7 +35,7 @@ public class Board extends BaseEntity {
     private String name;
 
     @OrderBy("orderNumber ASC")
-    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST })
+    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST }, orphanRemoval = true)
     @JoinColumn(name = "board_id")
     protected List<BoardCategory> categoryList;
 
@@ -47,20 +50,43 @@ public class Board extends BaseEntity {
         this.name = name;
     }
 
+    public List<BoardCategory> getCategoryList() {
+        return Optional.ofNullable(this.categoryList)
+            .map(categoryList -> categoryList.stream()
+                .sorted(Comparator.comparing(BoardCategory::getOrderNumber))
+                .collect(Collectors.toList()))
+            .orElseGet(ArrayList::new);
+    }
+
+    public Optional<BoardCategory> getCategory(long categoryId) {
+        return Optional.ofNullable(this.categoryList)
+            .flatMap(categoryList -> categoryList.stream().filter(boardCategory -> boardCategory.getId().equals(categoryId)).findFirst());
+    }
+
     public void saveCategories(LinkedHashSet<String> categoryNames) {
-        categoryNames.forEach(this::saveCategory);
+        if (categoryNames.isEmpty()) return;
+        if (this.categoryList == null) this.categoryList = new ArrayList<>();
+        List<String> categoryNameList = new ArrayList<>(categoryNames);
+        IntStream.range(0, categoryNameList.size())
+            .forEach(idx -> this.categoryList.add(BoardCategory.createCategory(this.id, categoryNameList.get(idx), idx + 1)));
     }
 
-    public void saveCategory(String categoryName) {
-        if (this.getCategoryList() == null) this.categoryList = new ArrayList<>();
-        this.categoryList.add(BoardCategory.createCategory(this.id, categoryName, this.categoryList.size()+ 1));
+    public void saveAndUpdateCategories(List<SaveAndUpdateBoardCategoryParameterDTO> updateCategoryList) {
+        IntStream.range(0, updateCategoryList.size()).forEach(idx -> {
+            SaveAndUpdateBoardCategoryParameterDTO updateCategory = updateCategoryList.get(idx);
+            String categoryName = updateCategory.getCategoryName();
+            int orderNumber = updateCategory.getOrderNumber();
+            Optional.ofNullable(updateCategory.getCategoryId()).ifPresentOrElse(
+                categoryId -> this.getCategory(categoryId).ifPresent(category -> category.updateCategory(categoryName, orderNumber)),
+                () -> this.categoryList.add(BoardCategory.createCategory(this.id, categoryName, orderNumber)));
+        });
     }
 
-    public void updateCategory(Long categoryId, String categoryName) {
-        Optional.ofNullable(this.getCategoryList())
-            .flatMap(categoryList -> categoryList.stream()
-            .filter(category -> category.getId().equals(categoryId)).findFirst())
-            .ifPresent(category -> category.updateName(categoryName));
+    public void deleteCategories(Set<Long> categoryIds) {
+        Optional.ofNullable(this.categoryList)
+            .ifPresent(categoryList -> categoryList.removeAll(categoryList.stream()
+                .filter(category -> categoryIds.contains(category.getId()))
+                .toList()));
     }
 
 }

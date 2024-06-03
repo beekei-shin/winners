@@ -6,16 +6,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.winners.backoffice.application.ApplicationServiceTest;
-import org.winners.backoffice.application.board.dto.UpdateBoardCategoryParameterDTO;
 import org.winners.core.config.exception.CannotProcessedDataException;
 import org.winners.core.config.exception.DuplicatedDataException;
 import org.winners.core.config.exception.NotExistDataException;
 import org.winners.core.domain.board.*;
 import org.winners.core.domain.board.service.BoardDomainService;
+import org.winners.core.domain.board.service.dto.SaveAndUpdateBoardCategoryParameterDTO;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +52,7 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
         List<BoardCategory> categoryList = board.getCategoryList();
         List<String> categoryNameList = new ArrayList<>(categoryNames);
         assertThat(categoryList.size()).isEqualTo(categoryNames.size());
-        IntStream.range(0, categoryList.size() - 1).forEach(idx -> {
+        IntStream.range(0, categoryList.size()).forEach(idx -> {
             BoardCategory boardCategory = categoryList.get(idx);
             assertThat(boardCategory.getName()).isEqualTo(categoryNameList.get(idx));
             assertThat(boardCategory.getOrderNumber()).isEqualTo(idx + 1);
@@ -68,6 +69,7 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
         String boardName = "공지사항";
         Throwable exception = assertThrows(DuplicatedDataException.class,
             () -> boardManageServiceV1.saveBoard(boardType, boardName, new LinkedHashSet<>()));
+
         verify(boardDomainService).duplicateBoardCheck(boardType, boardName);
     }
 
@@ -76,29 +78,44 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
     void updateBoard() {
         List<BoardCategory> savedCategoryList = new ArrayList<>() {{
             add(BoardCategoryMock.createCategory(1L, "카테고리1", 1));
+            add(BoardCategoryMock.createCategory(2L, "카테고리2", 2));
+            add(BoardCategoryMock.createCategory(3L, "카테고리3", 3));
         }};
         Board board = BoardMock.createHasCategoryBoard(1L, savedCategoryList);
         given(boardDomainService.getBoard(anyLong())).willReturn(board);
         willDoNothing().given(boardDomainService).duplicateBoardCheck(any(BoardType.class), anyString(), anyLong());
+        willDoNothing().given(boardDomainService).possibleDeleteCategoryCheck(any(Board.class), anySet());
 
         long boardId = 10;
         String boardName = "수정할 게시판명";
-        List<UpdateBoardCategoryParameterDTO> updateCategoryList = List.of(
-            UpdateBoardCategoryParameterDTO.builder().categoryId(1L).categoryName("수정할 카테고리1").build(),
-            UpdateBoardCategoryParameterDTO.builder().categoryName("수정할 카테고리2").build(),
-            UpdateBoardCategoryParameterDTO.builder().categoryName("수정할 카테고리3").build());
+        List<SaveAndUpdateBoardCategoryParameterDTO> updateCategoryList = List.of(
+            SaveAndUpdateBoardCategoryParameterDTO.builder()
+                .categoryId(1L)
+                .categoryName("수정할 카테고리1")
+                .orderNumber(1).build(),
+            SaveAndUpdateBoardCategoryParameterDTO.builder()
+                .categoryName("수정할 카테고리2")
+                .orderNumber(2)
+                .build(),
+            SaveAndUpdateBoardCategoryParameterDTO.builder()
+                .categoryName("수정할 카테고리3")
+                .orderNumber(3)
+                .build());
         boardManageServiceV1.updateBoard(boardId, boardName, updateCategoryList);
 
-        List<BoardCategory> categoryList = board.getCategoryList();
         assertThat(board.getName()).isEqualTo(boardName);
-        assertThat(categoryList.size()).isEqualTo(updateCategoryList.size());
-        IntStream.range(0, categoryList.size() - 1).forEach(idx -> {
-            BoardCategory boardCategory = categoryList.get(idx);
-            assertThat(boardCategory.getName()).isEqualTo(updateCategoryList.get(idx).getCategoryName());
-            assertThat(boardCategory.getOrderNumber()).isEqualTo(idx + 1);
+        assertThat(board.getCategoryList().size()).isEqualTo(updateCategoryList.size());
+        IntStream.range(0, board.getCategoryList().size()).forEach(idx -> {
+            BoardCategory category = board.getCategoryList().get(idx);
+            SaveAndUpdateBoardCategoryParameterDTO updateCategory = updateCategoryList.get(idx);
+            assertThat(category.getId()).isEqualTo(updateCategory.getCategoryId());
+            assertThat(category.getName()).isEqualTo(updateCategory.getCategoryName());
+            assertThat(category.getOrderNumber()).isEqualTo(updateCategory.getOrderNumber());
         });
+
         verify(boardDomainService).getBoard(boardId);
         verify(boardDomainService).duplicateBoardCheck(board.getType(), boardName, boardId);
+        verify(boardDomainService).possibleDeleteCategoryCheck(board, Set.of(2L, 3L));
     }
 
     @Test
@@ -110,6 +127,7 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
         String boardName = "수정할 게시판명";
         Throwable exception = assertThrows(NotExistDataException.class,
             () -> boardManageServiceV1.updateBoard(boardId, boardName, List.of()));
+
         verify(boardDomainService).getBoard(boardId);
     }
 
@@ -124,8 +142,36 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
         String boardName = "수정할 게시판명";
         Throwable exception = assertThrows(DuplicatedDataException.class,
             () -> boardManageServiceV1.updateBoard(boardId, boardName, List.of()));
+
         verify(boardDomainService).getBoard(boardId);
         verify(boardDomainService).duplicateBoardCheck(board.getType(), boardName, boardId);
+    }
+
+    @Test
+    @DisplayName("게시판 수정 - 카테고리 삭제 불가")
+    void updateBoard_cannotDeleteCategory() {
+        List<BoardCategory> savedCategoryList = new ArrayList<>() {{
+            add(BoardCategoryMock.createCategory(1L, "카테고리1", 1));
+            add(BoardCategoryMock.createCategory(2L, "카테고리2", 2));
+            add(BoardCategoryMock.createCategory(3L, "카테고리3", 3));
+        }};
+        Board board = BoardMock.createHasCategoryBoard(1L, savedCategoryList);
+        given(boardDomainService.getBoard(anyLong())).willReturn(board);
+        willDoNothing().given(boardDomainService).duplicateBoardCheck(any(BoardType.class), anyString(), anyLong());
+        willThrow(CannotProcessedDataException.class).given(boardDomainService).possibleDeleteCategoryCheck(any(Board.class), anySet());
+
+        long boardId = 10;
+        String boardName = "수정할 게시판명";
+        List<SaveAndUpdateBoardCategoryParameterDTO> updateCategoryList = List.of(
+            SaveAndUpdateBoardCategoryParameterDTO.builder().categoryId(1L).categoryName("수정할 카테고리1").build(),
+            SaveAndUpdateBoardCategoryParameterDTO.builder().categoryName("수정할 카테고리2").build(),
+            SaveAndUpdateBoardCategoryParameterDTO.builder().categoryName("수정할 카테고리3").build());
+        Throwable exception = assertThrows(CannotProcessedDataException.class,
+            () -> boardManageServiceV1.updateBoard(boardId, boardName, updateCategoryList));
+
+        verify(boardDomainService).getBoard(boardId);
+        verify(boardDomainService).duplicateBoardCheck(board.getType(), boardName, boardId);
+        verify(boardDomainService).possibleDeleteCategoryCheck(board, Set.of(2L, 3L));
     }
 
     @Test
@@ -133,14 +179,14 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
     void deleteBoard() {
         Board board = BoardMock.createBoard(1L);
         given(boardDomainService.getBoard(anyLong())).willReturn(board);
-        willDoNothing().given(boardDomainService).possibleDeleteCheck(any(Board.class));
+        willDoNothing().given(boardDomainService).possibleDeleteBoardCheck(any(Board.class));
         willDoNothing().given(boardDomainService).deleteBoard(any(Board.class));
 
         long boardId = 10;
         boardManageServiceV1.deleteBoard(boardId);
 
         verify(boardDomainService).getBoard(boardId);
-        verify(boardDomainService).possibleDeleteCheck(board);
+        verify(boardDomainService).possibleDeleteBoardCheck(board);
         verify(boardDomainService).deleteBoard(board);
     }
 
@@ -152,21 +198,23 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
         long boardId = 10;
         Throwable exception = assertThrows(NotExistDataException.class,
             () -> boardManageServiceV1.deleteBoard(boardId));
+
         verify(boardDomainService).getBoard(boardId);
     }
 
     @Test
-    @DisplayName("게시판 삭제 - 게시글이 등록된 게시판")
-    void deleteBoard_savedBoardPost() {
+    @DisplayName("게시판 삭제 - 게시판 삭제 불가")
+    void deleteBoard_cannotDeleteBoard() {
         Board board = BoardMock.createBoard(1L);
         given(boardDomainService.getBoard(anyLong())).willReturn(board);
-        willThrow(CannotProcessedDataException.class).given(boardDomainService).possibleDeleteCheck(any(Board.class));
+        willThrow(CannotProcessedDataException.class).given(boardDomainService).possibleDeleteBoardCheck(any(Board.class));
 
         long boardId = 10;
         Throwable exception = assertThrows(CannotProcessedDataException.class,
             () -> boardManageServiceV1.deleteBoard(boardId));
+
         verify(boardDomainService).getBoard(boardId);
-        verify(boardDomainService).possibleDeleteCheck(board);
+        verify(boardDomainService).possibleDeleteBoardCheck(board);
     }
 
 }

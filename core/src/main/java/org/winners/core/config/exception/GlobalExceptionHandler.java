@@ -44,6 +44,7 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ApiResponse<?>> badRequestExceptionHandler(Exception e) {
         final ApiResponseType apiResponseType = ApiResponseType.BAD_REQUEST;
+        e.printStackTrace();
         if (e.getClass().equals(MethodArgumentNotValidException.class)) {
             MethodArgumentNotValidException notValidException = (MethodArgumentNotValidException) e;
             String fieldName = Objects.requireNonNull(notValidException.getFieldError()).getField();

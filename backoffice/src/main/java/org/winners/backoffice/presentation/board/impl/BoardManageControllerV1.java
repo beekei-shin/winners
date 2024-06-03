@@ -5,10 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.winners.backoffice.application.board.BoardManageService;
-import org.winners.backoffice.presentation.board.BackofficeController;
+import org.winners.backoffice.presentation.BackofficeController;
 import org.winners.backoffice.presentation.board.BoardManageController;
 import org.winners.backoffice.presentation.board.request.DeleteBoardRequestDTO;
 import org.winners.backoffice.presentation.board.request.SaveBoardRequestDTO;
+import org.winners.backoffice.presentation.board.request.UpdateBoardRequestDTO;
 import org.winners.core.config.presentation.ApiResponse;
 
 @RestController
@@ -22,6 +23,12 @@ public class BoardManageControllerV1 implements BoardManageController {
     @Override
     public ApiResponse<?> saveBoard(SaveBoardRequestDTO request) {
         boardManageServiceV1.saveBoard(request.getBoardType(), request.getBoardName(), request.getCategoryNames());
+        return ApiResponse.success();
+    }
+
+    @Override
+    public ApiResponse<?> updateBoard(UpdateBoardRequestDTO request) {
+        boardManageServiceV1.updateBoard(request.getBoardId(), request.getBoardName(), request.convertParameter());
         return ApiResponse.success();
     }
 

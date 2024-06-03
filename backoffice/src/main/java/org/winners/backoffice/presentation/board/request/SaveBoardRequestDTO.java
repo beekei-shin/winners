@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.winners.core.config.presentation.validation.ValidEnum;
 import org.winners.core.domain.board.BoardType;
+import org.winners.core.domain.board.service.BoardDomainService;
 
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class SaveBoardRequestDTO {
     private String boardName;
 
     @NotNull
-    @Size(min = 1, max = 10)
+    @Size(min = 1, max = BoardDomainService.BOARD_CATEGORY_MAX_COUNT)
     private LinkedHashSet<String> categoryNames;
 
     public BoardType getBoardType() {

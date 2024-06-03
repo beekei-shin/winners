@@ -7,11 +7,14 @@ import org.winners.backoffice.application.board.BoardManageService;
 import org.winners.backoffice.presentation.ControllerTest;
 import org.winners.backoffice.presentation.board.request.DeleteBoardRequestDTO;
 import org.winners.backoffice.presentation.board.request.SaveBoardRequestDTO;
+import org.winners.backoffice.presentation.board.request.UpdateBoardRequestDTO;
 import org.winners.core.domain.board.BoardType;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 
@@ -38,6 +41,22 @@ class BoardManageControllerV1Test extends ControllerTest {
 
         verify(boardManageService).saveBoard(request.getBoardType(), request.getBoardName(), request.getCategoryNames());
     }
+
+    @Test
+    @DisplayName("게시판 수정")
+    void updateBoard() {
+        willDoNothing().given(boardManageService).updateBoard(anyLong(), anyString(), anyList());
+
+        UpdateBoardRequestDTO request = new UpdateBoardRequestDTO(1L, "커뮤니티",
+            List.of(
+                new UpdateBoardRequestDTO.UpdateCategoryRequestDTO(1L, "카테고리1", 1),
+                new UpdateBoardRequestDTO.UpdateCategoryRequestDTO(2L, "카테고리2", 2),
+                new UpdateBoardRequestDTO.UpdateCategoryRequestDTO(null, "카테고리3", 3)
+            ));
+
+        putTest(request, null);
+    }
+
 
     @Test
     @DisplayName("게시판 삭제")

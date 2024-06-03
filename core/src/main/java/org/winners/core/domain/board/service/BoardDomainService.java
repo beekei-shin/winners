@@ -9,10 +9,13 @@ import org.winners.core.config.exception.NotExistDataException;
 import org.winners.core.domain.board.*;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class BoardDomainService {
+
+    public static final int BOARD_CATEGORY_MAX_COUNT = 10;
 
     private final BoardRepository boardRepository;
     private final BoardPostRepository boardPostRepository;
@@ -38,7 +41,7 @@ public class BoardDomainService {
             });
     }
 
-    public void possibleDeleteCheck(Board board) {
+    public void possibleDeleteBoardCheck(Board board) {
         if (boardPostRepository.countByBoardId(board.getId()) > 0)
             throw new CannotProcessedDataException(ExceptionMessageType.CANNOT_DELETE_BOARD);
     }
@@ -46,6 +49,11 @@ public class BoardDomainService {
     public void deleteBoard(Board board) {
         boardCategoryRepository.deleteByBoardId(board.getId());
         boardRepository.delete(board);
+    }
+
+    public void possibleDeleteCategoryCheck(Board board, Set<Long> deleteCategoryIds) {
+        if (boardPostRepository.countByBoardIdAndCategoryIdIn(board.getId(), deleteCategoryIds) > 0)
+            throw new CannotProcessedDataException(ExceptionMessageType.CANNOT_DELETE_BOARD_CATEGORY);
     }
 
 }
