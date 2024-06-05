@@ -1,4 +1,4 @@
-package org.winners.core.config.security;
+package org.winners.app.config.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;

@@ -1,4 +1,4 @@
-package org.winners.core.config.security.handler;
+package org.winners.app.config.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

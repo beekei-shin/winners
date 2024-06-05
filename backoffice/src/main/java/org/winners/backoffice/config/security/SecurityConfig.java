@@ -1,4 +1,4 @@
-package org.winners.core.config.security;
+package org.winners.backoffice.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.DispatcherType;
@@ -17,9 +17,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.winners.core.config.security.filter.JwtAuthenticationFilter;
-import org.winners.core.config.security.handler.JwtAccessDeniedHandler;
-import org.winners.core.config.security.handler.JwtUnauthorizedHandler;
+import org.winners.backoffice.config.security.filter.JwtAuthenticationFilter;
+import org.winners.backoffice.config.security.handler.JwtAccessDeniedHandler;
+import org.winners.backoffice.config.security.handler.JwtUnauthorizedHandler;
 import org.winners.core.config.token.TokenProvider;
 import org.winners.core.config.token.TokenRole;
 import org.winners.core.domain.user.service.ClientUserDomainService;
@@ -76,8 +76,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, SecurityWhitelist.getWhitelistByMethod(HttpMethod.POST)).permitAll()
                 .requestMatchers(HttpMethod.PUT, SecurityWhitelist.getWhitelistByMethod(HttpMethod.PUT)).permitAll()
                 .requestMatchers(HttpMethod.DELETE, SecurityWhitelist.getWhitelistByMethod(HttpMethod.DELETE)).permitAll()
-                .requestMatchers("/app/**").hasAnyRole(TokenRole.APP.getRole())
-                .requestMatchers("/bo/**").hasAnyRole(TokenRole.BACKOFFICE.getRole())
+                .requestMatchers("/bo/**").hasAnyRole(TokenRole.APP.getRole())
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtAuthenticationFilter(tokenProvider, clientUserDomainService), UsernamePasswordAuthenticationFilter.class)

@@ -20,9 +20,7 @@ public class SwaggerConfig {
         final String securitySchemeName = "JWT Authentication";
         return new OpenAPI()
             .info(apiInfo())
-            .servers(List.of(
-                new Server().url("/app").description("APP"),
-                new Server().url("/bo").description("BACKOFFICE")))
+            .servers(List.of(new Server().url("/bo").description("BACKOFFICE")))
             .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
             .components(new Components().addSecuritySchemes(
                 securitySchemeName,

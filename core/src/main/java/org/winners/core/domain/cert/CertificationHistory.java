@@ -33,7 +33,8 @@ public class CertificationHistory extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @Comment("인증키")
-    @JoinColumn(name = "certification_key", columnDefinition = "BINARY(16)", nullable = false)
+    @JoinColumn(name = "certification_key", columnDefinition = "BINARY(16)", nullable = false,
+        foreignKey = @ForeignKey(name = "FK_certification_history_certification_key"))
     protected CertificationKey certificationKey;
 
     protected CertificationHistory(CertificationType certificationType, CertificationKey certificationKey) {

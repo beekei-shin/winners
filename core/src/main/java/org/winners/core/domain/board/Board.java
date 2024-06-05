@@ -34,9 +34,10 @@ public class Board extends BaseEntity {
     @Column(name = "board_name", length = 100, nullable = false)
     private String name;
 
+    @Comment("게시판 고유번호")
     @OrderBy("orderNumber ASC")
     @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST }, orphanRemoval = true)
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(name = "FK_board_category_board_id"))
     protected List<BoardCategory> categoryList;
 
     public static Board createBoard(BoardType boardType, String boardName) {

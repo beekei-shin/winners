@@ -1,4 +1,4 @@
-package org.winners.core.config.security.filter;
+package org.winners.backoffice.config.security.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,10 +12,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.winners.backoffice.config.security.SecurityWhitelist;
 import org.winners.core.config.exception.ExpiredTokenException;
 import org.winners.core.config.exception.UnauthorizedTokenException;
 import org.winners.core.config.presentation.ApiResponseType;
-import org.winners.core.config.security.SecurityWhitelist;
 import org.winners.core.config.token.TokenProvider;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.service.ClientUserDomainService;
