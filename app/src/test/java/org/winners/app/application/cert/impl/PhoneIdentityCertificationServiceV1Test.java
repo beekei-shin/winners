@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.winners.app.application.ApplicationServiceTest;
+import org.winners.app.config.ApplicationServiceTest;
 import org.winners.core.config.exception.AlreadyProcessedDataException;
 import org.winners.core.config.exception.ExceptionMessageType;
 import org.winners.core.config.exception.NotExistDataException;
@@ -52,7 +52,7 @@ class PhoneIdentityCertificationServiceV1Test extends ApplicationServiceTest {
 
         // when
         UUID certificationKeyId = phoneIdentityCertificationServiceV1.sendPhoneIdentityOtpNumber(SendOtpNumberParameterDTO.builder()
-            .name("홍길동")
+            .userName("홍길동")
             .birthday(LocalDate.of(1993, 10, 20))
             .gender(Gender.MALE)
             .mobileCarrier(MobileCarrier.LGM)

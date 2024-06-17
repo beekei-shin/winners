@@ -2,8 +2,8 @@ package org.winners.core.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.winners.core.config.token.TokenProvider;
-import org.winners.core.config.token.TokenRole;
+import org.winners.core.config.security.token.TokenProvider;
+import org.winners.core.config.security.token.TokenRole;
 import org.winners.core.domain.auth.AuthenticationHistory;
 import org.winners.core.domain.auth.AuthenticationHistoryRepository;
 import org.winners.core.domain.auth.service.dto.AuthTokenDTO;

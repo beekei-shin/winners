@@ -2,7 +2,7 @@ package org.winners.core.domain.board;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.winners.core.domain.RepositoryTest;
+import org.winners.core.config.RepositoryTest;
 
 import java.util.List;
 

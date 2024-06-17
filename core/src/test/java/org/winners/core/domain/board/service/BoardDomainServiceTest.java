@@ -4,11 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.winners.core.config.DomainServiceTest;
 import org.winners.core.config.exception.CannotProcessedDataException;
 import org.winners.core.config.exception.DuplicatedDataException;
 import org.winners.core.config.exception.ExceptionMessageType;
 import org.winners.core.config.exception.NotExistDataException;
-import org.winners.core.domain.DomainServiceTest;
 import org.winners.core.domain.board.*;
 
 import java.util.Optional;
@@ -25,15 +25,15 @@ class BoardDomainServiceTest extends DomainServiceTest {
 
     private BoardDomainService boardDomainService;
     private BoardRepository boardRepository;
-    private BoardPostRepository boardPostRepository;
     private BoardCategoryRepository boardCategoryRepository;
+    private BoardPostRepository boardPostRepository;
 
     @BeforeEach
     public void BeforeEach() {
         this.boardRepository = Mockito.mock(BoardRepository.class);
-        this.boardPostRepository = Mockito.mock(BoardPostRepository.class);
         this.boardCategoryRepository = Mockito.mock(BoardCategoryRepository.class);
-        this.boardDomainService = new BoardDomainService(boardRepository, boardPostRepository, boardCategoryRepository);
+        this.boardPostRepository = Mockito.mock(BoardPostRepository.class);
+        this.boardDomainService = new BoardDomainService(boardRepository, boardCategoryRepository, boardPostRepository);
     }
 
     @Test

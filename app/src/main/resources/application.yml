@@ -6,6 +6,9 @@ server:
 spring:
   config:
     import: "application-core.yml"
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   security:
     access-token:
       secret-key: test

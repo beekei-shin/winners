@@ -28,7 +28,7 @@ public class PhoneIdentityCertificationDomainService {
         String encryptOtpNumber = passwordEncoder.encode(defaultOtpNumber);
         PhoneIdentityCertificationHistory certHistory = phoneIdentityCertificationHistoryRepository.save(PhoneIdentityCertificationHistory.createHistory(
             certificationKey,
-            parameter.getName(),
+            parameter.getUserName(),
             parameter.getBirthday(),
             parameter.getGender(),
             parameter.getMobileCarrier(),

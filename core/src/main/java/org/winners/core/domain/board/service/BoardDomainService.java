@@ -18,8 +18,8 @@ public class BoardDomainService {
     public static final int BOARD_CATEGORY_MAX_COUNT = 10;
 
     private final BoardRepository boardRepository;
-    private final BoardPostRepository boardPostRepository;
     private final BoardCategoryRepository boardCategoryRepository;
+    private final BoardPostRepository boardPostRepository;
 
     public Board getBoard(long boardId) {
         return boardRepository.findById(boardId)

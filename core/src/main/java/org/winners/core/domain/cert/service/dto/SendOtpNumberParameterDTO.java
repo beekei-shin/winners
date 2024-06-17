@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class SendOtpNumberParameterDTO {
-    private final String name;
+    private final String userName;
     private final LocalDate birthday;
     private final Gender gender;
     private final MobileCarrier mobileCarrier;

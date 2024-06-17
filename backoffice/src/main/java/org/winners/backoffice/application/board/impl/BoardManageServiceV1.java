@@ -3,6 +3,7 @@ package org.winners.backoffice.application.board.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.winners.backoffice.application.board.BoardManageService;
+import org.winners.backoffice.application.board.dto.BoardInfoDTO;
 import org.winners.core.domain.board.Board;
 import org.winners.core.domain.board.BoardCategory;
 import org.winners.core.domain.board.BoardRepository;
@@ -56,6 +57,12 @@ public class BoardManageServiceV1 implements BoardManageService {
         Board board = boardDomainService.getBoard(boardId);
         boardDomainService.possibleDeleteBoardCheck(board);
         boardDomainService.deleteBoard(board);
+    }
+
+    @Override
+    public BoardInfoDTO getBoard(long boardId) {
+        Board board = boardDomainService.getBoard(boardId);
+        return BoardInfoDTO.create(board);
     }
 
 }

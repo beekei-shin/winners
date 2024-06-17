@@ -27,6 +27,11 @@ public enum ExceptionMessageType implements EnumClass {
     DUPLICATED_BOARD("중복된 게시판 입니다."),
     CANNOT_DELETE_BOARD("게시판을 삭제할 수 없습니다."),
     CANNOT_DELETE_BOARD_CATEGORY("게시판 카테고리를 삭제할 수 없습니다."),
+
+    NOT_EXIST_BOARD_CATEGORY("존재하지 않는 게시판 카테고리입니다."),
+
+    NOT_EXIST_BOARD_POST("존재하지 않는 게시글입니다."),
+    NOT_ACCESS_BOARD_POST("접근 불가능한 게시글입니다."),
     ;
 
     private final String message;

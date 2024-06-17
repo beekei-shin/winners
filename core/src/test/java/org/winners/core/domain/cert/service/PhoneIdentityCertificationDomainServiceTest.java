@@ -5,10 +5,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.winners.core.config.DomainServiceTest;
 import org.winners.core.config.exception.ExceptionMessageType;
 import org.winners.core.config.exception.InvalidDataException;
 import org.winners.core.config.exception.NotExistDataException;
-import org.winners.core.domain.DomainServiceTest;
 import org.winners.core.domain.cert.*;
 import org.winners.core.domain.cert.service.dto.CertificationInfoDTO;
 import org.winners.core.domain.cert.service.dto.SendOtpNumberParameterDTO;
@@ -50,7 +50,7 @@ class PhoneIdentityCertificationDomainServiceTest extends DomainServiceTest {
         // when
         UUID certificationKeyId = phoneIdentityCertificationDomainService.sendOtpNumber(
             savedPhoneIdentityCertificationHistory.getCertificationKey(), SendOtpNumberParameterDTO.builder()
-                .name(savedPhoneIdentityCertificationHistory.getName())
+                .userName(savedPhoneIdentityCertificationHistory.getName())
                 .birthday(savedPhoneIdentityCertificationHistory.getBirthday())
                 .gender(savedPhoneIdentityCertificationHistory.getGender())
                 .mobileCarrier(savedPhoneIdentityCertificationHistory.getMobileCarrier())

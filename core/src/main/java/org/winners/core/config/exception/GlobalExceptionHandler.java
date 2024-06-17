@@ -27,6 +27,7 @@ public class GlobalExceptionHandler {
         HttpRequestMethodNotSupportedException.class
     })
     public ResponseEntity<ApiResponse<?>> unSupportedMediaTypeExceptionHandler(Exception e) {
+        e.printStackTrace();
         final ApiResponseType apiResponseType = ApiResponseType.UNSUPPORTED_MEDIA_TYPE;
         return ResponseEntity
             .status(apiResponseType.getHttpStatus())

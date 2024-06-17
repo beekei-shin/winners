@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.winners.backoffice.application.ApplicationServiceTest;
+import org.winners.backoffice.application.board.dto.BoardInfoDTO;
+import org.winners.backoffice.config.ApplicationServiceTest;
 import org.winners.core.config.exception.CannotProcessedDataException;
 import org.winners.core.config.exception.DuplicatedDataException;
 import org.winners.core.config.exception.NotExistDataException;
@@ -215,6 +216,44 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
 
         verify(boardDomainService).getBoard(boardId);
         verify(boardDomainService).possibleDeleteBoardCheck(board);
+    }
+
+    @Test
+    @DisplayName("게시판 정보 조회")
+    void getBoardInfo() {
+        Board board = BoardMock.createHasCategoryBoard(1L, List.of(
+            BoardCategoryMock.createCategory(1L, "카테고리1", 1),
+            BoardCategoryMock.createCategory(2L, "카테고리2", 2),
+            BoardCategoryMock.createCategory(3L, "카테고리3", 3)
+        ));
+        given(boardDomainService.getBoard(anyLong())).willReturn(board);
+
+
+        long boardId = 1;
+        BoardInfoDTO boardInfo = boardManageServiceV1.getBoard(boardId);
+
+        assertThat(boardInfo.getBoardId()).isEqualTo(board.getId());
+        assertThat(boardInfo.getBoardName()).isEqualTo(board.getName());
+        assertThat(boardInfo.getCategoryList().size()).isEqualTo(board.getCategoryList().size());
+        IntStream.range(0, board.getCategoryList().size()).forEach(idx -> {
+            BoardCategory boardCategory = board.getCategoryList().get(idx);
+            BoardInfoDTO.BoardCategoryDTO boardCategoryDTO = boardInfo.getCategoryList().get(idx);
+            assertThat(boardCategory.getId()).isEqualTo(boardCategoryDTO.getCategoryId());
+            assertThat(boardCategory.getName()).isEqualTo(boardCategoryDTO.getCategoryName());
+        });
+        verify(boardDomainService).getBoard(boardId);
+    }
+
+    @Test
+    @DisplayName("게시판 정보 조회 - 존재하지 않는 게시판")
+    void getBoardInfo_notExistBoard() {
+        willThrow(NotExistDataException.class).given(boardDomainService).getBoard(anyLong());
+
+        long boardId = 1;
+        Throwable exception = assertThrows(NotExistDataException.class,
+            () -> boardManageServiceV1.getBoard(boardId));
+
+        verify(boardDomainService).getBoard(boardId);
     }
 
 }

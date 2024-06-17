@@ -18,7 +18,7 @@ public class BoardPost extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Comment("고유번호")
     @Column(name = "id")
-    private Long id;
+    protected Long id;
 
     @Comment("회원 고유번호")
     @Column(name = "user_id", nullable = false, updatable = false)
@@ -31,7 +31,7 @@ public class BoardPost extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Comment("게시판 유형")
     @Column(name = "board_type", length = 50, nullable = false, updatable = false)
-    private BoardType type;
+    private BoardType boardType;
 
     @Comment("카테고리 고유번호")
     @Column(name = "category_id", nullable = false)
@@ -44,5 +44,29 @@ public class BoardPost extends BaseEntity {
     @Comment("내용")
     @Column(name = "contents", length = 500, nullable = false)
     private String contents;
+
+    @Comment("비밀글 여부")
+    @Column(name = "is_secret_post", columnDefinition = "TINYINT(1) DEFAULT 0", nullable = false)
+    private boolean isSecretPost;
+
+    public static BoardPost createPost(long userId, Board board, BoardCategory category,
+                                       String title, String contents, boolean isSecretPost) {
+        return BoardPost.builder()
+            .userId(userId)
+            .boardId(board.getId())
+            .boardType(board.getType())
+            .categoryId(category.getId())
+            .title(title)
+            .contents(contents)
+            .isSecretPost(isSecretPost)
+            .build();
+    }
+
+    public void updatePost(BoardCategory category, String title, String contents, boolean isSecretPost) {
+        this.categoryId = category.getId();
+        this.title = title;
+        this.contents = contents;
+        this.isSecretPost = isSecretPost;
+    }
 
 }

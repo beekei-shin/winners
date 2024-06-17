@@ -2,6 +2,7 @@ package org.winners.backoffice.application.board;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.winners.backoffice.application.board.dto.BoardInfoDTO;
 import org.winners.core.domain.board.BoardType;
 import org.winners.core.domain.board.service.dto.SaveAndUpdateBoardCategoryParameterDTO;
 
@@ -18,5 +19,8 @@ public interface BoardManageService {
 
     @Transactional
     void deleteBoard(long boardId);
+
+    @Transactional(readOnly = true)
+    BoardInfoDTO getBoard(long boardId);
 
 }
