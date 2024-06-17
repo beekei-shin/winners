@@ -9,7 +9,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.winners.app.application.board.BoardPostAppService;
+import org.winners.app.application.board.AppBoardPostService;
 import org.winners.app.application.board.dto.BoardPostInfoDTO;
 import org.winners.app.application.board.dto.BoardPostListDTO;
 import org.winners.app.application.board.dto.GetPostListSearchParameterDTO;
@@ -26,47 +26,45 @@ import org.winners.core.utils.SecurityUtil;
 @ApiVersion(1)
 @RestController
 @RequiredArgsConstructor
-@Tag(name = AppController.BOARD_POST_TAG_NAME)
-@RequestMapping(path = AppController.BOARD_POST_PATH, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-public class BoardPostController {
+@Tag(name = AppController.INQUIRY_BOARD_TAG_NAME)
+@RequestMapping(path = AppController.INQUIRY_BOARD_PATH, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+public class InquiryBoardController {
 
-    private final BoardPostAppService boardPostAppServiceV1;
+    private final AppBoardPostService inquiryBoardPostServiceV1;
 
-    @Operation(summary = "게시글 목록 조회")
-    @GetMapping(name = "게시글 목록 조회")
-    public ApiResponse<GetPostListResponseDTO> getPostList(@RequestParam(required = false) @Min(value = 1) Long boardId,
-                                                           @RequestParam(required = false) String keyword,
+    @Operation(summary = "문의글 목록 조회")
+    @GetMapping(name = "문의글 목록 조회", value = "post")
+    public ApiResponse<GetPostListResponseDTO> getPostList(@RequestParam(required = false) String keyword,
                                                            @ParameterObject @ModelAttribute PagingRequestDTO paging) {
-        Page<BoardPostListDTO> postList = boardPostAppServiceV1.getPostList(
+        Page<BoardPostListDTO> postList = inquiryBoardPostServiceV1.getPostList(
             GetPostListSearchParameterDTO.builder()
-                .boardId(boardId)
                 .keyword(keyword)
                 .build(),
             paging.of());
         return ApiResponse.success(GetPostListResponseDTO.convert(postList));
     }
 
-    @Operation(summary = "게시글 정보 조회")
-    @GetMapping(name = "게시글 정보 조회", value = "{postId}")
+    @Operation(summary = "문의글 정보 조회")
+    @GetMapping(name = "문의글 정보 조회", value = "post/{postId}")
     public ApiResponse<GetPostInfoResponseDTO> getPostInfo(@PathVariable @Min(value = 1) long postId) {
         long userId = SecurityUtil.getTokenUserId();
-        BoardPostInfoDTO postInfo = boardPostAppServiceV1.getPostInfo(postId, userId);
+        BoardPostInfoDTO postInfo = inquiryBoardPostServiceV1.getPostInfo(postId, userId);
         return ApiResponse.success(GetPostInfoResponseDTO.convert(postInfo));
     }
 
-    @Operation(summary = "게시글 등록")
-    @PostMapping(name = "게시글 등록")
+    @Operation(summary = "문의글 등록")
+    @PostMapping(name = "문의글 등록", value = "post")
     public ApiResponse<?> savePost(@RequestBody @Valid SavePostRequestDTO request) {
         long userId = SecurityUtil.getTokenUserId();
-        boardPostAppServiceV1.savePost(userId, request.convertParameter());
+        inquiryBoardPostServiceV1.savePost(userId, request.convertParameter());
         return ApiResponse.success();
     }
 
-    @Operation(summary = "게시글 수정")
-    @PutMapping(name = "게시글 수정", value = "{postId}")
+    @Operation(summary = "문의글 수정")
+    @PutMapping(name = "문의글 수정", value = "post/{postId}")
     public ApiResponse<?> updatePost(@PathVariable @Min(value = 1) long postId, @RequestBody @Valid UpdatePostRequestDTO request) {
         long userId = SecurityUtil.getTokenUserId();
-        boardPostAppServiceV1.updatePost(userId, postId, request.convertParameter());
+        inquiryBoardPostServiceV1.updatePost(userId, postId, request.convertParameter());
         return ApiResponse.success();
     }
 

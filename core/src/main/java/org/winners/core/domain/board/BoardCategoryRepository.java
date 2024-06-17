@@ -14,5 +14,6 @@ public interface BoardCategoryRepository {
     void deleteByBoardId(long boardId);
     BoardCategory saveAndFlush(BoardCategory boardCategory);
     Optional<BoardCategory> findById(long id);
+    Optional<BoardCategory> findByIdAndBoardId(long id, long boardId);
     List<BoardCategory> findAll();
 }

@@ -11,5 +11,4 @@ import java.util.Set;
 public class Whitelist {
     private final String path;
     private final Set<HttpMethod> methods;
-    private final boolean shouldNotFilter;
 }

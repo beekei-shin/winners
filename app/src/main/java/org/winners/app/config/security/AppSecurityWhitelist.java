@@ -15,8 +15,8 @@ import java.util.Set;
 public class AppSecurityWhitelist implements SecurityWhitelist, EnumClass {
 
     private final List<Whitelist> whitelist = List.of(
-        new Whitelist("/v*/user/client/sign/**", Set.of(HttpMethod.POST), true),
-        new Whitelist("/v*/cert/phone-identity/**", Set.of(HttpMethod.POST, HttpMethod.PUT), true)
+        new Whitelist("/v*/user/client/sign/**", Set.of(HttpMethod.POST)),
+        new Whitelist("/v*/cert/phone-identity/**", Set.of(HttpMethod.POST, HttpMethod.PUT))
     );
 
 }

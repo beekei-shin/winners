@@ -63,40 +63,66 @@ class BoardDomainServiceTest extends DomainServiceTest {
     }
 
     @Test
+    @DisplayName("유형 별 게시판 조회")
+    public void getBoardByType() {
+        Board board = BoardMock.createBoard(1L);
+        given(boardRepository.findByType(any(BoardType.class))).willReturn(Optional.of(board));
+
+        BoardType boardType = BoardType.INQUIRY;
+        Board returnBoard = boardDomainService.getBoardByType(boardType);
+
+        assertThat(returnBoard).isEqualTo(board);
+        verify(boardRepository).findByType(boardType);
+    }
+
+    @Test
+    @DisplayName("유형 별 게시판 조회 - 존재하지 않는 게시판")
+    public void getBoardByType_notExistBoard() {
+        given(boardRepository.findByType(any(BoardType.class))).willReturn(Optional.empty());
+
+        BoardType boardType = BoardType.INQUIRY;
+        Throwable exception = assertThrows(NotExistDataException.class,
+            () -> boardDomainService.getBoardByType(boardType));
+
+        assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.NOT_EXIST_BOARD.getMessage());
+        verify(boardRepository).findByType(boardType);
+    }
+
+    @Test
     @DisplayName("중복 게시판 확인")
     public void duplicateBoardCheck() {
-        BoardType boardType = BoardType.COMMUNITY;
-        String boardName = "커뮤니티";
+        BoardType boardType = BoardType.NOTICE;
+        String boardName = "게시판명";
         long boardId = 10;
 
-        given(boardRepository.countByTypeAndName(any(BoardType.class), anyString())).willReturn(0L);
-        boardDomainService.duplicateBoardCheck(boardType, boardName);
-        verify(boardRepository).countByTypeAndName(boardType, boardName);
+        given(boardRepository.countByType(any(BoardType.class))).willReturn(0L);
+        boardDomainService.duplicateBoardCheck(boardType);
+        verify(boardRepository).countByType(boardType);
 
-        given(boardRepository.countByTypeAndNameAndIdNot(any(BoardType.class), anyString(), anyLong())).willReturn(0L);
-        boardDomainService.duplicateBoardCheck(boardType, boardName, boardId);
-        verify(boardRepository).countByTypeAndNameAndIdNot(boardType, boardName, boardId);
+        given(boardRepository.countByTypeAndIdNot(any(BoardType.class), anyLong())).willReturn(0L);
+        boardDomainService.duplicateBoardCheck(boardType, boardId);
+        verify(boardRepository).countByTypeAndIdNot(boardType, boardId);
     }
 
     @Test
     @DisplayName("중복 게시판 확인 - 중복된 게시판")
     public void duplicateBoardCheck_duplicatedBoard() {
-        BoardType boardType = BoardType.COMMUNITY;
-        String boardName = "커뮤니티";
+        BoardType boardType = BoardType.NOTICE;
+        String boardName = "게시판명";
         long boardId = 10;
 
-        given(boardRepository.countByTypeAndName(any(BoardType.class), anyString())).willReturn(1L);
+        given(boardRepository.countByType(any(BoardType.class))).willReturn(1L);
         Throwable exception = assertThrows(DuplicatedDataException.class,
-            () -> boardDomainService.duplicateBoardCheck(boardType, boardName));
+            () -> boardDomainService.duplicateBoardCheck(boardType));
         assertThat(exception.getMessage()).isEqualTo(ExceptionMessageType.DUPLICATED_BOARD.getMessage());
-        verify(boardRepository).countByTypeAndName(boardType, boardName);
+        verify(boardRepository).countByType(boardType);
 
 
-        given(boardRepository.countByTypeAndNameAndIdNot(any(BoardType.class), anyString(), anyLong())).willReturn(1L);
+        given(boardRepository.countByTypeAndIdNot(any(BoardType.class), anyLong())).willReturn(1L);
         Throwable exception2 = assertThrows(DuplicatedDataException.class,
-            () -> boardDomainService.duplicateBoardCheck(boardType, boardName, boardId));
+            () -> boardDomainService.duplicateBoardCheck(boardType, boardId));
         assertThat(exception2.getMessage()).isEqualTo(ExceptionMessageType.DUPLICATED_BOARD.getMessage());
-        verify(boardRepository).countByTypeAndNameAndIdNot(boardType, boardName, boardId);
+        verify(boardRepository).countByTypeAndIdNot(boardType, boardId);
     }
 
     @Test
@@ -112,7 +138,7 @@ class BoardDomainServiceTest extends DomainServiceTest {
 
     @Test
     @DisplayName("게시판 삭제 가능 여부 확인 - 삭제 불가능")
-    public void possibleDeleteCheck_cannotPossibleDelete() {
+    public void possibleDeleteCheck_impossibleDelete() {
         given(boardPostRepository.countByBoardId(anyLong())).willReturn(1L);
 
         Board board = BoardMock.createBoard(1L);
@@ -150,7 +176,7 @@ class BoardDomainServiceTest extends DomainServiceTest {
 
     @Test
     @DisplayName("카테고리 삭제 가능 여부 확인 - 삭제 불가능")
-    public void possibleDeleteCategoryCheck_cannotPossibleDelete() {
+    public void possibleDeleteCategoryCheck_impossibleDelete() {
         given(boardPostRepository.countByBoardIdAndCategoryIdIn(anyLong(), anySet())).willReturn(1L);
 
         Board board = BoardMock.createBoard(1L);

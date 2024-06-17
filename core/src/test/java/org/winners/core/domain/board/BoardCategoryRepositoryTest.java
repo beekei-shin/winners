@@ -18,12 +18,12 @@ class BoardCategoryRepositoryTest extends RepositoryTest {
 
     @Test
     void deleteByBoardId() {
-        Board noticeBoard = boardRepository.saveAndFlush(Board.createBoard(BoardType.NOTICE, "공지사항"));
+        Board noticeBoard = boardRepository.saveAndFlush(Board.createBoard(BoardType.NOTICE, "게시판1"));
         boardCategoryRepository.saveAndFlush(BoardCategory.createCategory(noticeBoard.getId(), "카테고리1", 1));
         boardCategoryRepository.saveAndFlush(BoardCategory.createCategory(noticeBoard.getId(), "카테고리2", 2));
         boardCategoryRepository.saveAndFlush(BoardCategory.createCategory(noticeBoard.getId(), "카테고리3", 3));
 
-        Board communityBoard = boardRepository.saveAndFlush(Board.createBoard(BoardType.COMMUNITY, "커뮤니티"));
+        Board communityBoard = boardRepository.saveAndFlush(Board.createBoard(BoardType.INQUIRY, "게시판2"));
         boardCategoryRepository.saveAndFlush(BoardCategory.createCategory(communityBoard.getId(), "카테고리1", 1));
         boardCategoryRepository.saveAndFlush(BoardCategory.createCategory(communityBoard.getId(), "카테고리2", 2));
         boardCategoryRepository.saveAndFlush(BoardCategory.createCategory(communityBoard.getId(), "카테고리3", 3));

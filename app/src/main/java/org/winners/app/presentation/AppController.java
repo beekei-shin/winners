@@ -8,7 +8,7 @@ public interface AppController {
     String CLIENT_USER_SIGN_TAG_NAME = "201. 사용자 회원 서명";
     String CLIENT_USER_SIGN_PATH = "user/client/sign";
 
-    String BOARD_POST_TAG_NAME = "302. 게시글";
-    String BOARD_POST_PATH = "board/post";
+    String INQUIRY_BOARD_TAG_NAME = "302. 문의 게시판";
+    String INQUIRY_BOARD_PATH = "board/inquiry";
 
 }

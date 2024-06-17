@@ -32,12 +32,12 @@ class BoardControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("게시판 등록")
-    @WithMockUser(authorities = TokenRole.BACKOFFICE)
+    @WithMockUser(authorities = TokenRole.ADMIN_USER)
     void saveBoard() {
         willDoNothing().given(boardManageService).saveBoard(any(BoardType.class), anyString(), any(LinkedHashSet.class));
 
-        BoardType boardType = BoardType.COMMUNITY;
-        String boardName = "커뮤니티";
+        BoardType boardType = BoardType.INQUIRY;
+        String boardName = "게시판명";
         LinkedHashSet<String> categoryNames = new LinkedHashSet<>() {{ add("카테고리1"); add("카테고리2"); }};
         mvcTest(HttpMethod.POST)
             .requestBody(
@@ -52,12 +52,12 @@ class BoardControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("게시판 수정")
-    @WithMockUser(authorities = TokenRole.BACKOFFICE)
+    @WithMockUser(authorities = TokenRole.ADMIN_USER)
     void updateBoard() {
         willDoNothing().given(boardManageService).updateBoard(anyLong(), anyString(), anyList());
 
         long boardId = 1;
-        String boardName = "커뮤니티";
+        String boardName = "게시판명";
         List<Map<String, Object>> categoryList = List.of(
             Map.ofEntries(
                 Map.entry("categoryId", 1L),
@@ -82,7 +82,7 @@ class BoardControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("게시판 삭제")
-    @WithMockUser(authorities = TokenRole.BACKOFFICE)
+    @WithMockUser(authorities = TokenRole.ADMIN_USER)
     void deleteBoard() {
         willDoNothing().given(boardManageService).deleteBoard(anyLong());
 
@@ -97,7 +97,7 @@ class BoardControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("게시판 정보 조회")
-    @WithMockUser(authorities = TokenRole.BACKOFFICE)
+    @WithMockUser(authorities = TokenRole.ADMIN_USER)
     void getBoard() {
         Board board = BoardMock.createHasCategoryBoard(1L, List.of(
             BoardCategoryMock.createCategory(1L, "카테고리1", 1),

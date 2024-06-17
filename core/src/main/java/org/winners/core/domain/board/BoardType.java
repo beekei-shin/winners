@@ -9,7 +9,7 @@ import org.winners.core.domain.common.EnumClass;
 public enum BoardType implements EnumClass {
 
     NOTICE("공지사항"),
-    COMMUNITY("커뮤니티");
+    INQUIRY("1:1 문의");
 
     private final String name;
 

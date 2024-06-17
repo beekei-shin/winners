@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SavePostParameterDTO {
-    private final long boardId;
     private final long categoryId;
     private final String postTitle;
     private final String postContents;

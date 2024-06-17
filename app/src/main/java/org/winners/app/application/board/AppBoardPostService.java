@@ -11,7 +11,7 @@ import org.winners.app.application.board.dto.UpdatePostParameterDTO;
 import org.winners.core.domain.board.service.dto.SavePostParameterDTO;
 
 @Service
-public interface BoardPostAppService {
+public interface AppBoardPostService {
     @Transactional(readOnly = true)
     Page<BoardPostListDTO> getPostList(GetPostListSearchParameterDTO searchParameter, PageRequest pageRequest);
     @Transactional(readOnly = true)

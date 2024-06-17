@@ -83,7 +83,7 @@ public class AppSecurityConfig {
                 .requestMatchers(HttpMethod.POST, securityWhitelist().getWhitelistByMethod(HttpMethod.POST)).permitAll()
                 .requestMatchers(HttpMethod.PUT, securityWhitelist().getWhitelistByMethod(HttpMethod.PUT)).permitAll()
                 .requestMatchers(HttpMethod.DELETE, securityWhitelist().getWhitelistByMethod(HttpMethod.DELETE)).permitAll()
-                .requestMatchers("/app/**").hasAnyRole(TokenRole.APP.getRole().replace("ROLE_", ""))
+                .requestMatchers("/**").hasAnyRole(TokenRole.CLIENT_USER.getRole().replace("ROLE_", ""))
                 .anyRequest().authenticated()
             )
             .addFilterAfter(new JwtAuthenticationFilter(tokenProvider, securityWhitelist(), clientUserDomainService), UsernamePasswordAuthenticationFilter.class)

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class AuthenticationHistoryMock {
 
     public static AuthenticationHistory createHistory() {
-        return AuthenticationHistory.createHistory(1,
+        return AuthenticationHistory.createClientUserAuthHistory(1,
             DeviceOs.AOS, "deviceToken",
             "accessToken", LocalDateTime.now().plusDays(10),
             "refreshToken", LocalDateTime.now().plusDays(20));

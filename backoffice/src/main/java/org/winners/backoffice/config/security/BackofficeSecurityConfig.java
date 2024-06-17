@@ -82,7 +82,7 @@ public class BackofficeSecurityConfig {
                 .requestMatchers(HttpMethod.POST, securityWhitelist().getWhitelistByMethod(HttpMethod.POST)).permitAll()
                 .requestMatchers(HttpMethod.PUT, securityWhitelist().getWhitelistByMethod(HttpMethod.PUT)).permitAll()
                 .requestMatchers(HttpMethod.DELETE, securityWhitelist().getWhitelistByMethod(HttpMethod.DELETE)).permitAll()
-                .requestMatchers("/bo/**").hasAnyRole(TokenRole.BACKOFFICE.getRole().replace("ROLE_", ""))
+                .requestMatchers("/**").hasAnyRole(TokenRole.ADMIN_USER.getRole().replace("ROLE_", ""))
                 .anyRequest().authenticated()
             )
             .addFilterAfter(new JwtAuthenticationFilter(tokenProvider, securityWhitelist(), clientUserDomainService), UsernamePasswordAuthenticationFilter.class)

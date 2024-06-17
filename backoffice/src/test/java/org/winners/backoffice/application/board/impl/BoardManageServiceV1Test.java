@@ -42,7 +42,7 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
     @DisplayName("게시판 등록")
     void saveBoard() {
         Board board = BoardMock.createBoard(1L);
-        willDoNothing().given(boardDomainService).duplicateBoardCheck(any(BoardType.class), anyString());
+        willDoNothing().given(boardDomainService).duplicateBoardCheck(any(BoardType.class));
         given(boardRepository.saveAndFlush(any(Board.class))).willReturn(board);
 
         BoardType boardType = BoardType.NOTICE;
@@ -58,20 +58,20 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
             assertThat(boardCategory.getName()).isEqualTo(categoryNameList.get(idx));
             assertThat(boardCategory.getOrderNumber()).isEqualTo(idx + 1);
         });
-        verify(boardDomainService).duplicateBoardCheck(boardType, boardName);
+        verify(boardDomainService).duplicateBoardCheck(boardType);
     }
 
     @Test
     @DisplayName("게시판 등록 - 중복된 게시판")
     void saveBoard_duplicatedBoard() {
-        willThrow(DuplicatedDataException.class).given(boardDomainService).duplicateBoardCheck(any(BoardType.class), anyString());
+        willThrow(DuplicatedDataException.class).given(boardDomainService).duplicateBoardCheck(any(BoardType.class));
 
         BoardType boardType = BoardType.NOTICE;
         String boardName = "공지사항";
         Throwable exception = assertThrows(DuplicatedDataException.class,
             () -> boardManageServiceV1.saveBoard(boardType, boardName, new LinkedHashSet<>()));
 
-        verify(boardDomainService).duplicateBoardCheck(boardType, boardName);
+        verify(boardDomainService).duplicateBoardCheck(boardType);
     }
 
     @Test
@@ -84,7 +84,7 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
         }};
         Board board = BoardMock.createHasCategoryBoard(1L, savedCategoryList);
         given(boardDomainService.getBoard(anyLong())).willReturn(board);
-        willDoNothing().given(boardDomainService).duplicateBoardCheck(any(BoardType.class), anyString(), anyLong());
+        willDoNothing().given(boardDomainService).duplicateBoardCheck(any(BoardType.class));
         willDoNothing().given(boardDomainService).possibleDeleteCategoryCheck(any(Board.class), anySet());
 
         long boardId = 10;
@@ -115,7 +115,7 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
         });
 
         verify(boardDomainService).getBoard(boardId);
-        verify(boardDomainService).duplicateBoardCheck(board.getType(), boardName, boardId);
+        verify(boardDomainService).duplicateBoardCheck(board.getType(), boardId);
         verify(boardDomainService).possibleDeleteCategoryCheck(board, Set.of(2L, 3L));
     }
 
@@ -137,7 +137,7 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
     void updateBoard_duplicatedBoard() {
         Board board = BoardMock.createBoard(1L);
         given(boardDomainService.getBoard(anyLong())).willReturn(board);
-        willThrow(DuplicatedDataException.class).given(boardDomainService).duplicateBoardCheck(any(BoardType.class), anyString(), anyLong());
+        willThrow(DuplicatedDataException.class).given(boardDomainService).duplicateBoardCheck(any(BoardType.class), anyLong());
 
         long boardId = 10;
         String boardName = "수정할 게시판명";
@@ -145,12 +145,12 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
             () -> boardManageServiceV1.updateBoard(boardId, boardName, List.of()));
 
         verify(boardDomainService).getBoard(boardId);
-        verify(boardDomainService).duplicateBoardCheck(board.getType(), boardName, boardId);
+        verify(boardDomainService).duplicateBoardCheck(board.getType(), boardId);
     }
 
     @Test
     @DisplayName("게시판 수정 - 카테고리 삭제 불가")
-    void updateBoard_cannotDeleteCategory() {
+    void updateBoard_impossibleDeleteCategory() {
         List<BoardCategory> savedCategoryList = new ArrayList<>() {{
             add(BoardCategoryMock.createCategory(1L, "카테고리1", 1));
             add(BoardCategoryMock.createCategory(2L, "카테고리2", 2));
@@ -158,7 +158,7 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
         }};
         Board board = BoardMock.createHasCategoryBoard(1L, savedCategoryList);
         given(boardDomainService.getBoard(anyLong())).willReturn(board);
-        willDoNothing().given(boardDomainService).duplicateBoardCheck(any(BoardType.class), anyString(), anyLong());
+        willDoNothing().given(boardDomainService).duplicateBoardCheck(any(BoardType.class), anyLong());
         willThrow(CannotProcessedDataException.class).given(boardDomainService).possibleDeleteCategoryCheck(any(Board.class), anySet());
 
         long boardId = 10;
@@ -171,7 +171,7 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
             () -> boardManageServiceV1.updateBoard(boardId, boardName, updateCategoryList));
 
         verify(boardDomainService).getBoard(boardId);
-        verify(boardDomainService).duplicateBoardCheck(board.getType(), boardName, boardId);
+        verify(boardDomainService).duplicateBoardCheck(board.getType(), boardId);
         verify(boardDomainService).possibleDeleteCategoryCheck(board, Set.of(2L, 3L));
     }
 
@@ -205,7 +205,7 @@ class BoardManageServiceV1Test extends ApplicationServiceTest {
 
     @Test
     @DisplayName("게시판 삭제 - 게시판 삭제 불가")
-    void deleteBoard_cannotDeleteBoard() {
+    void deleteBoard_impossibleDeleteBoard() {
         Board board = BoardMock.createBoard(1L);
         given(boardDomainService.getBoard(anyLong())).willReturn(board);
         willThrow(CannotProcessedDataException.class).given(boardDomainService).possibleDeleteBoardCheck(any(Board.class));

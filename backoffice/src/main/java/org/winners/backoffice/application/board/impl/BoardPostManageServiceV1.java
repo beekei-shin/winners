@@ -33,7 +33,7 @@ public class BoardPostManageServiceV1 implements BoardPostManageService {
             .leftJoin(boardCategory, boardCategory.id.eq(boardPost.categoryId))
             .leftJoin(user, user.id.eq(boardPost.userId))
             .optionalWhere(board.id, searchParameter.getBoardId())
-            .optionalWhere(boardPost.title, searchParameter.getKeyword())
+            .optionalLike(boardPost.title, searchParameter.getKeyword())
             .orderBy(boardPost.id.desc())
             .getPage(pageRequest);
     }

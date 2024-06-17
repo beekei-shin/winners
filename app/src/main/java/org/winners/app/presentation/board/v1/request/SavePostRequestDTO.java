@@ -14,9 +14,6 @@ import org.winners.core.domain.board.service.dto.SavePostParameterDTO;
 public class SavePostRequestDTO {
 
     @Min(value = 1)
-    private long boardId;
-
-    @Min(value = 1)
     private long categoryId;
 
     @NotBlank
@@ -30,7 +27,6 @@ public class SavePostRequestDTO {
 
     public SavePostParameterDTO convertParameter() {
         return SavePostParameterDTO.builder()
-            .boardId(boardId)
             .categoryId(categoryId)
             .postTitle(postTitle)
             .postContents(postContents)

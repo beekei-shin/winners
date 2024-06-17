@@ -103,7 +103,7 @@ class PhoneIdentityCertificationServiceV1Test extends ApplicationServiceTest {
 
     @Test
     @DisplayName("휴대폰 본인인증 인증 OTP 번호 인증 - 인증이 불가능한 인증키")
-    public void certifyPhoneIdentityOtpNumber_notPossibleCertifyAuthenticationKey() {
+    public void certifyPhoneIdentityOtpNumber_impossibleCertifyAuthenticationKey() {
         // given
         CertificationKey certifiedCertificationKey = CertificationKeyMock.createCertifiedKey(UUID.randomUUID());
         given(certificationKeyDomainService.getSavedCertificationKey(any(UUID.class))).willReturn(certifiedCertificationKey);

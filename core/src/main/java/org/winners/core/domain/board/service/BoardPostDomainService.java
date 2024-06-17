@@ -13,6 +13,7 @@ import org.winners.core.domain.board.BoardPostRepository;
 public class BoardPostDomainService {
 
     public static final String SECRET_POST_TITLE = "비밀글입니다.";
+
     private final BoardPostRepository boardPostRepository;
 
     public void possibleViewPostCheck(BoardPost boardPost, long viewUserId) {

@@ -26,7 +26,7 @@ public class BoardManageServiceV1 implements BoardManageService {
 
     @Override
     public void saveBoard(BoardType boardType, String boardName, LinkedHashSet<String> categoryNames) {
-        boardDomainService.duplicateBoardCheck(boardType, boardName);
+        boardDomainService.duplicateBoardCheck(boardType);
         Board savedBoard = boardRepository.saveAndFlush(Board.createBoard(boardType, boardName));
         savedBoard.saveCategories(categoryNames);
     }
@@ -44,7 +44,7 @@ public class BoardManageServiceV1 implements BoardManageService {
             .filter(categoryId -> !updateCategoryIds.contains(categoryId))
             .collect(Collectors.toSet());
 
-        boardDomainService.duplicateBoardCheck(board.getType(), boardName, boardId);
+        boardDomainService.duplicateBoardCheck(board.getType(), boardId);
         boardDomainService.possibleDeleteCategoryCheck(board, deleteCategoryIds);
 
         board.updateBoard(boardName);

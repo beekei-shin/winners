@@ -13,8 +13,8 @@ public class BoardCategoryDomainService {
 
     private final BoardCategoryRepository boardCategoryRepository;
 
-    public BoardCategory getCategory(long categoryId) {
-        return boardCategoryRepository.findById(categoryId)
+    public BoardCategory getCategory(long boardId, long categoryId) {
+        return boardCategoryRepository.findByIdAndBoardId(categoryId, boardId)
             .orElseThrow(() -> new NotExistDataException(ExceptionMessageType.NOT_EXIST_BOARD_CATEGORY));
     }
 

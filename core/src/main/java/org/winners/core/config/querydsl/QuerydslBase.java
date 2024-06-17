@@ -4,8 +4,8 @@ import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.Getter;
@@ -60,11 +60,6 @@ public class QuerydslBase<T> {
         return this;
     }
 
-    public QuerydslBase<T> where(BooleanExpression booleanExpression) {
-        Optional.ofNullable(booleanExpression).ifPresent(this.jpaQuery::where);
-        return this;
-    }
-
     public <C> QuerydslBase<T> where(SimpleExpression<C> column, C value) {
         this.jpaQuery.where(column.eq(value));
         return this;
@@ -72,6 +67,16 @@ public class QuerydslBase<T> {
 
     public <C> QuerydslBase<T> optionalWhere(SimpleExpression<C> column, C value) {
         Optional.ofNullable(value).ifPresent(v -> this.jpaQuery.where(column.eq(v)));
+        return this;
+    }
+
+    public QuerydslBase<T> like(StringPath column, String value) {
+        this.jpaQuery.where(column.contains(value));
+        return this;
+    }
+
+    public QuerydslBase<T> optionalLike(StringPath column, String value) {
+        Optional.ofNullable(value).ifPresent(v -> this.jpaQuery.where(column.contains(v)));
         return this;
     }
 

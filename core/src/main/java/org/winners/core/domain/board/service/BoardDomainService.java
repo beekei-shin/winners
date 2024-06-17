@@ -26,17 +26,22 @@ public class BoardDomainService {
             .orElseThrow(() -> new NotExistDataException(ExceptionMessageType.NOT_EXIST_BOARD));
     }
 
-    public void duplicateBoardCheck(BoardType boardType, String boardName) {
-        this.duplicateBoardCheck(boardType, boardName ,null);
+    public Board getBoardByType(BoardType boardType) {
+        return boardRepository.findByType(boardType)
+            .orElseThrow(() -> new NotExistDataException(ExceptionMessageType.NOT_EXIST_BOARD));
     }
 
-    public void duplicateBoardCheck(BoardType boardType, String boardName, Long boardId) {
+    public void duplicateBoardCheck(BoardType boardType) {
+        this.duplicateBoardCheck(boardType ,null);
+    }
+
+    public void duplicateBoardCheck(BoardType boardType, Long boardId) {
         Optional.ofNullable(boardId)
             .ifPresentOrElse(id -> {
-                if (boardRepository.countByTypeAndNameAndIdNot(boardType, boardName, id) > 0)
+                if (boardRepository.countByTypeAndIdNot(boardType, id) > 0)
                     throw new DuplicatedDataException(ExceptionMessageType.DUPLICATED_BOARD);
             }, () -> {
-                if (boardRepository.countByTypeAndName(boardType, boardName) > 0)
+                if (boardRepository.countByType(boardType) > 0)
                     throw new DuplicatedDataException(ExceptionMessageType.DUPLICATED_BOARD);
             });
     }

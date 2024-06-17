@@ -24,14 +24,5 @@ public interface SecurityWhitelist {
             .filter(white -> matcher.match(contextPath + white.getPath(), path))
             .anyMatch(white -> white.getMethods().contains(method));
     }
-    default boolean isShouldNotFilter(String contextPath, String path, HttpMethod method) {
-        AntPathMatcher matcher = new AntPathMatcher();
-        return this.getWhitelist().stream()
-            .filter(white -> matcher.match(contextPath + white.getPath(), path))
-            .filter(white -> white.getMethods().contains(method))
-            .findFirst()
-            .map(Whitelist::isShouldNotFilter)
-            .orElse(false);
-    };
 
 }

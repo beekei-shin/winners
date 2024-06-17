@@ -68,6 +68,10 @@ public class ControllerTest {
         this.objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
+    protected MvcTestBase mvcTest(HttpMethod httpMethod) {
+        return new MvcTestBase(this, "", httpMethod);
+    }
+
     protected MvcTestBase mvcTest(String apiPath, HttpMethod httpMethod) {
         return new MvcTestBase(this, apiPath, httpMethod);
     }

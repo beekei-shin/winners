@@ -18,7 +18,6 @@ import org.winners.core.config.presentation.ApiResponseType;
 import org.winners.core.config.security.token.TokenProvider;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.service.ClientUserDomainService;
-import org.winners.core.utils.SecurityUtil;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -37,16 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String contextPath = request.getContextPath();
         String requestURI = request.getRequestURI();
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
-        if (securityWhitelist.isWhitelist(contextPath, requestURI, method)) {
-            if (securityWhitelist.isShouldNotFilter(contextPath, requestURI, method)) {
-                return true;
-            } else {
-                final String authorizationToken = request.getHeader(TOKEN_HEADER_NAME);
-                return StringUtils.isBlank(authorizationToken);
-            }
-        } else {
-            return false;
-        }
+        return securityWhitelist.isWhitelist(contextPath, requestURI, method);
     }
 
     @Override
@@ -69,8 +59,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
-            } else if (!this.shouldNotFilter(request) && SecurityUtil.getTokenUserIdOptional().isEmpty()) {
-                throw new UnauthorizedTokenException();
             }
         } catch (ExpiredTokenException e) {
             request.setAttribute("ExceptionType", ApiResponseType.EXPIRED_TOKEN.toString());

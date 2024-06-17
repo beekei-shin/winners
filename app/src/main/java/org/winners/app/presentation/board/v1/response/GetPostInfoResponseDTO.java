@@ -24,6 +24,7 @@ public class GetPostInfoResponseDTO {
             .categoryName(postInfo.getCategoryName())
             .postTitle(postInfo.getPostTitle())
             .postContents(postInfo.getPostContents())
+            .isSecretPost(postInfo.isSecretPost())
             .postCreatedDatetime(postInfo.getPostCreatedDatetime())
             .postUpdatedDatetime(postInfo.getPostUpdatedDatetime())
             .build();
@@ -38,6 +39,7 @@ public class GetPostInfoResponseDTO {
     private final String categoryName;
     private final String postTitle;
     private final String postContents;
+    private final Boolean isSecretPost;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtil.DATETIME_FORMAT_PATTERN)
     private final LocalDateTime postCreatedDatetime;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtil.DATETIME_FORMAT_PATTERN)

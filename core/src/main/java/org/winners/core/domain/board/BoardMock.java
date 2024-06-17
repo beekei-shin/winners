@@ -4,10 +4,14 @@ import java.util.List;
 
 public class BoardMock {
 
-    public static Board createBoard(long id) {
-        Board board = Board.createBoard(BoardType.COMMUNITY, "커뮤니티");
+    public static Board createBoard(long id, BoardType boardType) {
+        Board board = Board.createBoard(boardType, "게시판명");
         board.id = id;
         return board;
+    }
+
+    public static Board createBoard(long id) {
+        return BoardMock.createBoard(id, BoardType.NOTICE);
     }
 
     public static Board createHasCategoryBoard(long id, List<BoardCategory> categoryList) {

@@ -29,11 +29,11 @@ public class AuthenticationHistory extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Comment("Device OS")
-    @Column(name = "device_os", length = 50, nullable = false, updatable = false)
+    @Column(name = "device_os", length = 50, updatable = false)
     private DeviceOs deviceOs;
 
     @Comment("DeviceToken")
-    @Column(name = "device_token", length = 500, nullable = false, updatable = false)
+    @Column(name = "device_token", length = 500, updatable = false)
     private String deviceToken;
 
     @Comment("AccessToken")
@@ -52,14 +52,26 @@ public class AuthenticationHistory extends BaseEntity {
     @Column(name = "refresh_token_expire_datetime", nullable = false, updatable = false)
     private LocalDateTime refreshTokenExpireDatetime;
 
-    public static AuthenticationHistory createHistory(long userId,
-                                                      DeviceOs deviceOs, String deviceToken,
-                                                      String accessToken, LocalDateTime accessTokenExpireDatetime,
-                                                      String refreshToken, LocalDateTime refreshTokenExpireDatetime) {
+    public static AuthenticationHistory createClientUserAuthHistory(long userId,
+                                                                    DeviceOs deviceOs, String deviceToken,
+                                                                    String accessToken, LocalDateTime accessTokenExpireDatetime,
+                                                                    String refreshToken, LocalDateTime refreshTokenExpireDatetime) {
         return AuthenticationHistory.builder()
             .userId(userId)
             .deviceOs(deviceOs)
             .deviceToken(deviceToken)
+            .accessToken(accessToken)
+            .accessTokenExpireDatetime(accessTokenExpireDatetime)
+            .refreshToken(refreshToken)
+            .refreshTokenExpireDatetime(refreshTokenExpireDatetime)
+            .build();
+    }
+
+    public static AuthenticationHistory createAdminUserAuthHistory(long userId,
+                                                                    String accessToken, LocalDateTime accessTokenExpireDatetime,
+                                                                    String refreshToken, LocalDateTime refreshTokenExpireDatetime) {
+        return AuthenticationHistory.builder()
+            .userId(userId)
             .accessToken(accessToken)
             .accessTokenExpireDatetime(accessTokenExpireDatetime)
             .refreshToken(refreshToken)

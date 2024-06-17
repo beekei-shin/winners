@@ -16,7 +16,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthDomainService {
 
-    protected final static Set<TokenRole> CLIENT_USER_AUTH_TOKEN_ROLE = Set.of(TokenRole.APP, TokenRole.CLIENT_USER);
+    protected final static Set<TokenRole> CLIENT_USER_AUTH_TOKEN_ROLE = Set.of(TokenRole.CLIENT_USER);
+    protected final static Set<TokenRole> ADMIN_USER_AUTH_TOKEN_ROLE = Set.of(TokenRole.ADMIN_USER);
 
     private final TokenProvider tokenProvider;
     private final AuthenticationHistoryRepository authenticationHistoryRepository;
@@ -26,8 +27,20 @@ public class AuthDomainService {
         LocalDateTime accessTokenExpireDate = tokenProvider.getAccessTokenExpiredDate(accessToken);
         String refreshToken = tokenProvider.createRefreshToken(userId, CLIENT_USER_AUTH_TOKEN_ROLE);
         LocalDateTime refreshTokenExpireDate = tokenProvider.getRefreshTokenExpiredDate(refreshToken);
-        authenticationHistoryRepository.save(AuthenticationHistory.createHistory(
+        authenticationHistoryRepository.save(AuthenticationHistory.createClientUserAuthHistory(
             userId, deviceOs, deviceToken,
+            accessToken, accessTokenExpireDate,
+            refreshToken, refreshTokenExpireDate));
+        return AuthTokenDTO.create(accessToken, refreshToken);
+    }
+
+    public AuthTokenDTO createAdminUserAuthToken(long userId) {
+        String accessToken = tokenProvider.createAccessToken(userId, ADMIN_USER_AUTH_TOKEN_ROLE);
+        LocalDateTime accessTokenExpireDate = tokenProvider.getAccessTokenExpiredDate(accessToken);
+        String refreshToken = tokenProvider.createRefreshToken(userId, ADMIN_USER_AUTH_TOKEN_ROLE);
+        LocalDateTime refreshTokenExpireDate = tokenProvider.getRefreshTokenExpiredDate(refreshToken);
+        authenticationHistoryRepository.save(AuthenticationHistory.createAdminUserAuthHistory(
+            userId,
             accessToken, accessTokenExpireDate,
             refreshToken, refreshTokenExpireDate));
         return AuthTokenDTO.create(accessToken, refreshToken);
