@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +19,9 @@ import org.winners.core.config.presentation.ApiResponseType;
 import org.winners.core.config.security.token.TokenProvider;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.service.ClientUserDomainService;
+import org.winners.core.utils.SecurityUtil;
 
+import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -59,6 +62,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
+            } else if (SecurityUtil.getTokenUserIdOptional().isEmpty()) {
+                throw new UnauthorizedTokenException();
             }
         } catch (ExpiredTokenException e) {
             request.setAttribute("ExceptionType", ApiResponseType.EXPIRED_TOKEN.toString());

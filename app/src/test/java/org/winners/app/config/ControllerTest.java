@@ -27,6 +27,7 @@ import org.winners.core.config.version.ApiVersion;
 import org.winners.core.config.version.ApiVersionRequestMappingConfig;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +116,13 @@ public class ControllerTest {
         }
 
         resultActions.andDo(print());
+    }
+
+    protected Map<String, Object> mergeResponse(Map<String, Object> ... res) {
+        return Arrays.stream(res).reduce(new HashMap<>(), (a, b) -> {
+            a.putAll(b);
+            return a;
+        });
     }
 
     protected <R> Map<String, Object> createPageResponse(Page<R> page) {

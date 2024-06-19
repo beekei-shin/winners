@@ -1,20 +1,20 @@
 package org.winners.core.config.querydsl;
 
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.hibernate.jdbc.Expectations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.winners.core.config.presentation.OrderByParameterDTO;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Getter
 public class QuerydslBase<T> {
@@ -60,28 +60,52 @@ public class QuerydslBase<T> {
         return this;
     }
 
-    public <C> QuerydslBase<T> where(SimpleExpression<C> column, C value) {
+    public <C> QuerydslBase<T> where(C value, SimpleExpression<C> column) {
         this.jpaQuery.where(column.eq(value));
         return this;
     }
 
-    public <C> QuerydslBase<T> optionalWhere(SimpleExpression<C> column, C value) {
-        Optional.ofNullable(value).ifPresent(v -> this.jpaQuery.where(column.eq(v)));
+    public QuerydslBase<T> whereOr(String value, StringPath ... columns) {
+        this.jpaQuery.where(Expressions.anyOf(Arrays.stream(columns)
+            .map(column -> column.eq(value))
+            .toArray(BooleanExpression[]::new)));
         return this;
     }
 
-    public QuerydslBase<T> like(StringPath column, String value) {
+    public <C> QuerydslBase<T> optionalWhere(C value, SimpleExpression<C> column) {
+        Optional.ofNullable(value).ifPresent(v -> this.where(v, column));
+        return this;
+    }
+
+    public QuerydslBase<T> optionalWhereOr(String value, StringPath ... columns) {
+        Optional.ofNullable(value).ifPresent(v -> this.whereOr(v, columns));
+        return this;
+    }
+
+    public QuerydslBase<T> like(String value, StringPath column) {
         this.jpaQuery.where(column.contains(value));
         return this;
     }
 
-    public QuerydslBase<T> optionalLike(StringPath column, String value) {
-        Optional.ofNullable(value).ifPresent(v -> this.jpaQuery.where(column.contains(v)));
+    public QuerydslBase<T> likeOr(String value, StringPath ... columns) {
+        this.jpaQuery.where(Expressions.anyOf(Arrays.stream(columns)
+            .map(column -> column.contains(value))
+            .toArray(BooleanExpression[]::new)));
         return this;
     }
 
-    public QuerydslBase<T> orderBy(OrderSpecifier<?>... o) {
-        this.jpaQuery.orderBy(o);
+    public QuerydslBase<T> optionalLike(String value, StringPath column) {
+        Optional.ofNullable(value).ifPresent(v -> this.like(v, column));
+        return this;
+    }
+
+    public QuerydslBase<T> optionalLikeOr(String value, StringPath ... columns) {
+        Optional.ofNullable(value).ifPresent(v -> this.likeOr(v, columns));
+        return this;
+    }
+
+    public QuerydslBase<T> orderBy(OrderSpecifier<?>... specifiers) {
+        this.jpaQuery.orderBy(specifiers);
         return this;
     }
 
@@ -96,5 +120,6 @@ public class QuerydslBase<T> {
     public Page<T> getPage(PageRequest pageRequest) {
         return this.querydslRepository.getPage(this, pageRequest);
     }
+
 
 }

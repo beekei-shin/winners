@@ -15,7 +15,7 @@ import java.util.Set;
 public class BackofficeSecurityWhitelist implements SecurityWhitelist, EnumClass {
 
     private final List<Whitelist> whitelist = List.of(
-        new Whitelist("board/**", Set.of(HttpMethod.GET))
+        new Whitelist("/v*/shop/**", Set.of(HttpMethod.GET, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE))
     );
 
 }
