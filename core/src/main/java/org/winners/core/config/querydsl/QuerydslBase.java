@@ -1,5 +1,7 @@
 package org.winners.core.config.querydsl;
 
+import com.querydsl.core.FetchableQuery;
+import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -55,6 +57,12 @@ public class QuerydslBase<T> {
         return this;
     }
 
+    public <P> QuerydslBase<T> innerJoin(EntityPath<P> joinTable, Path<P> path) {
+        this.jpaQuery.innerJoin(joinTable, path);
+        return this;
+    }
+
+
     public QuerydslBase<T> leftJoin(EntityPath<?> joinTable, Predicate on) {
         this.jpaQuery.leftJoin(joinTable).on(on);
         return this;
@@ -107,6 +115,15 @@ public class QuerydslBase<T> {
     public QuerydslBase<T> orderBy(OrderSpecifier<?>... specifiers) {
         this.jpaQuery.orderBy(specifiers);
         return this;
+    }
+
+    public <R> Optional<R> transformRow(ResultTransformer<Map<Long, R>> transformer) {
+        return Optional.ofNullable(this.jpaQuery.transform(transformer))
+            .flatMap(map -> map.values().stream().findFirst());
+    }
+
+    public List<T> transformList(ResultTransformer<List<T>> transformer) {
+        return this.jpaQuery.transform(transformer);
     }
 
     public Optional<T> getRow() {

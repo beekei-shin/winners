@@ -60,8 +60,10 @@ public class MvcTestBase {
         return this;
     }
 
-    public MvcTestBase responseBody(Map<String, Object> body) {
-        this.responseBody.putAll(body);
+    public MvcTestBase responseBody(Map<String, Object> ... bodys) {
+        for (Map<String, Object> body : bodys) {
+            this.responseBody.putAll(body);
+        }
         return this;
     }
 

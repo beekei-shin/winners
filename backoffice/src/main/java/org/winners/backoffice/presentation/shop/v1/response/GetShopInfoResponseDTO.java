@@ -10,10 +10,20 @@ import org.winners.core.domain.shop.ShopType;
 import org.winners.core.utils.DateUtil;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder(access = AccessLevel.PRIVATE)
 public class GetShopInfoResponseDTO {
+
+    @Getter
+    @Builder
+    public static class ShopUserResponseDTO {
+        private final long userId;
+        private final String userName;
+        private final String phoneNumber;
+    }
 
     private final long shopId;
     private final ShopType shopType;
@@ -23,6 +33,7 @@ public class GetShopInfoResponseDTO {
     private final String zipCode;
     private final String address;
     private final String detailAddress;
+    private final List<ShopUserResponseDTO> userList;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtil.DATETIME_FORMAT_PATTERN)
     private final LocalDateTime createdDatetime;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateUtil.DATETIME_FORMAT_PATTERN)
@@ -38,6 +49,13 @@ public class GetShopInfoResponseDTO {
             .zipCode(shopInfo.getZipCode())
             .address(shopInfo.getAddress())
             .detailAddress(shopInfo.getDetailAddress())
+            .userList(shopInfo.getUserList().stream()
+                .map(userInfo -> ShopUserResponseDTO.builder()
+                    .userId(userInfo.getUserId())
+                    .userName(userInfo.getUserName())
+                    .phoneNumber(userInfo.getPhoneNumber())
+                    .build())
+                .collect(Collectors.toList()))
             .createdDatetime(shopInfo.getCreatedDatetime())
             .updatedDatetime(shopInfo.getUpdatedDatetime())
             .build();

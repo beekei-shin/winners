@@ -165,4 +165,58 @@ class ShopManageServiceV1Test extends ApplicationServiceTest {
         verify(shopDomainService).getShop(shopId);
     }
 
+    @Test
+    @DisplayName("사업자 회원 상점 연결")
+    void connectShopToBusinessUser() {
+        Shop shop = ShopMock.createShop(1L);
+        given(shopDomainService.getShop(anyLong())).willReturn(shop);
+
+        long shopId = 1;
+        long userId = 2;
+        shopManageServiceV1.connectShopToBusinessUser(shopId, userId);
+
+        assertThat(shop.getUserIds().contains(userId)).isTrue();
+        verify(shopDomainService).getShop(shopId);
+    }
+
+    @Test
+    @DisplayName("사업자 회원 상점 연결 - 존재하지 않는 상점")
+    void connectShopToBusinessUser_notExistShop() {
+        given(shopDomainService.getShop(anyLong())).willThrow(new NotExistDataException(ExceptionMessageType.NOT_EXIST_SHOP));
+
+        long shopId = 1;
+        long userId = 2;
+        Throwable exception = assertThrows(NotExistDataException.class,
+            () -> shopManageServiceV1.connectShopToBusinessUser(shopId, userId));
+
+        verify(shopDomainService).getShop(shopId);
+    }
+
+    @Test
+    @DisplayName("사업자 회원 상점 연결해제")
+    void disconnectShopToBusinessUser() {
+        Shop shop = ShopMock.createShop(1L);
+        given(shopDomainService.getShop(anyLong())).willReturn(shop);
+
+        long shopId = 1;
+        long userId = 2;
+        shopManageServiceV1.disconnectShopToBusinessUser(shopId, userId);
+
+        assertThat(shop.getUserIds().contains(userId)).isFalse();
+        verify(shopDomainService).getShop(shopId);
+    }
+
+    @Test
+    @DisplayName("사업자 회원 상점 연결해제 - 존재하지 않는 상점")
+    void disconnectShopToBusinessUser_notExistShop() {
+        given(shopDomainService.getShop(anyLong())).willThrow(new NotExistDataException(ExceptionMessageType.NOT_EXIST_SHOP));
+
+        long shopId = 1;
+        long userId = 2;
+        Throwable exception = assertThrows(NotExistDataException.class,
+            () -> shopManageServiceV1.disconnectShopToBusinessUser(shopId, userId));
+
+        verify(shopDomainService).getShop(shopId);
+    }
+
 }

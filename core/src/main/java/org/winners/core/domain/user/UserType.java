@@ -9,6 +9,7 @@ import org.winners.core.domain.common.EnumClass;
 public enum UserType implements EnumClass {
 
     CLIENT("사용자 회원"),
+    BUSINESS("사업자 회원"),
     ADMIN("관리자 회원");
 
     private final String name;

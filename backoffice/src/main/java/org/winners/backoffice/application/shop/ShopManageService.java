@@ -37,4 +37,10 @@ public interface ShopManageService {
     @Transactional(readOnly = true)
     ShopInfoDTO getShopInfo(long shopId);
 
+    @Transactional
+    void connectShopToBusinessUser(long shopId, long userId);
+
+    @Transactional
+    void disconnectShopToBusinessUser(long shopId, long userId);
+
 }

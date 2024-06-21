@@ -22,7 +22,10 @@ import org.winners.core.domain.shop.service.ShopDomainService;
 import java.util.List;
 import java.util.Set;
 
+import static com.querydsl.core.group.GroupBy.groupBy;
 import static org.winners.core.domain.shop.QShop.shop;
+import static org.winners.core.domain.shop.QShopUserConnect.shopUserConnect;
+import static org.winners.core.domain.user.QBusinessUser.businessUser;
 
 @Component
 @RequiredArgsConstructor
@@ -39,7 +42,7 @@ public class ShopManageServiceV1 implements ShopManageService {
         shopDomainService.duplicateShopCheck(shopType, businessNumber);
         Shop shop = shopRepository.saveAndFlush(Shop.createShop(shopType, shopName, businessNumber,
             ShopAddress.createAddress(zipCode, address, detailAddress)));
-        shop.saveAndUpdateCategories(categoryIds);
+        shop.connectCategories(categoryIds);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class ShopManageServiceV1 implements ShopManageService {
         shopDomainService.duplicateShopCheck(shop.getType(), businessNumber, shop.getId());
 
         shop.updateShop(shopName, businessNumber, ShopAddress.createAddress(zipCode, address, detailAddress));
-        shop.saveAndUpdateCategories(categoryIds);
+        shop.connectCategories(categoryIds);
     }
 
     @Override
@@ -77,11 +80,25 @@ public class ShopManageServiceV1 implements ShopManageService {
     @Override
     public ShopInfoDTO getShopInfo(long shopId) {
         return querydslRepository
-            .select(ShopInfoDTO.class)
             .from(shop)
+            .leftJoin(shopUserConnect, shopUserConnect.shop.eq(shop))
+            .leftJoin(businessUser, businessUser.id.eq(shopUserConnect.id.userId))
             .where(shopId, shop.id)
-            .getRow()
+            .orderBy(shop.id.asc())
+            .transformRow(groupBy(shop.id).as(new ShopInfoDTO().constructor()))
             .orElseThrow(() -> new NotExistDataException(ExceptionMessageType.NOT_EXIST_SHOP));
+    }
+
+    @Override
+    public void connectShopToBusinessUser(long shopId, long userId) {
+        Shop shop = shopDomainService.getShop(shopId);
+        shop.connectUser(userId);
+    }
+
+    @Override
+    public void disconnectShopToBusinessUser(long shopId, long userId) {
+        Shop shop = shopDomainService.getShop(shopId);
+        shop.disconnectUser(userId);
     }
 
 }

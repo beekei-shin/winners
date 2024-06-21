@@ -23,7 +23,7 @@ import java.time.LocalDate;
 public class ClientUser extends User {
 
     @Comment("휴대폰 번호")
-    @Column(name = "phone_number", length = 300, nullable = false)
+    @Column(name = "phone_number", length = 20, nullable = false)
     private String phoneNumber;
 
     @Comment("CI")

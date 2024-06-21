@@ -35,13 +35,13 @@ class ShopManageControllerTest extends ControllerTest {
     }
 
     @MockBean
-    private ShopManageService shopManageServiceV1;
+    private ShopManageService shopManageService;
 
     @Test
     @DisplayName("상점 등록")
     @WithMockUser(authorities = TokenRole.ADMIN_USER)
     void saveShop() {
-        willDoNothing().given(shopManageServiceV1).saveShop(
+        willDoNothing().given(shopManageService).saveShop(
             any(ShopType.class), anyString(), anyString(),
             anyString(), anyString(), anyString(),
             anySet());
@@ -65,14 +65,14 @@ class ShopManageControllerTest extends ControllerTest {
             .responseType(ApiResponseType.SUCCESS)
             .run();
 
-        verify(shopManageServiceV1).saveShop(shopType, shopName, businessNumber, zipCode, address, detailAddress, categoryIds);
+        verify(shopManageService).saveShop(shopType, shopName, businessNumber, zipCode, address, detailAddress, categoryIds);
     }
 
     @Test
     @DisplayName("상점 수정")
     @WithMockUser(authorities = TokenRole.ADMIN_USER)
     void updateShop() {
-        willDoNothing().given(shopManageServiceV1).updateShop(
+        willDoNothing().given(shopManageService).updateShop(
             anyLong(), anyString(), anyString(),
             anyString(), anyString(), anyString(),
             anySet());
@@ -96,14 +96,14 @@ class ShopManageControllerTest extends ControllerTest {
             .responseType(ApiResponseType.SUCCESS)
             .run();
 
-        verify(shopManageServiceV1).updateShop(shopId, shopName, businessNumber, zipCode, address, detailAddress, categoryIds);
+        verify(shopManageService).updateShop(shopId, shopName, businessNumber, zipCode, address, detailAddress, categoryIds);
     }
 
     @Test
     @DisplayName("상점 삭제")
     @WithMockUser(authorities = TokenRole.ADMIN_USER)
     void deleteShop() {
-        willDoNothing().given(shopManageServiceV1).deleteShop(anyLong());
+        willDoNothing().given(shopManageService).deleteShop(anyLong());
 
         long shopId = 1;
         mvcTest(HttpMethod.DELETE)
@@ -111,7 +111,7 @@ class ShopManageControllerTest extends ControllerTest {
             .responseType(ApiResponseType.SUCCESS)
             .run();
 
-        verify(shopManageServiceV1).deleteShop(shopId);
+        verify(shopManageService).deleteShop(shopId);
     }
 
     @Test
@@ -125,7 +125,7 @@ class ShopManageControllerTest extends ControllerTest {
             new ShopListDTO(3L, ShopType.RESTAURANT, ShopStatus.OPEN, "상점2", "33333", LocalDateTime.now().minusDays(3))
         );
         Page<ShopListDTO> shopPage = new PageImpl<>(shopList, pageRequest, shopList.size());
-        given(shopManageServiceV1.getShopList(any(), any(), any(PageRequest.class))).willReturn(shopPage);
+        given(shopManageService.getShopList(any(), any(), any(PageRequest.class))).willReturn(shopPage);
 
         mvcTest(HttpMethod.GET)
             .responseType(ApiResponseType.SUCCESS)
@@ -150,27 +150,73 @@ class ShopManageControllerTest extends ControllerTest {
     @DisplayName("상점 정보 조회")
     @WithMockUser(authorities = TokenRole.ADMIN_USER)
     void getShopInfo() {
-        ShopInfoDTO shopInfo = new ShopInfoDTO(1L, ShopType.RESTAURANT, ShopStatus.OPEN, "상점1", "11111", "우편번호", "주소", "상세주소", LocalDateTime.now().minusDays(1), LocalDateTime.now().minusHours(1));
-        given(shopManageServiceV1.getShopInfo(anyLong())).willReturn(shopInfo);
+        List<ShopInfoDTO.ShopUserInfoDTO> shopUserList = List.of(
+            new ShopInfoDTO.ShopUserInfoDTO(2L, "홍길동1", "01011111111"),
+            new ShopInfoDTO.ShopUserInfoDTO(3L, "홍길동2", "01022222222"),
+            new ShopInfoDTO.ShopUserInfoDTO(4L, "홍길동3", "01033333333"));
+        ShopInfoDTO shopInfo = new ShopInfoDTO(1L, ShopType.RESTAURANT, ShopStatus.OPEN, "상점1", "11111", "우편번호", "주소", "상세주소", shopUserList, LocalDateTime.now().minusDays(1), LocalDateTime.now().minusHours(1));
+        given(shopManageService.getShopInfo(anyLong())).willReturn(shopInfo);
 
         long shopId = 1;
         mvcTest("{shopId}", HttpMethod.GET)
             .pathVariable(Map.entry("shopId", shopId))
             .responseType(ApiResponseType.SUCCESS)
             .responseBody(
-                Map.entry("shopId", shopInfo.getShopId()),
-                Map.entry("shopType", shopInfo.getShopType().toString()),
-                Map.entry("shopStatus", shopInfo.getShopStatus().toString()),
-                Map.entry("shopName", shopInfo.getShopName()),
-                Map.entry("businessNumber", shopInfo.getBusinessNumber()),
-                Map.entry("zipCode", shopInfo.getZipCode()),
-                Map.entry("address", shopInfo.getAddress()),
-                Map.entry("detailAddress", shopInfo.getDetailAddress()),
-                Map.entry("createdDatetime", DateUtil.formatDatetime(shopInfo.getCreatedDatetime())),
-                Map.entry("updatedDatetime", DateUtil.formatDatetime(shopInfo.getUpdatedDatetime())))
+                createResponse(
+                    Map.entry("shopId", shopInfo.getShopId()),
+                    Map.entry("shopType", shopInfo.getShopType().toString()),
+                    Map.entry("shopStatus", shopInfo.getShopStatus().toString()),
+                    Map.entry("shopName", shopInfo.getShopName()),
+                    Map.entry("businessNumber", shopInfo.getBusinessNumber()),
+                    Map.entry("zipCode", shopInfo.getZipCode()),
+                    Map.entry("address", shopInfo.getAddress()),
+                    Map.entry("detailAddress", shopInfo.getDetailAddress())),
+                createListResponse(shopUserList, "userList",
+                    Map.entry("userId", ShopInfoDTO.ShopUserInfoDTO::getUserId),
+                    Map.entry("userName", ShopInfoDTO.ShopUserInfoDTO::getUserName),
+                    Map.entry("phoneNumber", ShopInfoDTO.ShopUserInfoDTO::getPhoneNumber)),
+                createResponse(
+                    Map.entry("createdDatetime", DateUtil.formatDatetime(shopInfo.getCreatedDatetime())),
+                    Map.entry("updatedDatetime", DateUtil.formatDatetime(shopInfo.getUpdatedDatetime()))))
             .run();
 
-        verify(shopManageServiceV1).getShopInfo(shopId);
+        verify(shopManageService).getShopInfo(shopId);
+    }
+
+    @Test
+    @DisplayName("사업자 회원 상점 연결")
+    @WithMockUser(authorities = TokenRole.ADMIN_USER)
+    void connectShopToBusinessUser() {
+        willDoNothing().given(shopManageService).connectShopToBusinessUser(anyLong(), anyLong());
+
+        long shopId = 1;
+        long userId = 2;
+        mvcTest("business-user", HttpMethod.POST)
+            .requestBody(
+                Map.entry("shopId", shopId),
+                Map.entry("userId", userId))
+            .responseType(ApiResponseType.SUCCESS)
+            .run();
+
+        verify(shopManageService).connectShopToBusinessUser(shopId, userId);
+    }
+
+    @Test
+    @DisplayName("사업자 회원 상점 연동 해제")
+    @WithMockUser(authorities = TokenRole.ADMIN_USER)
+    void disconnectShopToBusinessUser() {
+        willDoNothing().given(shopManageService).disconnectShopToBusinessUser(anyLong(), anyLong());
+
+        long shopId = 1;
+        long userId = 2;
+        mvcTest("business-user", HttpMethod.DELETE)
+            .requestBody(
+                Map.entry("shopId", shopId),
+                Map.entry("userId", userId))
+            .responseType(ApiResponseType.SUCCESS)
+            .run();
+
+        verify(shopManageService).disconnectShopToBusinessUser(shopId, userId);
     }
 
 }

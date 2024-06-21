@@ -26,7 +26,7 @@ public class ShopListDTO implements QuerydslSelectDTO {
     private LocalDateTime createdDatetime;
 
     @Override
-    public ConstructorExpression constructor() {
+    public ConstructorExpression<ShopListDTO> constructor() {
         return Projections.constructor(
             ShopListDTO.class,
             shop.id,

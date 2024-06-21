@@ -15,9 +15,7 @@ import org.winners.backoffice.application.shop.dto.GetShopListSearchParameterDTO
 import org.winners.backoffice.application.shop.dto.ShopInfoDTO;
 import org.winners.backoffice.application.shop.dto.ShopListDTO;
 import org.winners.backoffice.presentation.BackofficeController;
-import org.winners.backoffice.presentation.shop.v1.request.DeleteShopRequestDTO;
-import org.winners.backoffice.presentation.shop.v1.request.SaveShopRequestDTO;
-import org.winners.backoffice.presentation.shop.v1.request.UpdateShopRequestDTO;
+import org.winners.backoffice.presentation.shop.v1.request.*;
 import org.winners.backoffice.presentation.shop.v1.response.GetShopInfoResponseDTO;
 import org.winners.backoffice.presentation.shop.v1.response.GetShopListResponseDTO;
 import org.winners.core.config.presentation.ApiResponse;
@@ -75,6 +73,20 @@ public class ShopManageController {
     public ApiResponse<GetShopInfoResponseDTO> getShopList(@PathVariable @Min(value = 1) long shopId) {
         ShopInfoDTO shopInfo = shopManageServiceV1.getShopInfo(shopId);
         return ApiResponse.success(GetShopInfoResponseDTO.convert(shopInfo));
+    }
+
+    @Operation(summary = "사업자 회원 상점 연결")
+    @PostMapping(name = "사업자 회원 상점 연결", value = "business-user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> connectShopToBusinessUser(@RequestBody @Valid ConnectShopToBusinessUserRequestDTO request) {
+        shopManageServiceV1.connectShopToBusinessUser(request.getShopId(), request.getUserId());
+        return ApiResponse.success();
+    }
+
+    @Operation(summary = "사업자 회원 상점 연결해제")
+    @DeleteMapping(name = "사업자 회원 상점 연결해제", value = "business-user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiResponse<?> connectShopToBusinessUser(@RequestBody @Valid DisconnectShopToBusinessUserRequestDTO request) {
+        shopManageServiceV1.disconnectShopToBusinessUser(request.getShopId(), request.getUserId());
+        return ApiResponse.success();
     }
 
 }

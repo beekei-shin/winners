@@ -1,5 +1,6 @@
 package org.winners.core.config.querydsl;
 
+import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,11 @@ public class QuerydslRepository {
     public <T> QuerydslBase<T> select(Expression<T> select) {
         QuerydslBase<T> querydslBase = new QuerydslBase<>(this, queryFactory);
         return querydslBase.select(select);
+    }
+
+    public <T> QuerydslBase<T> from(EntityPath<T> from) {
+        QuerydslBase<T> querydslBase = new QuerydslBase<>(this, queryFactory);
+        return querydslBase.from(from);
     }
 
 

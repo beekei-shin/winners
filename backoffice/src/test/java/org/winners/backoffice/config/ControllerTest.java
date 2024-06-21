@@ -117,8 +117,12 @@ public class ControllerTest {
         resultActions.andDo(print());
     }
 
-    protected Map<String, Object> mergeResponse(Map<String, Object> ... res) {
-        return Arrays.stream(res).reduce(new HashMap<>(), (a, b) -> {
+    protected Map<String, Object> createResponse(Map.Entry<String, Object> ... response) {
+        return Map.ofEntries(response);
+    }
+
+    protected Map<String, Object> mergeResponse(Map<String, Object> ... response) {
+        return Arrays.stream(response).reduce(new HashMap<>(), (a, b) -> {
             a.putAll(b);
             return a;
         });

@@ -51,6 +51,9 @@ public class Shop extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "shop", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ShopCategoryConnect> categoryConnectList;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "shop", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<ShopUserConnect> userConnectList;
+
     public static Shop createShop(ShopType type, String name, String businessNumber, ShopAddress address) {
         return Shop.builder()
             .type(type)
@@ -67,23 +70,6 @@ public class Shop extends BaseEntity {
         this.address = address;
     }
 
-    public Set<Long> getCategoryIds() {
-        return Optional.ofNullable(this.categoryConnectList)
-            .map(list -> list.stream()
-                .map(ShopCategoryConnect::getCategoryId)
-                .collect(Collectors.toSet()))
-            .orElseGet(HashSet::new);
-    }
-
-    public void saveAndUpdateCategories(Set<Long> categoryIds) {
-        if (categoryIds == null || categoryIds.isEmpty()) return;
-        if (this.categoryConnectList == null) this.categoryConnectList = new ArrayList<>();
-        this.categoryConnectList.removeIf(connect -> !categoryIds.contains(connect.getCategoryId()));
-        categoryIds.stream()
-            .filter(categoryId -> !this.getCategoryIds().contains(categoryId))
-            .forEach(categoryId -> this.categoryConnectList.add(ShopCategoryConnect.create(this, categoryId)));
-    }
-
     public void open() {
         this.status = ShopStatus.OPEN;
     }
@@ -98,6 +84,42 @@ public class Shop extends BaseEntity {
 
     public void delete() {
         this.status = ShopStatus.DELETE;
+    }
+
+    public Set<Long> getCategoryIds() {
+        return Optional.ofNullable(this.categoryConnectList)
+            .map(list -> list.stream()
+                .map(ShopCategoryConnect::getCategoryId)
+                .collect(Collectors.toSet()))
+            .orElseGet(HashSet::new);
+    }
+
+    public void connectCategories(Set<Long> categoryIds) {
+        if (categoryIds == null || categoryIds.isEmpty()) return;
+        if (this.categoryConnectList == null) this.categoryConnectList = new ArrayList<>();
+        this.categoryConnectList.removeIf(connect -> !categoryIds.contains(connect.getCategoryId()));
+        categoryIds.stream()
+            .filter(categoryId -> !this.getCategoryIds().contains(categoryId))
+            .forEach(categoryId -> this.categoryConnectList.add(ShopCategoryConnect.create(this, categoryId)));
+    }
+
+    public Set<Long> getUserIds() {
+        return Optional.ofNullable(this.userConnectList)
+            .map(list -> list.stream()
+                .map(ShopUserConnect::getUserId)
+                .collect(Collectors.toSet()))
+            .orElseGet(HashSet::new);
+    }
+
+    public void connectUser(long userId) {
+        if (this.userConnectList == null) this.userConnectList = new ArrayList<>();
+        if (!this.getUserIds().contains(userId))
+            this.userConnectList.add(ShopUserConnect.create(this, userId));
+    }
+
+    public void disconnectUser(long deleteUserId) {
+        Optional.ofNullable(this.userConnectList)
+            .ifPresent(connectList -> connectList.removeIf(connect -> connect.getUserId() == deleteUserId));
     }
 
 
