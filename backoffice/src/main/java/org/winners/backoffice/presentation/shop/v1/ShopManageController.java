@@ -28,13 +28,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = BackofficeController.SHOP_MANAGE_TAG_NAME)
-@RequestMapping(path = BackofficeController.SHOP_MANAGE_PATH)
+@RequestMapping(path = BackofficeController.SHOP_MANAGE_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ShopManageController {
 
     private final ShopManageService shopManageServiceV1;
 
     @Operation(summary = "상점 등록")
-    @PostMapping(name = "상점 등록", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(name = "상점 등록", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> saveShop(@RequestBody @Valid SaveShopRequestDTO request) {
         shopManageServiceV1.saveShop(request.getShopType(), request.getShopName(), request.getBusinessNumber(),
             request.getZipCode(), request.getAddress(), request.getDetailAddress(),
@@ -43,7 +43,7 @@ public class ShopManageController {
     }
 
     @Operation(summary = "상점 수정")
-    @PutMapping(name = "상점 수정", value = "{shopId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(name = "상점 수정", value = "{shopId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> updateShop(@PathVariable @Min(value = 1) long shopId,
                                      @RequestBody @Valid UpdateShopRequestDTO request) {
         shopManageServiceV1.updateShop(shopId, request.getShopName(), request.getBusinessNumber(),

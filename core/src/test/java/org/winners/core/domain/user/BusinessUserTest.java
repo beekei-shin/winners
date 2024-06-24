@@ -20,4 +20,15 @@ class BusinessUserTest {
         assertThat(businessUser.getPassword()).isEqualTo(password);
     }
 
+    @Test
+    @DisplayName("비밀번호 변경")
+    void updatePassword() {
+        BusinessUser businessUser = BusinessUserMock.createUser(1L);
+
+        String password = "newPassword";
+        businessUser.updatePassword(password);
+
+        assertThat(businessUser.getPassword()).isEqualTo(password);
+    }
+
 }

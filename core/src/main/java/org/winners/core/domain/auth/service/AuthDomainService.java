@@ -17,6 +17,7 @@ import java.util.Set;
 public class AuthDomainService {
 
     protected final static Set<TokenRole> CLIENT_USER_AUTH_TOKEN_ROLE = Set.of(TokenRole.CLIENT_USER);
+    protected final static Set<TokenRole> BUSINESS_USER_AUTH_TOKEN_ROLE = Set.of(TokenRole.BUSINESS_USER);
     protected final static Set<TokenRole> ADMIN_USER_AUTH_TOKEN_ROLE = Set.of(TokenRole.ADMIN_USER);
 
     private final TokenProvider tokenProvider;
@@ -29,6 +30,18 @@ public class AuthDomainService {
         LocalDateTime refreshTokenExpireDate = tokenProvider.getRefreshTokenExpiredDate(refreshToken);
         authenticationHistoryRepository.save(AuthenticationHistory.createClientUserAuthHistory(
             userId, deviceOs, deviceToken,
+            accessToken, accessTokenExpireDate,
+            refreshToken, refreshTokenExpireDate));
+        return AuthTokenDTO.create(accessToken, refreshToken);
+    }
+
+    public AuthTokenDTO createBusinessUserAuthToken(long userId) {
+        String accessToken = tokenProvider.createAccessToken(userId, BUSINESS_USER_AUTH_TOKEN_ROLE);
+        LocalDateTime accessTokenExpireDate = tokenProvider.getAccessTokenExpiredDate(accessToken);
+        String refreshToken = tokenProvider.createRefreshToken(userId, BUSINESS_USER_AUTH_TOKEN_ROLE);
+        LocalDateTime refreshTokenExpireDate = tokenProvider.getRefreshTokenExpiredDate(refreshToken);
+        authenticationHistoryRepository.save(AuthenticationHistory.createBusinessUserAuthHistory(
+            userId,
             accessToken, accessTokenExpireDate,
             refreshToken, refreshTokenExpireDate));
         return AuthTokenDTO.create(accessToken, refreshToken);

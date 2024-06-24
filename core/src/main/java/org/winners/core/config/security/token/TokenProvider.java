@@ -44,14 +44,14 @@ public class TokenProvider {
     public String createAccessToken(long id, Set<TokenRole> authorities) {
         final Map<String, Object> claims = new HashMap<>();
         claims.put(tokenTypeKey, TokenType.ACCESS.toString());
-        claims.put(authorityKey, authorities.stream().map(TokenRole::getRole).reduce("", (a, b) -> StringUtils.isNotBlank(a) ? a + authorityRegex + "ROLE_" + b : "ROLE_" + b));
+        claims.put(authorityKey, authorities.stream().map(TokenRole::getRole).reduce("", (a, b) -> StringUtils.isNotBlank(a) ? a + authorityRegex +  b : b));
         return issueToken(id, Jwts.claims(claims), accessTokenSecretKey, TokenType.ACCESS.getExpiresIn());
     }
 
     public String createRefreshToken(long id, Set<TokenRole> authorities) {
         final Map<String, Object> claims = new HashMap<>();
         claims.put(tokenTypeKey, TokenType.REFRESH.toString());
-        claims.put(authorityKey, authorities.stream().map(TokenRole::getRole).reduce("", (a, b) -> StringUtils.isNotBlank(a) ? a + authorityRegex + "ROLE_" + b : "ROLE_" + b));
+        claims.put(authorityKey, authorities.stream().map(TokenRole::getRole).reduce("", (a, b) -> StringUtils.isNotBlank(a) ? a + authorityRegex + b : b));
         return issueToken(id, Jwts.claims(claims), refreshTokenSecretKey, TokenType.REFRESH.getExpiresIn());
     }
 

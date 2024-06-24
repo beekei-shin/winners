@@ -1,6 +1,5 @@
 package org.winners.backoffice.application.user.impl;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

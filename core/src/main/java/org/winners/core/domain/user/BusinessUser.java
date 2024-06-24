@@ -36,4 +36,8 @@ public class BusinessUser extends User {
         return new BusinessUser(name, phoneNumber, password);
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
 }

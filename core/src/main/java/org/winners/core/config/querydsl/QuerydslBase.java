@@ -1,6 +1,5 @@
 package org.winners.core.config.querydsl;
 
-import com.querydsl.core.FetchableQuery;
 import com.querydsl.core.ResultTransformer;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -11,12 +10,13 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import org.hibernate.jdbc.Expectations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.winners.core.config.presentation.OrderByParameterDTO;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Getter
 public class QuerydslBase<T> {

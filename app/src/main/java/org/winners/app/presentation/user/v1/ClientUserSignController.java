@@ -24,13 +24,13 @@ import org.winners.core.config.version.ApiVersion;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = AppController.CLIENT_USER_SIGN_TAG_NAME)
-@RequestMapping(path = AppController.CLIENT_USER_SIGN_PATH, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = AppController.CLIENT_USER_SIGN_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ClientUserSignController {
 
     private final ClientUserSignService clientUserSignServiceV1;
 
     @Operation(summary = "사용자 회원 가입")
-    @PostMapping(name = "사용자 회원 가입", value = "up")
+    @PostMapping(name = "사용자 회원 가입", value = "up", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<SignUpClientUserResponseDTO> signUpClientUser(@RequestBody @Valid SignUpClientUserRequestDTO request) {
         SignUpClientUserResultDTO result =  clientUserSignServiceV1.signUp(
             request.getCertificationKey(),
@@ -40,7 +40,7 @@ public class ClientUserSignController {
     }
 
     @Operation(summary = "사용자 회원 로그인")
-    @PostMapping(name = "사용자 회원 로그인", value = "in")
+    @PostMapping(name = "사용자 회원 로그인", value = "in", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<SignInClientUserResponseDTO> signInClientUser(@RequestBody @Valid SignInClientUserRequestDTO request) {
         SignInClientUserResultDTO result = clientUserSignServiceV1.signIn(
             request.getCertificationKey(),

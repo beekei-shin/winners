@@ -67,6 +67,18 @@ public class AuthenticationHistory extends BaseEntity {
             .build();
     }
 
+    public static AuthenticationHistory createBusinessUserAuthHistory(long userId,
+                                                                      String accessToken, LocalDateTime accessTokenExpireDatetime,
+                                                                      String refreshToken, LocalDateTime refreshTokenExpireDatetime) {
+        return AuthenticationHistory.builder()
+            .userId(userId)
+            .accessToken(accessToken)
+            .accessTokenExpireDatetime(accessTokenExpireDatetime)
+            .refreshToken(refreshToken)
+            .refreshTokenExpireDatetime(refreshTokenExpireDatetime)
+            .build();
+    }
+
     public static AuthenticationHistory createAdminUserAuthHistory(long userId,
                                                                     String accessToken, LocalDateTime accessTokenExpireDatetime,
                                                                     String refreshToken, LocalDateTime refreshTokenExpireDatetime) {

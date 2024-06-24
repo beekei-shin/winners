@@ -20,6 +20,7 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 class ClientUserSignControllerTest extends ControllerTest {
 
@@ -54,6 +55,8 @@ class ClientUserSignControllerTest extends ControllerTest {
                 Map.entry("refreshToken", authToken.getRefreshToken()))
             .responseType(ApiResponseType.SUCCESS)
             .run();
+
+        verify(clientUserSignService).signUp(certificationKey, deviceOs, deviceToken);
     }
 
     @Test
@@ -80,6 +83,8 @@ class ClientUserSignControllerTest extends ControllerTest {
                 Map.entry("refreshToken", authToken.getRefreshToken()))
             .responseType(ApiResponseType.SUCCESS)
             .run();
+
+        verify(clientUserSignService).signIn(certificationKey, deviceOs, deviceToken);
     }
 
 }
