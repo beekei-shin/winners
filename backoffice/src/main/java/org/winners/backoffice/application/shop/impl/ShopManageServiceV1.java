@@ -36,23 +36,23 @@ public class ShopManageServiceV1 implements ShopManageService {
     private final ShopDomainService shopDomainService;
 
     @Override
-    public void saveShop(ShopType shopType, String shopName, String businessNumber,
+    public void saveShop(ShopType shopType, String shopName, String businessNumber, List<String> telNumber,
                          String zipCode, String address, String detailAddress,
                          Set<Long> categoryIds) {
         shopDomainService.duplicateShopCheck(shopType, businessNumber);
-        Shop shop = shopRepository.saveAndFlush(Shop.createShop(shopType, shopName, businessNumber,
+        Shop shop = shopRepository.saveAndFlush(Shop.createShop(shopType, shopName, businessNumber, telNumber,
             ShopAddress.createAddress(zipCode, address, detailAddress)));
         shop.connectCategories(categoryIds);
     }
 
     @Override
-    public void updateShop(long shopId, String shopName, String businessNumber,
+    public void updateShop(long shopId, String shopName, String businessNumber, List<String> telNumber,
                            String zipCode, String address, String detailAddress,
                            Set<Long> categoryIds) {
         Shop shop = shopDomainService.getShop(shopId);
         shopDomainService.duplicateShopCheck(shop.getType(), businessNumber, shop.getId());
 
-        shop.updateShop(shopName, businessNumber, ShopAddress.createAddress(zipCode, address, detailAddress));
+        shop.updateShop(shopName, businessNumber, telNumber, ShopAddress.createAddress(zipCode, address, detailAddress));
         shop.connectCategories(categoryIds);
     }
 
@@ -67,8 +67,7 @@ public class ShopManageServiceV1 implements ShopManageService {
                                          List<GetShopListOrderByParameterDTO> orderByParameter,
                                          PageRequest pageRequest) {
         return querydslRepository
-            .select(ShopListDTO.class)
-            .countSelect(shop.id.countDistinct())
+            .select(ShopListDTO.class, shop.id.countDistinct())
             .from(shop)
             .optionalWhere(searchParameter.getShopType(), shop.type)
             .optionalWhere(searchParameter.getShopStatus(), shop.status)

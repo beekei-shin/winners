@@ -15,5 +15,8 @@ public enum TokenRole implements EnumClass {
 
     private final String name;
     private final String role;
+    public String getSimpleRole() {
+        return this.role.replace("ROLE_", "");
+    }
 
 }

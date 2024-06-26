@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("org.winners.core.domain")
 @EnableJpaRepositories("org.winners.core.infra")
 @SpringBootConfiguration
-public class JpaConfig {
+public class ApplicationConfig {
 }

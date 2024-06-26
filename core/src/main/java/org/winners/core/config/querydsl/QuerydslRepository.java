@@ -25,6 +25,11 @@ public class QuerydslRepository {
         return querydslBase.select(selectClass);
     }
 
+    public <T extends QuerydslSelectDTO> QuerydslBase<T> select(Class<T> selectClass, Expression<Long> countSelect) {
+        QuerydslBase<T> querydslBase = new QuerydslBase<>(this, queryFactory);
+        return querydslBase.select(selectClass).countSelect(countSelect);
+    }
+
     public <T> QuerydslBase<T> select(Expression<T> select) {
         QuerydslBase<T> querydslBase = new QuerydslBase<>(this, queryFactory);
         return querydslBase.select(select);

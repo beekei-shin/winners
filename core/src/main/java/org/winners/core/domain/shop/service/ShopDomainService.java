@@ -16,6 +16,7 @@ import java.util.Optional;
 public class ShopDomainService {
 
     public static final int SHOP_CATEGORY_MAX_COUNT = 3;
+    public static final int SHOP_TEL_MAX_COUNT = 3;
 
     private final ShopRepository shopRepository;
 

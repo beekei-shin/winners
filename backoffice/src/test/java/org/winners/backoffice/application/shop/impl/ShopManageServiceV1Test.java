@@ -12,6 +12,7 @@ import org.winners.core.config.exception.NotExistDataException;
 import org.winners.core.domain.shop.*;
 import org.winners.core.domain.shop.service.ShopDomainService;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,11 +44,12 @@ class ShopManageServiceV1Test extends ApplicationServiceTest {
         ShopType shopType = ShopType.RESTAURANT;
         String shopName = "테스트 상점";
         String businessNumber = "1234567890";
+        List<String> telNumber = List.of("0211111111", "0222222222", "0333333333");
         String zipCode = "우편번호";
         String address = "주소";
         String detailAddress = "상세주소";
         Set<Long> categoryIds = Set.of(1L, 2L, 3L);
-        shopManageServiceV1.saveShop(shopType, shopName, businessNumber, zipCode, address, detailAddress, categoryIds);
+        shopManageServiceV1.saveShop(shopType, shopName, businessNumber, telNumber, zipCode, address, detailAddress, categoryIds);
 
         assertThat(shop.getCategoryIds().size()).isEqualTo(categoryIds.size());
         shop.getCategoryIds().forEach(categoryId -> assertThat(categoryIds.contains(categoryId)).isTrue());
@@ -64,12 +66,13 @@ class ShopManageServiceV1Test extends ApplicationServiceTest {
         ShopType shopType = ShopType.RESTAURANT;
         String shopName = "테스트 상점";
         String businessNumber = "1234567890";
+        List<String> telNumber = List.of("0211111111", "0222222222", "0333333333");
         String zipCode = "우편번호";
         String address = "주소";
         String detailAddress = "상세주소";
         Set<Long> categoryIds = Set.of(1L, 2L, 3L);
         Throwable exception = assertThrows(DuplicatedDataException.class,
-            () -> shopManageServiceV1.saveShop(shopType, shopName, businessNumber, zipCode, address, detailAddress, categoryIds));
+            () -> shopManageServiceV1.saveShop(shopType, shopName, businessNumber, telNumber, zipCode, address, detailAddress, categoryIds));
 
         verify(shopDomainService).duplicateShopCheck(shopType, businessNumber);
     }
@@ -84,11 +87,12 @@ class ShopManageServiceV1Test extends ApplicationServiceTest {
         long shopId = 1L;
         String shopName = "테스트 상점222";
         String businessNumber = "1234567890222";
+        List<String> telNumber = List.of("0211111111", "0222222222", "0333333333");
         String zipCode = "우편번호";
         String address = "주소";
         String detailAddress = "상세주소";
         Set<Long> categoryIds = Set.of(1L, 2L, 3L);
-        shopManageServiceV1.updateShop(shopId, shopName, businessNumber, zipCode, address, detailAddress, categoryIds);
+        shopManageServiceV1.updateShop(shopId, shopName, businessNumber, telNumber, zipCode, address, detailAddress, categoryIds);
 
         assertThat(shop.getName()).isEqualTo(shopName);
         assertThat(shop.getBusinessNumber()).isEqualTo(businessNumber);
@@ -103,18 +107,18 @@ class ShopManageServiceV1Test extends ApplicationServiceTest {
     @Test
     @DisplayName("상점 수정 - 존재하지 않는 상점")
     void updateShop_notExistShop() {
-        Shop shop = ShopMock.createShop(1L);
         given(shopDomainService.getShop(anyLong())).willThrow(new NotExistDataException(ExceptionMessageType.NOT_EXIST_SHOP));
 
         long shopId = 1L;
         String shopName = "테스트 상점222";
         String businessNumber = "1234567890222";
+        List<String> telNumber = List.of("0211111111", "0222222222", "0333333333");
         String zipCode = "우편번호";
         String address = "주소";
         String detailAddress = "상세주소";
         Set<Long> categoryIds = Set.of(1L, 2L, 3L);
         Throwable exception = assertThrows(NotExistDataException.class,
-            () -> shopManageServiceV1.updateShop(shopId, shopName, businessNumber, zipCode, address, detailAddress, categoryIds));
+            () -> shopManageServiceV1.updateShop(shopId, shopName, businessNumber, telNumber, zipCode, address, detailAddress, categoryIds));
 
         verify(shopDomainService).getShop(shopId);
     }
@@ -130,12 +134,13 @@ class ShopManageServiceV1Test extends ApplicationServiceTest {
         long shopId = 1L;
         String shopName = "테스트 상점222";
         String businessNumber = "1234567890222";
+        List<String> telNumber = List.of("0211111111", "0222222222", "0333333333");
         String zipCode = "우편번호";
         String address = "주소";
         String detailAddress = "상세주소";
         Set<Long> categoryIds = Set.of(1L, 2L, 3L);
         Throwable exception = assertThrows(DuplicatedDataException.class,
-            () -> shopManageServiceV1.updateShop(shopId, shopName, businessNumber, zipCode, address, detailAddress, categoryIds));
+            () -> shopManageServiceV1.updateShop(shopId, shopName, businessNumber, telNumber, zipCode, address, detailAddress, categoryIds));
 
         verify(shopDomainService).getShop(shopId);
         verify(shopDomainService).duplicateShopCheck(shop.getType(), businessNumber, shopId);

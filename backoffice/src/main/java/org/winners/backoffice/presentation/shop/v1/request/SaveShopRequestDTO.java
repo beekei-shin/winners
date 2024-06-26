@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 import org.winners.core.domain.shop.ShopType;
 import org.winners.core.domain.shop.service.ShopDomainService;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -27,6 +28,9 @@ public class SaveShopRequestDTO {
     @NotBlank
     @Length(max = 50)
     private String businessNumber;
+
+    @Size(max = ShopDomainService.SHOP_TEL_MAX_COUNT)
+    private List<String> telNumber;
 
     @NotBlank
     @Length(max = 50)

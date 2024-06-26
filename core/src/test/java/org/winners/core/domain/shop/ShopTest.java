@@ -3,6 +3,7 @@ package org.winners.core.domain.shop;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,14 +17,16 @@ class ShopTest {
         ShopType shopType = ShopType.RESTAURANT;
         String shopName = "테스트 상점";
         String businessNumber = "1234567890";
+        List<String> telNumber = List.of("0211111111", "0222222222", "0233333333");
         String zipCode = "우편번호";
         String address = "주소";
         String detailAddress = "상세주소";
-        Shop shop = Shop.createShop(shopType, shopName, businessNumber, ShopAddress.createAddress(zipCode, address, detailAddress));
+        Shop shop = Shop.createShop(shopType, shopName, businessNumber, telNumber, ShopAddress.createAddress(zipCode, address, detailAddress));
 
         assertThat(shop.getType()).isEqualTo(shopType);
         assertThat(shop.getName()).isEqualTo(shopName);
         assertThat(shop.getBusinessNumber()).isEqualTo(businessNumber);
+        assertThat(shop.getTelNumber()).isEqualTo(telNumber);
         assertThat(shop.getAddress().getZipCode()).isEqualTo(zipCode);
         assertThat(shop.getAddress().getAddress()).isEqualTo(address);
         assertThat(shop.getAddress().getDetailAddress()).isEqualTo(detailAddress);
@@ -35,10 +38,11 @@ class ShopTest {
         Shop shop = ShopMock.createShop(1L);
         String updateShopName = "수정 상점명";
         String updateBusinessName = "수정 사업자등록번호";
+        List<String> telNumber = List.of("0211111111", "0222222222", "0233333333");
         String zipCode = "수정 우편번호";
         String address = "수정 주소";
         String detailAddress = "수정 상세주소";
-        shop.updateShop(updateShopName, updateBusinessName, ShopAddress.createAddress(zipCode, address, detailAddress));
+        shop.updateShop(updateShopName, updateBusinessName, telNumber, ShopAddress.createAddress(zipCode, address, detailAddress));
 
         assertThat(shop.getName()).isEqualTo(updateShopName);
         assertThat(shop.getBusinessNumber()).isEqualTo(updateBusinessName);

@@ -18,7 +18,8 @@ public class AppSecurityWhitelist implements SecurityWhitelist, EnumClass {
     private final List<Whitelist> whitelist = List.of(
         new Whitelist("/v*/" + AppController.PHONE_IDENTITY_CERT_PATH + "/**", Set.of(HttpMethod.POST, HttpMethod.PUT)),
         new Whitelist("/v*/" + AppController.CLIENT_USER_SIGN_PATH + "/**", Set.of(HttpMethod.POST)),
-        new Whitelist("/v*/" + AppController.BUSINESS_USER_SIGN_PATH + "/**", Set.of(HttpMethod.POST))
+        new Whitelist("/v*/" + AppController.BUSINESS_USER_SIGN_PATH + "/**", Set.of(HttpMethod.POST)),
+        new Whitelist("/v*/" + AppController.SHOP_PATH + "/**", Set.of(HttpMethod.GET))
     );
 
 }

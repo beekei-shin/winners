@@ -24,13 +24,14 @@ import org.winners.core.config.security.handler.JwtUnauthorizedHandler;
 import org.winners.core.config.security.token.TokenProvider;
 import org.winners.core.config.security.token.TokenRole;
 import org.winners.core.domain.user.service.ClientUserDomainService;
+import org.winners.core.domain.user.service.UserDomainService;
 
 @Configuration
 @RequiredArgsConstructor
 public class AppSecurityConfig {
 
     private final TokenProvider tokenProvider;
-    private final ClientUserDomainService clientUserDomainService;
+    private final UserDomainService userDomainService;
     private final ObjectMapper objectMapper;
 
     @Bean
@@ -84,11 +85,10 @@ public class AppSecurityConfig {
                 .requestMatchers(HttpMethod.PUT, securityWhitelist().getWhitelistByMethod(HttpMethod.PUT)).permitAll()
                 .requestMatchers(HttpMethod.DELETE, securityWhitelist().getWhitelistByMethod(HttpMethod.DELETE)).permitAll()
                 .requestMatchers("/**").hasAnyRole(
-                    TokenRole.CLIENT_USER.getRole().replace("ROLE_", ""),
-                    TokenRole.BUSINESS_USER.getRole().replace("ROLE_", ""))
-                .anyRequest().authenticated()
-            )
-            .addFilterAfter(new JwtAuthenticationFilter(tokenProvider, securityWhitelist(), clientUserDomainService), UsernamePasswordAuthenticationFilter.class)
+                    TokenRole.CLIENT_USER.getSimpleRole(),
+                    TokenRole.BUSINESS_USER.getSimpleRole())
+                .anyRequest().authenticated())
+            .addFilterAfter(new JwtAuthenticationFilter(tokenProvider, securityWhitelist(), userDomainService), UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling(eh -> eh
                 .authenticationEntryPoint(new JwtUnauthorizedHandler(objectMapper))
                 .accessDeniedHandler(new JwtAccessDeniedHandler(objectMapper)))

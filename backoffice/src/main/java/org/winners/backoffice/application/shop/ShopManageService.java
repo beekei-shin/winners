@@ -17,12 +17,12 @@ import java.util.Set;
 public interface ShopManageService {
 
     @Transactional
-    void saveShop(ShopType shopType, String shopName, String businessNumber,
+    void saveShop(ShopType shopType, String shopName, String businessNumber, List<String> telNumber,
                   String zipCode, String address, String detailAddress,
                   Set<Long> categoryIds);
 
     @Transactional
-    void updateShop(long shopId, String shopName, String businessNumber,
+    void updateShop(long shopId, String shopName, String businessNumber, List<String> telNumber,
                     String zipCode, String address, String detailAddress,
                     Set<Long> categoryIds);
 

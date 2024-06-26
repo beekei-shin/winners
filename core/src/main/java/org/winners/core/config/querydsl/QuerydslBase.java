@@ -13,10 +13,7 @@ import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Getter
 public class QuerydslBase<T> {
@@ -80,6 +77,11 @@ public class QuerydslBase<T> {
         return this;
     }
 
+    public <C> QuerydslBase<T> whereIn(Collection<C> value, SimpleExpression<C> column) {
+        this.jpaQuery.where(column.in(value));
+        return this;
+    }
+
     public <C> QuerydslBase<T> optionalWhere(C value, SimpleExpression<C> column) {
         Optional.ofNullable(value).ifPresent(v -> this.where(v, column));
         return this;
@@ -87,6 +89,11 @@ public class QuerydslBase<T> {
 
     public QuerydslBase<T> optionalWhereOr(String value, StringPath ... columns) {
         Optional.ofNullable(value).ifPresent(v -> this.whereOr(v, columns));
+        return this;
+    }
+
+    public <C> QuerydslBase<T> optionalWhereIn(Collection<C> value, SimpleExpression<C> column) {
+        Optional.ofNullable(value).ifPresent(v -> this.whereIn(v, column));
         return this;
     }
 
@@ -117,6 +124,11 @@ public class QuerydslBase<T> {
         return this;
     }
 
+    public QuerydslBase<T> groupBy(Expression<?>... groupBy) {
+        this.jpaQuery.groupBy(groupBy);
+        return this;
+    }
+
     public <R> Optional<R> transformRow(ResultTransformer<Map<Long, R>> transformer) {
         return Optional.ofNullable(this.jpaQuery.transform(transformer))
             .flatMap(map -> map.values().stream().findFirst());
@@ -137,6 +149,5 @@ public class QuerydslBase<T> {
     public Page<T> getPage(PageRequest pageRequest) {
         return this.querydslRepository.getPage(this, pageRequest);
     }
-
 
 }

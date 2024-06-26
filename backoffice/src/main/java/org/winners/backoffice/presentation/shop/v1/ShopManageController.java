@@ -36,7 +36,7 @@ public class ShopManageController {
     @Operation(summary = "상점 등록")
     @PostMapping(name = "상점 등록", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> saveShop(@RequestBody @Valid SaveShopRequestDTO request) {
-        shopManageServiceV1.saveShop(request.getShopType(), request.getShopName(), request.getBusinessNumber(),
+        shopManageServiceV1.saveShop(request.getShopType(), request.getShopName(), request.getBusinessNumber(), request.getTelNumber(),
             request.getZipCode(), request.getAddress(), request.getDetailAddress(),
             request.getCategoryIds());
         return ApiResponse.success();
@@ -46,7 +46,7 @@ public class ShopManageController {
     @PutMapping(name = "상점 수정", value = "{shopId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<?> updateShop(@PathVariable @Min(value = 1) long shopId,
                                      @RequestBody @Valid UpdateShopRequestDTO request) {
-        shopManageServiceV1.updateShop(shopId, request.getShopName(), request.getBusinessNumber(),
+        shopManageServiceV1.updateShop(shopId, request.getShopName(), request.getBusinessNumber(), request.getTelNumber(),
             request.getZipCode(), request.getAddress(), request.getDetailAddress(),
             request.getCategoryIds());
         return ApiResponse.success();

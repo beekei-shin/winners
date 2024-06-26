@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.Where;
+import org.winners.core.config.converter.ListConverter;
 import org.winners.core.domain.common.BaseEntity;
 
 import java.util.*;
@@ -45,6 +46,11 @@ public class Shop extends BaseEntity {
     @Column(name = "business_number", length = 100, nullable = false)
     private String businessNumber;
 
+    @Convert(converter = ListConverter.class)
+    @Comment("전화번호")
+    @Column(name = "tel_number", length = 100, nullable = false)
+    private List<String> telNumber;
+
     @Embedded
     private ShopAddress address;
 
@@ -54,19 +60,21 @@ public class Shop extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "shop", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ShopUserConnect> userConnectList;
 
-    public static Shop createShop(ShopType type, String name, String businessNumber, ShopAddress address) {
+    public static Shop createShop(ShopType type, String name, String businessNumber, List<String> telNumber, ShopAddress address) {
         return Shop.builder()
             .type(type)
             .status(ShopStatus.UNOPEN)
             .name(name)
+            .telNumber(telNumber)
             .businessNumber(businessNumber)
             .address(address)
             .build();
     }
 
-    public void updateShop(String name, String businessNumber, ShopAddress address) {
+    public void updateShop(String name, String businessNumber, List<String> telNumber, ShopAddress address) {
         this.name = name;
         this.businessNumber = businessNumber;
+        this.telNumber = telNumber;
         this.address = address;
     }
 

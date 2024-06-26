@@ -42,13 +42,14 @@ class ShopManageControllerTest extends ControllerTest {
     @WithMockUser(authorities = TokenRole.ADMIN_USER)
     void saveShop() {
         willDoNothing().given(shopManageService).saveShop(
-            any(ShopType.class), anyString(), anyString(),
+            any(ShopType.class), anyString(), anyString(), anyList(),
             anyString(), anyString(), anyString(),
             anySet());
 
         ShopType shopType = ShopType.RESTAURANT;
         String shopName = "상점명";
         String businessNumber = "1234567890";
+        List<String> telNumber = List.of("0211111111", "0222222222", "0333333333");
         String zipCode = "우편번호";
         String address = "주소";
         String detailAddress = "상세주소";
@@ -58,6 +59,7 @@ class ShopManageControllerTest extends ControllerTest {
                 Map.entry("shopType", shopType),
                 Map.entry("shopName", shopName),
                 Map.entry("businessNumber", businessNumber),
+                Map.entry("telNumber", telNumber),
                 Map.entry("zipCode", zipCode),
                 Map.entry("address", address),
                 Map.entry("detailAddress", detailAddress),
@@ -65,7 +67,7 @@ class ShopManageControllerTest extends ControllerTest {
             .responseType(ApiResponseType.SUCCESS)
             .run();
 
-        verify(shopManageService).saveShop(shopType, shopName, businessNumber, zipCode, address, detailAddress, categoryIds);
+        verify(shopManageService).saveShop(shopType, shopName, businessNumber, telNumber, zipCode, address, detailAddress, categoryIds);
     }
 
     @Test
@@ -73,13 +75,14 @@ class ShopManageControllerTest extends ControllerTest {
     @WithMockUser(authorities = TokenRole.ADMIN_USER)
     void updateShop() {
         willDoNothing().given(shopManageService).updateShop(
-            anyLong(), anyString(), anyString(),
+            anyLong(), anyString(), anyString(), anyList(),
             anyString(), anyString(), anyString(),
             anySet());
 
         long shopId = 1;
         String shopName = "상점명";
         String businessNumber = "1234567890";
+        List<String> telNumber = List.of("0211111111", "0222222222", "0333333333");
         String zipCode = "우편번호";
         String address = "주소";
         String detailAddress = "상세주소";
@@ -89,6 +92,7 @@ class ShopManageControllerTest extends ControllerTest {
             .requestBody(
                 Map.entry("shopName", shopName),
                 Map.entry("businessNumber", businessNumber),
+                Map.entry("telNumber", telNumber),
                 Map.entry("zipCode", zipCode),
                 Map.entry("address", address),
                 Map.entry("detailAddress", detailAddress),
@@ -96,7 +100,7 @@ class ShopManageControllerTest extends ControllerTest {
             .responseType(ApiResponseType.SUCCESS)
             .run();
 
-        verify(shopManageService).updateShop(shopId, shopName, businessNumber, zipCode, address, detailAddress, categoryIds);
+        verify(shopManageService).updateShop(shopId, shopName, businessNumber, telNumber, zipCode, address, detailAddress, categoryIds);
     }
 
     @Test

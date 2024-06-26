@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.winners.core.config.DomainServiceTest;
+import org.winners.core.domain.log.ServiceLog;
 import org.winners.core.domain.log.ServiceLogRepository;
 import org.winners.core.domain.log.ServiceLogType;
 
@@ -27,8 +28,8 @@ class ServiceLogDomainServiceTest extends DomainServiceTest {
     }
 
     @Test
-    @DisplayName("비밀번호 변경 로그 횟수 조회")
-    void hasCountUpdatedPasswordLog() {
+    @DisplayName("비밀번호 변경 로그 여부 조회")
+    void hasUpdatedPasswordLog() {
         long userId = 1;
 
         given(serviceLogRepository.countByUserIdAndType(anyLong(), any(ServiceLogType.class))).willReturn(1L);
@@ -40,6 +41,13 @@ class ServiceLogDomainServiceTest extends DomainServiceTest {
         assertThat(hasUpdatedPasswordLog2).isFalse();
 
         verify(serviceLogRepository, times(2)).countByUserIdAndType(userId, ServiceLogType.UPDATE_PASSWORD);
+    }
+
+    @Test
+    @DisplayName("비밀번호 변경 로그 등록")
+    void saveUpdatePasswordLog() {
+        given(serviceLogRepository.save(any(ServiceLog.class))).willReturn(ServiceLog.createUpdatePasswordLog(1L));
+        serviceLogDomainService.saveUpdatePasswordLog(1L);
     }
 
 }

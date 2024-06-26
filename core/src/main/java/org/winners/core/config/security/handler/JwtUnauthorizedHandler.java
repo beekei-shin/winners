@@ -2,6 +2,7 @@ package org.winners.core.config.security.handler;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,6 @@ public class JwtUnauthorizedHandler implements AuthenticationEntryPoint {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(apiResponseType.getHttpStatus().value());
 
-            objectMapper.writeValue(os, ApiResponse.exception(apiResponseType));
             os.flush();
         }
     }

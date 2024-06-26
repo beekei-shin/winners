@@ -17,4 +17,7 @@ public interface AppController {
     String BUSINESS_USER_TAG_NAME = "302. 사업자 회원";
     String BUSINESS_USER_PATH = "user/business";
 
+    String SHOP_TAG_NAME = "401. 상점";
+    String SHOP_PATH = "shop";
+
 }

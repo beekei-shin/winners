@@ -27,6 +27,7 @@ public enum ExceptionMessageType implements EnumClass {
     NOT_EXIST_SHOP("존재하지 않는 상점입니다."),
     DUPLICATED_SHOP("중복된 상점입니다."),
 
+    NOT_EXIST_PRODUCT("존재하지 않는 상품입니다."),
     ;
 
     private final String message;

@@ -18,6 +18,7 @@ import org.winners.core.config.presentation.ApiResponseType;
 import org.winners.core.config.security.token.TokenProvider;
 import org.winners.core.domain.user.ClientUser;
 import org.winners.core.domain.user.service.ClientUserDomainService;
+import org.winners.core.domain.user.service.UserDomainService;
 import org.winners.core.utils.SecurityUtil;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
     private final SecurityWhitelist securityWhitelist;
-    private final ClientUserDomainService clientUserDomainService;
+    private final UserDomainService userDomainService;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
@@ -53,8 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     long userId = tokenProvider.getAccessTokenId(token);
                     Collection<? extends GrantedAuthority> authority = tokenProvider.getAccessTokenAuthorities(token);
 
-                    ClientUser clientUser = clientUserDomainService.getClientUser(userId);
-                    clientUser.accessUserCheck();
+                    userDomainService.accessUserCheck(userId);
 
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, null, authority);
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
