@@ -1,7 +1,7 @@
 server:
-  port: 8080
+  port: 9010
   servlet:
-    context-path: "/app"
+    context-path: "/bo"
 
 spring:
   config:
@@ -16,7 +16,7 @@ spring:
       secret-key: test
 
 springdoc:
-  packages-to-scan: org.winners.app
+  packages-to-scan: org.winners.backoffice
   api-docs:
     enabled: true
     path: /api/docs/json

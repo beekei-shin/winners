@@ -1,5 +1,5 @@
-rootProject.name = 'winners-api'
-include 'app'
-include 'backoffice'
+rootProject.name = 'winners'
+include 'app-api'
+include 'backoffice-api'
 include 'core'
 
