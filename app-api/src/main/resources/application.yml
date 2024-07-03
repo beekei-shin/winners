@@ -16,7 +16,7 @@ spring:
       secret-key: test
 
 springdoc:
-  packages-to-scan: org.winners.app
+  packages-to-scan: com.winners.appApi
   api-docs:
     enabled: true
     path: /api/docs/json

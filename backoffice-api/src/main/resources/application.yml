@@ -16,7 +16,7 @@ spring:
       secret-key: test
 
 springdoc:
-  packages-to-scan: org.winners.backoffice
+  packages-to-scan: com.winners.backofficeApi
   api-docs:
     enabled: true
     path: /api/docs/json
