@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import com.winners.backofficeApi.application.shop.ShopManageService;
 import com.winners.backofficeApi.application.shop.dto.ShopInfoDTO;
-import org.winners.backofficeApi.presentation.shop.v1.request.*;
 import com.winners.backofficeApi.presentation.shop.v1.response.GetShopInfoResponseDTO;
 import com.winners.backofficeApi.presentation.shop.v1.response.GetShopListResponseDTO;
 import org.winners.core.config.presentation.ApiResponse;
